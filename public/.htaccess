@@ -1,7 +1,14 @@
-Options -Multiviews
 
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME} !-f
+<IfModule mod_rewrite.c>
+    Options -Multiviews
 
-RewriteRule ^(.*)$ index.php?url=$1 [L]
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+
+    RewriteRule ^(.*)$ index.php?url=$1 [L]
+</IfModule>
+ 
+<IfModule !mod_rewrite.c>
+    ErrorDocument 404 /index.php
+</IfModule
