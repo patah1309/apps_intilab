@@ -41,6 +41,7 @@ class LoginModel {
 							if($res['status'] == 200){
 								$file = file_put_contents('file/user.json', json_encode($array));
 								$response['session'] = $res;
+								$response['name'] = $_POST['username'];
 								$response['message'] = 'Login Success';
 								return $response;
 							}else {
@@ -51,6 +52,7 @@ class LoginModel {
 						}
 					}else {
 						$response['session'] = $value['session'];
+						$response['name'] = $_POST['username'];
 						$response['message'] = 'Login Success';
 						return $response;
 					}
@@ -80,6 +82,7 @@ class LoginModel {
 							if($res['status'] == 200){
 								$file = file_put_contents('file/user.json', json_encode($array));
 								$response['session'] = $res;
+								$response['name'] = $_POST['username'];
 								$response['message'] = 'Login Success';
 								return $response;
 							}else {
@@ -89,20 +92,6 @@ class LoginModel {
 							}
 						}
 				}
-				// else if($_POST['username'] != $query['identity'] && $_POST['password'] == $query['password']){
-				// 	$response['session'] = NULL;
-				// 	$response['message'] = 'Username Tidak Ditemukan';
-				// 	return $response;
-				// } else if($_POST['username'] == $query['identity'] && $_POST['password'] != $query['password']){
-				// 	$response['session'] = NULL;
-				// 	$response['message'] = 'Password Salah';
-				// 	return $response;
-				// } else {
-				// 	$response['session'] = NULL;
-				// 	$response['message'] = 'Login Gagal';
-				// 	return $response;
-				// }
-				// // return (array)$value;
 			}else {
 				$response['session'] = NULL;
 				$response['message'] = 'Login Gagal';
@@ -130,6 +119,7 @@ class LoginModel {
 			if($res['status'] == 200){
 				$file = file_put_contents('file/user.json', json_encode($array));
 				$response['session'] = $res;
+				$response['name'] = $_POST['username'];
 				$response['message'] = 'Login Success';
 				return $response;
 			}else {

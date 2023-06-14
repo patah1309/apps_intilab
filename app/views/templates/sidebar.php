@@ -11,9 +11,9 @@
    <div class="appHeader bg-primary text-light">
       <div class="left">
          <a href="#" class="headerButton" data-toggle="modal" data-target="#sidebarPanel">
-            <ion-icon name="menu-outline"></ion-icon>
+            <i class="fa-solid fa-bars"></i>
          </a>
-         <i class="fa fa-square" id="status-connection">&nbsp;</i><span
+         <i class="fa-solid fa-square" id="status-connection">&nbsp;</i><span
             id="status-text">&nbsp;</span>
       </div>
       <div class="right">
@@ -21,7 +21,7 @@
             <img src="<?= base_url; ?>/assets/img/admin.png" alt="image" class="imaged w40">
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <!-- <a class="dropdown-item"  href="#"><ion-icon size="small" name="person-outline"></ion-icon>Profil</a> -->
-                <a class="dropdown-item"  href="#" onclick="location.href='logout';"><ion-icon size="small" name="log-out-outline"></ion-icon>Keluar</a>
+                <a class="dropdown-item"  href="#" onclick="location.href='logout';"><i class="fa-solid fa-right-from-bracket"></i> Keluar</a>
             </div>
          </div>
       </div>
@@ -32,14 +32,14 @@
             <div class="modal-body p-0">
                <!-- profile box -->
                <div class="profileBox pt-2 pb-2">
-                  <div class="image-wrapper"><img src="./assets/img/admin.png" class="imaged w36">
+                  <div class="image-wrapper"><img src="<?= base_url;?>/assets/img/admin.png" class="imaged w36">
                   </div>
                   <div class="in">
                      <strong><span id="name_user"></span></strong>
                      <div class="text-muted">dedi@intilab.com</div>
                   </div>
                   <a href="#" class="btn btn-link btn-icon sidebar-close" data-dismiss="modal">
-                     <ion-icon name="close-outline"></ion-icon>
+                     <i class="fa-solid fa-xmark"></i>
                   </a>
                </div>
                <!-- * profile box -->
@@ -50,14 +50,14 @@
                   <li>
                      <a href="./profile" class="item">
                         <div class="icon-box bg-primary">
-                           <ion-icon name="person-outline"></ion-icon>
+                           <i class="fa-solid fa-user"></i>
                         </div> Profil
                      </a>
                   </li>
                   <li>
                      <a href="<?= base_url;?>/logout" class="item">
                         <div class="icon-box bg-primary">
-                           <ion-icon name="person-outline"></ion-icon>
+                           <i class="fa-solid fa-right-from-bracket"></i>
                         </div> Logout
                      </a>
                   </li>

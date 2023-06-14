@@ -1,5 +1,5 @@
 <?php
-
+ob_start();
 class Home extends Controller {
 	public function __construct()
 	{	
@@ -19,8 +19,8 @@ class Home extends Controller {
 	{
 		if($_SESSION['versi'] == $this->versi()){
 			$data['title'] = 'GPS INTILAB';
-			$val = $this->model('UserModel')->getUserById();
-			$data['nama'] = $val['name'];
+			// $val = $this->model('UserModel')->getUserById();
+			$data['nama'] = $_SESSION['name'];
 			$data['koneksi'] = $this->connection();
 			$this->view('templates/header', $data);
 			$this->view('templates/sidebar', $data);

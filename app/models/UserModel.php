@@ -10,7 +10,8 @@ class UserModel {
 			'headers' => [ 'Content-Type' => 'application/json' ],
 			'body' => json_encode([
 				'token' => $_SESSION['token'],
-			])
+			]),
+			'http_errors' => false
 		]);
 		$return = $response->getBody()->getContents();
 		$res = (array)json_decode($return);

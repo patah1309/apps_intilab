@@ -33,12 +33,6 @@
    <link rel="stylesheet" href="<?= base_url;?>/assets/css/sw-custom.css">
    <script src="<?= base_url;?>/assets/js/lib/jquery-3.4.1.min.js"></script>
    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-   <!-- Base Js File -->
-   <script src="<?= base_url;?>/assets/js/base.js"></script>
-   <!-- <script src="<?= base_url;?>/assets/js/sweetalert.min.js"></script> -->
-   <script src="<?= base_url;?>/assets/js/webcamjs/webcam.min.js"></script>
-   <script src="<?= base_url;?>/assets/js/init_net.js"></script>
-   <script src="<?= base_url;?>/assets/js/clock-pick/jquery-clock-timepicker.js"></script>
 </head>
 <style>
 body {

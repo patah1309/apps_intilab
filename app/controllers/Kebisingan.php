@@ -34,10 +34,11 @@ class Kebisingan extends Controller {
 
 
 			$data['title'] = 'APPS INTILAB';
-			$val = $this->model('UserModel')->getUserById();
-			$data['nama'] = $val['name'];
+			// $val = $this->model('UserModel')->getUserById();
+			$data['nama'] = $_SESSION['name'];
             $data['salam'] = $status;
 			$data['koneksi'] = $this->connection();
+			$data['total_data'] = $this->model('KebisinganModel')->getJsonData();
 			$this->view('templates/header', $data);
 			$this->view('templates/sidebar', $data);
 			$this->view('kebisingan/index', $data);
@@ -66,6 +67,11 @@ class Kebisingan extends Controller {
 	}
 
 	public function saveData(){
+		if ($_POST['jenis_durasi'] == "24 Jam" || $_POST['jenis_durasi'] == '8 Jam') {
+			$jendur = $_POST['jenis_durasi'] . '-' . json_encode($_POST['durasi_sampl']);
+		} else {
+			$jendur = $_POST['jenis_durasi'];
+		}
 		$data = array(
 			'no_sample' => $_POST['no_sample'],
 			'id_kat' => $_POST['id_kat'],
@@ -78,7 +84,7 @@ class Kebisingan extends Controller {
 			'waktu' => $_POST['waktu'],
 			'sumber_keb' => $_POST['sumber_keb'],
 			'jenis_kat' => $_POST['jenis_kat'],
-			'jenis_durasi' => $_POST['jenis_durasi'],
+			'jenis_durasi' => $jendur,
 			'kebisingan' => $_POST['kebisingan'],
 			'suhu_udara' => $_POST['suhu_udara'],
 			'kelembapan_udara' => $_POST['kelembapan_udara'],
@@ -87,12 +93,15 @@ class Kebisingan extends Controller {
 			'foto_lain' => $_POST['foto_lain'],
 			'is_sync' => '0');
 		$kon = $this->connection();
+		var_dump($this->connection());
 		$save = $this->model('KebisinganModel')->saveDataUdara($data, $kon, $_POST);
-		if($save != []){
-			header('location: '. base_url . '/kebisingan');
-		}else {
-			echo $save;
-		}
+		echo $save;
+		header('location: '. base_url . '/kebisingan');
+	}
+
+	public function upload_data_to_server(){
+		$data = $this->model('KebisinganModel')->syncronize();
+		echo $data;
 	}
 
 }

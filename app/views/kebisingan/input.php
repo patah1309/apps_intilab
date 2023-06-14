@@ -21,15 +21,27 @@
                                 <div class="row">
                                     <div class="col-8">
                                         <input type="text" class="form-control" id="no_sample" name="no_sample" required autocomplete="off" style="font-size:12px">
-                                        <input type="hidden" id="id_kat" name="id_kat">
+                                        <!-- <input type="hidden" id="id_kat" name="id_kat"> -->
                                     </div>
                                     <div class="col-4">
                                         <span class="input-group-prepends" style="width:30%">
-                                            <a class="btn btn-info" href="javascript:;" onclick="getdata()"><i class="fa fa-refresh"></i></a>
+                                            <a class="btn btn-info" href="javascript:;" onclick="getdata()"><i class="fa-solid fa-rotate"></i></a>
                                         </span>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="form-group basic">
+                        <div class="input-wrapper">
+                            <label class="label">Sub Kategori</label>
+                            <select name="id_kat" id="id_kat" class="form-control" required>
+                                <option value="">Pilih Sub Ketegori</option>
+                                <option value="23">Kebisingan</option>
+                                <option value="24">Kebisingan (24 Jam)</option>
+                                <option value="25">Kebisingan (Indoor)</option>
+                                <option value="26">Kebisingan (Outdoor)</option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-group basic">
@@ -94,7 +106,7 @@
                                         </div>
                                         <div class="col-4">
                                             <span class="input-group-prepends" style="width:30%">
-                                                <a class="btn btn-info fa fa-map-marker" onclick="getlocation()">Get Location</a>
+                                                <a class="btn btn-info" onclick="getlocation()"><i class="fa-solid fa-location-dot"></i> Get Location</a>
                                             </span>
                                         </div>
                                     </div>
@@ -113,7 +125,8 @@
                                         </div>
                                         <div class="col-2 px-0">
                                             <span class="d-flex align-items-center btn btn-danger">
-                                                <a class="fa fa-clock-o" onclick="mulai()"></a>
+                                                <a class="fa-solid fa-clock" onclick="mulai()"></a>
+                                                <!-- <i class="fa-solid fa-clock"></i> -->
                                             </span>
                                         </div>
                                     </div>
@@ -199,7 +212,7 @@
                                 </label>
                                 <label for="file1">
                                     <span class="btn btn-primary" id="lokasi">
-                                        <i class="fa fa-camera"></i>Ambil Gambar </span>
+                                        <i class="fa-solid fa-camera"> </i> Ambil Gambar </span>
                                     <input type="file" id="file1" accept="image/*" capture="environment" style="display:none" onchange="preview_image(1)">
                                 </label>
                                 <textarea id="foto_lok" name="foto_lok" class="d-none"></textarea>
@@ -210,7 +223,7 @@
                                 <label class="label label-1 mb-1">Foto Lain - Lain</label>
                                 <label for="file3">
                                     <span class="btn btn-primary" id="lain">
-                                        <i class="fa fa-camera"></i>Ambil Gambar </span>
+                                        <i class="fa-solid fa-camera"> </i> Ambil Gambar </span>
                                     <input type="file" id="file3" accept="image/*" capture="environment" style="display:none" onchange="preview_image(3)">
                                 </label>
                                 <textarea id="foto_lain" name="foto_lain" class="d-none"></textarea>
@@ -240,33 +253,15 @@
         </form>
     </div>
 </div>
-<div class="btnBottom" id="btnBawah">
-    <div class="btnTengah">
-        <i></i>
-    </div>
+<div class="btnBottom">
+    <div class="btnTengah" onclick="location.href='kebisingan/add_data'"></a></div>
     <div class="btnMenu">
         <ul>
-            <li style="--i:0.1s;">
-                <a href="./home">
-                    <ion-icon name="speedometer"></ion-icon>
-                </a>
-            </li>
-            <li style="--i:0.2s;">
-                <a href="./kebisingan">
-                    <ion-icon name="home"></ion-icon>
-                </a>
-            </li>
+            <li style="--i:0.1s;"><a href="<?= base_url;?>/home"><i class="fa-solid fa-gauge"></i></a></li>
+            <li style="--i:0.2s;"><a href="<?= base_url;?>/kebisingan"><i class="fa-solid fa-house"></i></a></li>
             <li></li>
-            <li style="--i:0.2s;">
-                <a href="./datakebisingan">
-                    <ion-icon name="document-text"></ion-icon>
-                </a>
-            </li>
-            <li style="--i:0.1s;">
-                <a href="./profile">
-                    <ion-icon name="person"></ion-icon>
-                </a>
-            </li>
+            <li style="--i:0.2s;"><a href="<?= base_url;?>/datakebisingan"><i class="fa-solid fa-file-lines"></i></a></li>
+            <li style="--i:0.1s;"><a href="<?= base_url;?>/profile"><i class="fa-solid fa-user"></i></a></li>
         </ul>
     </div>
 </div>
@@ -290,7 +285,7 @@
                 e = JSON.parse(resp);
                   if (e.id_ket == '23' || e.id_ket == '24' || e.id_ket == '25' || e.id_ket === '26') {
                     //  $('#btnBawah').hide()
-                     $('#udara').html(kebisingan).fadeIn('slow');
+                    //  $('#udara').html(kebisingan).fadeIn('slow');
                      $('#keterangan-4').val(e.keterangan);
                      $('#id_kat').val(e.id_ket);
                      $('#jam').clockTimePicker();
@@ -309,10 +304,10 @@
                   }
                },
                error: function(e) {
-                  Swal.fire({
-                     icon: 'error',
-                     title: e.responseJSON.message,
-                  })
+                    Swal.fire({
+                        icon: 'error',
+                        title: e.responseJSON.message,
+                    })
                }
             })
         } else {
@@ -321,6 +316,11 @@
                 title : 'Anda Sedang Offline',
                 timer : 3000
             })
+            $('#jam').clockTimePicker();
+            $('#jamm').clockTimePicker();
+            input_kebisingan(120);
+            jendur();
+            kelas(120);
         }
     }
 

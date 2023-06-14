@@ -12,7 +12,7 @@ class Controller{
 		return new $model;
 	}
 	public function connection(){
-		$connected = @fsockopen("apps.intilab.com", 80); 
+		$connected = @fsockopen("www.google.com", 80); 
                                         //website, port  (try 80 or 443)
 		if ($connected){
 			$is_conn = true; //action when connected
