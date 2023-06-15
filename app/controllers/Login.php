@@ -3,12 +3,14 @@
 class Login extends Controller {
 	public function index()
 	{
+		// var_dump(base_api);
 		$data['title'] = 'Halaman Login';
 
 		$this->view('login/login', $data);
 	}
 
 	public function prosesLogin() {
+		// var_dump(base_api);
 		$row = $this->model('LoginModel')->checkLogin($_POST);
 		
 		if($row['message'] == 'Login Success'){
@@ -17,7 +19,7 @@ class Login extends Controller {
 			$_SESSION['expired_at'] = $row['session']['expired_at'];
 			$_SESSION['session_login'] = 'sudah_login';
 			$_SESSION['name'] = $row['name'];
-			$_SESSION['versi'] = $row['session']['apps_ver']; 
+			$_SESSION['versi'] = $row['session']['apps_ver'];
 			header('location: '. base_url . '/home');
 		} else {
 			Flasher::setMessage($row['message'],'','danger');

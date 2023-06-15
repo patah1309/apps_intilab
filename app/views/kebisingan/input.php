@@ -290,9 +290,9 @@
                      $('#id_kat').val(e.id_ket);
                      $('#jam').clockTimePicker();
                      $('#jamm').clockTimePicker();
-                     input_kebisingan(120);
+                     input_kebisingan(5);
                      jendur();
-                     kelas(120);
+                     kelas(5);
                   } else {
                     //  error.play();
                     // $('#form-add').trigger('reset');
@@ -318,9 +318,9 @@
             })
             $('#jam').clockTimePicker();
             $('#jamm').clockTimePicker();
-            input_kebisingan(120);
+            input_kebisingan(5);
             jendur();
-            kelas(120);
+            kelas(5);
         }
     }
 

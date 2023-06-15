@@ -37,7 +37,7 @@ class Kebisingan extends Controller {
 			// $val = $this->model('UserModel')->getUserById();
 			$data['nama'] = $_SESSION['name'];
             $data['salam'] = $status;
-			$data['koneksi'] = $this->connection();
+			// $data['koneksi'] = $this->connection();
 			$data['total_data'] = $this->model('KebisinganModel')->getJsonData();
 			$this->view('templates/header', $data);
 			$this->view('templates/sidebar', $data);
@@ -67,6 +67,7 @@ class Kebisingan extends Controller {
 	}
 
 	public function saveData(){
+		var_dump('test');
 		if ($_POST['jenis_durasi'] == "24 Jam" || $_POST['jenis_durasi'] == '8 Jam') {
 			$jendur = $_POST['jenis_durasi'] . '-' . json_encode($_POST['durasi_sampl']);
 		} else {
@@ -94,13 +95,17 @@ class Kebisingan extends Controller {
 			'is_sync' => '0');
 		$kon = $this->connection();
 		$save = $this->model('KebisinganModel')->saveDataUdara($data, $kon, $_POST);
-		if($save['message'] == 'No Sample Ini Sudah ada'){
-			Flasher::setMessage($save['message'],'',$save['status']);
-			header('location: '. base_url . '/kebisingan');
-		}else {
-			Flasher::setMessage($save['message'],'',$save['status']);
-			header(' : '. base_url . '/kebisingan');
-		}
+		// echo $save;
+		// var_dump($save['message'], $save['status']);
+		Flasher::setMessage($save['message'],'','success');
+		header('location: '. base_url . '/kebisingan');
+		// if($save['message'] == 'No Sample Ini Sudah ada'){
+		// 	Flasher::setMessage($save['message'],'',$save['status']);
+		// 	header('location: '. base_url . '/kebisingan');
+		// }else {
+		// 	Flasher::setMessage($save['message'],'',$save['status']);
+		// 	header(' : '. base_url . '/kebisingan');
+		// }
 	}
 
 	public function upload_data_to_server(){

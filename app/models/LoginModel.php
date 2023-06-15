@@ -10,20 +10,22 @@ class LoginModel {
 	{
 		if(file_exists('file/user.json')){
 			$file = file_get_contents('file/user.json');
+			// var_dump(base_api.'gettoken');
+			// exit();
 			if($file){
 				$value = json_decode($file, true);
 				$query = $value['uname'];
 				if($_POST['username'] == $query['identity'] && $_POST['password'] == $query['password']){
 					if($value['session']['expired_at'] == date('Y-m-d H:i:s')){
 						$client = new Client();
-						$guzzle = $client->request('POST', 'https://apps.intilab.com/eng/backend/public/default/api/gettoken',
+						$guzzle = $client->request('POST', base_api.'/gettoken',
 						[
 							'headers' => [ 'Content-Type' => 'application/json' ],
 							'body' => json_encode([
 								'identity' => $_POST['username'],
 								'password' => $_POST['password'],
 							]),
-							'http_errors' => false
+							// 'http_errors' => false
 						]
 						);
 						if ($guzzle->getStatusCode() != 200) {
@@ -58,7 +60,7 @@ class LoginModel {
 					}
 				} else {
 					$client = new Client();
-						$guzzle = $client->request('POST', 'https://apps.intilab.com/eng/backend/public/default/api/gettoken',
+						$guzzle = $client->request('POST', base_api.'gettoken',
 						[
 							'headers' => [ 'Content-Type' => 'application/json' ],
 							'body' => json_encode([
@@ -100,7 +102,7 @@ class LoginModel {
 		}else {
 
 			$client = new Client();
-			$guzzle = $client->request('POST', 'https://apps.intilab.com/eng/backend/public/default/api/gettoken',
+			$guzzle = $client->request('POST', base_api.'/gettoken',
 			[
 				'headers' => [ 'Content-Type' => 'application/json' ],
 				'body' => json_encode([
