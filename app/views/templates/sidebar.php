@@ -17,6 +17,13 @@
             id="status-text">&nbsp;</span>
       </div>
       <div class="right">
+         <div class="row">
+            <div class="col-sm-12">
+               <?php
+                  Flasher::Message();
+               ?>
+            </div>
+         </div>
          <div class="headerButton" data-toggle="dropdown" id="dropdownMenuLink" aria-haspopup="true">
             <img src="<?= base_url; ?>/assets/img/admin.png" alt="image" class="imaged w40">
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
