@@ -93,10 +93,14 @@ class Kebisingan extends Controller {
 			'foto_lain' => $_POST['foto_lain'],
 			'is_sync' => '0');
 		$kon = $this->connection();
-		var_dump($this->connection());
 		$save = $this->model('KebisinganModel')->saveDataUdara($data, $kon, $_POST);
-		echo $save;
-		header('location: '. base_url . '/kebisingan');
+		if($save['message'] == 'No Sample Ini Sudah ada'){
+			Flasher::setMessage($save['message'],'',$save['status']);
+			header('location: '. base_url . '/kebisingan');
+		}else {
+			Flasher::setMessage($save['message'],'',$save['status']);
+			header(' : '. base_url . '/kebisingan');
+		}
 	}
 
 	public function upload_data_to_server(){

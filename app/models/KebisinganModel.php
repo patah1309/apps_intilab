@@ -14,23 +14,17 @@ class KebisinganModel {
             ]),
             'http_errors' => false
 		]);
-        // var_dump($guzzle->getStatusCode());
         if ($guzzle->getStatusCode() != 200) {
             return json_encode(array());
         } else {
             $return = $guzzle->getBody()->getContents();
-            // $res = (array)json_decode($return);
             return $return;
         }
 		
 	}
 
     public function saveDataUdara($data, $kon){
-        // $kon = $this->connection();
-        // var_dump($_POST['no_sample']);
-        // var_dump($kon);
         if($kon == true){
-            var_dump("masuk");
             $client = new Client();
             $guzzle = $client->request('POST', 'https://apps.intilab.com/eng/backend/public/default/api/addDataUdaraApi',
                 [
@@ -63,21 +57,19 @@ class KebisinganModel {
                 return json_encode(array());
             } else {
                 $return = $guzzle->getBody()->getContents();
-                // $res = (array)json_decode($return);
                 return $return;
             }
         }else {
-            var_dump("gak");
             if(file_exists('file/data_kebisingan.json')){
                 $file = file_get_contents('file/data_kebisingan.json');
                 if($file){
-                    // $data = json_encode($data);
                     $array = [];
                     $old = json_decode($file, true);
-                    // $old = array_push($old, array($data));
                     foreach($old as $k => $v){
                         if($v['no_sample'] == $data['no_sample'] && $data['jenis_durasi'] == 'Sesaat'){
                             $response['message'] = 'No Sample Ini Sudah ada';
+                            $response['status'] = 'danger';
+                            return $response;die();
                         }
                     }
                     $i = 0;
@@ -85,21 +77,27 @@ class KebisinganModel {
                         $array[$i++] = $value;
                     }
                     $array[$i] = $data;
-                    // $array[] = array_push($array, $data);
-                    // var_dump($array);
                     $myfile = fopen('file/data_kebisingan.json', "w");
                     fwrite($myfile, json_encode($array, JSON_PRETTY_PRINT));
                     fclose($myfile);
+                    $response['message'] = 'Data Berhasil Disimpan';
+                    $response['status'] = 'success';
+                    return $response;
                 }else {
                     $array = [0 => $data];
                     $myfile = fopen('file/data_kebisingan.json', "w");
                     fwrite($myfile, json_encode($array, JSON_PRETTY_PRINT));
                     fclose($myfile);
+                    $response['message'] = 'Data Berhasil Disimpan';
+                    $response['status'] = 'success';
+                    return $response;
                 }
             }else {
-                // var_dump('gak_masuk');
                 $array = [0 => $data];
                 file_put_contents('file/data_kebisingan.json', json_encode($array, JSON_PRETTY_PRINT));
+                $response['message'] = 'Data Berhasil Disimpan';
+                $response['status'] = 'success';
+                return $response;
             }
         }
     }
