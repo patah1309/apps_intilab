@@ -9,13 +9,16 @@ class LoginModel {
 	public function checkLogin($data)
 	{
 		if(file_exists('file/user.json')){
+			
 			$file = file_get_contents('file/user.json');
 			// var_dump(base_api.'gettoken');
 			// exit();
 			if($file){
+				
 				$value = json_decode($file, true);
 				$query = $value['uname'];
 				if($_POST['username'] == $query['identity'] && $_POST['password'] == $query['password']){
+					
 					if($value['session']['expired_at'] == date('Y-m-d H:i:s')){
 						$client = new Client();
 						$guzzle = $client->request('POST', base_api.'/gettoken',
@@ -59,8 +62,9 @@ class LoginModel {
 						return $response;
 					}
 				} else {
+					
 					$client = new Client();
-						$guzzle = $client->request('POST', base_api.'gettoken',
+						$guzzle = $client->request('POST', base_api.'/gettoken',
 						[
 							'headers' => [ 'Content-Type' => 'application/json' ],
 							'body' => json_encode([

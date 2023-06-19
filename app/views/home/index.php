@@ -3,19 +3,24 @@
    <div class="section wallet-card-section pt-1">
       <div class="wallet-card">
          <div class="row">
+            <?php if($data['message'] != "") { ?>
+               <marquee behavior="" direction="" class="col-sm-12" style="height: 80px;font-size: 25px;padding: 25px;"><?= $data['message'] ?></marquee>
+            <?php }else { ?>
             <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                <div class="carousel-inner">
                   <div class="carousel-item active">
-                     <img class="d-block w-100 h-50 rounded" src="./img/gbr1.jpg" alt="First slide">
+                     <img class="d-block w-100 h-50 rounded" src="<?= base_url; ?>/img/gbr1.jpg" alt="First slide">
                   </div>
                   <div class="carousel-item">
-                     <img class="d-block w-100 h-50 rounded" src="./img/gbr2.jpg" alt="Second slide">
+                     <img class="d-block w-100 h-50 rounded" src="<?= base_url; ?>/img/gbr2.jpg" alt="Second slide">
                   </div>
                   <div class="carousel-item">
-                     <img class="d-block w-100 h-50 rounded" src="./img/gbr3.jpg" alt="Third slide">
+                     <img class="d-block w-100 h-50 rounded" src="<?= base_url; ?>/img/gbr3.jpg" alt="Third slide">
                   </div>
+                 
                </div>
             </div>
+            <?php } ?>
          </div>
 
          <div class="d-flex justify-content-center">
@@ -29,10 +34,10 @@
                         px-1 mt-1">
             <div class="col-4">
                <div class="box-item">
-                  <a href="./emisi">
+                  <a href="<?= base_url; ?>/emisi">
                      <div class="itemm">
                         <div class="bg-white itemm2">
-                           <img src="./img/emisi.png" width="55" height="55">
+                           <img src="<?= base_url; ?>/img/emisi.png" width="55" height="55">
                         </div>
                      </div>
                   </a>
@@ -48,7 +53,7 @@
                   <a href="<?= base_url; ?>/kebisingan">
                      <div class="itemm">
                         <div class="bg-white itemm2">
-                           <img src="./img/bising.png" width="55" height="55">
+                           <img src="<?= base_url; ?>/img/bising.png" width="55" height="55">
                         </div>
                      </div>
                   </a>
@@ -63,7 +68,7 @@
                   <a href="<?= base_url; ?>/air">
                      <div class="itemm">
                         <div class="bg-white itemm2">
-                           <img src="./img/limbah.png" width="55" height="55">
+                           <img src="<?= base_url; ?>/img/limbah.png" width="55" height="55">
                         </div>
                      </div>
                   </a>
@@ -81,7 +86,7 @@
                   <a href="./foto">
                      <div class="itemm">
                         <div class="bg-white itemm2">
-                           <img src="./img/qc.jpg" width="55" height="55">
+                           <img src="<?= base_url; ?>/img/qc.jpg" width="55" height="55">
                         </div>
                      </div>
                   </a>
@@ -95,7 +100,7 @@
                   <a href="./pencahayaan">
                      <div class="itemm">
                         <div class="bg-white itemm2">
-                           <img src="./img/cahaya.jpg" width="55" height="55">
+                           <img src="<?= base_url; ?>/img/cahaya.jpg" width="55" height="55">
                         </div>
                      </div>
                   </a>
@@ -109,7 +114,7 @@
                   <a href="./getaranling">
                      <div class="itemm">
                         <div class="bg-white itemm2">
-                           <img src="./img/getaranLing.png" width="55" height="55">
+                           <img src="<?= base_url; ?>/img/getaranLing.png" width="55" height="55">
                         </div>
                      </div>
                   </a>
@@ -126,7 +131,7 @@
                   <a href="./getaranPer">
                      <div class="itemm">
                         <div class="bg-white itemm2">
-                           <img src="./img/getaranPer.png" width="55" height="55">
+                           <img src="<?= base_url; ?>/img/getaranPer.png" width="55" height="55">
                         </div>
                      </div>
                   </a>
@@ -141,7 +146,7 @@
                   <a href="./iklimPanas">
                      <div class="itemm">
                         <div class="bg-white itemm2">
-                           <img src="./img/iklim.png" width="55" height="55">
+                           <img src="<?= base_url; ?>/img/iklim.png" width="55" height="55">
                         </div>
                      </div>
                   </a>
@@ -156,7 +161,7 @@
                   <a href="./iklimDingin">
                      <div class="itemm">
                         <div class="bg-white itemm2">
-                           <img src="./img/iklimDingin.png" width="55" height="55">
+                           <img src="<?= base_url; ?>/img/iklimDingin.png" width="55" height="55">
                         </div>
                      </div>
                   </a>
@@ -174,7 +179,7 @@
                   <a href="./partikulat">
                      <div class="itemm">
                         <div class="bg-white itemm2">
-                           <img src="./img/pm.jpg" width="55" height="55">
+                           <img src="<?= base_url; ?>/img/pm.jpg" width="55" height="55">
                         </div>
                      </div>
                   </a>
@@ -188,7 +193,7 @@
                   <a href="./medanLM">
                      <div class="itemm">
                         <div class="bg-white itemm2">
-                           <img src="./img/medanLM.png" width="55" height="55">
+                           <img src="<?= base_url; ?>/img/medanLM.png" width="55" height="55">
                         </div>
                      </div>
                   </a>
@@ -202,7 +207,7 @@
                   <a href="./sinarUV">
                      <div class="itemm">
                         <div class="bg-white itemm2">
-                           <img src="./img/sinar uv.png" width="55" height="55">
+                           <img src="<?= base_url; ?>/img/sinar uv.png" width="55" height="55">
                         </div>
                      </div>
                   </a>
@@ -219,7 +224,7 @@
                   <a href="./direct">
                      <div class="itemm">
                         <div class="bg-white itemm2">
-                           <img src="./img/direct.jpg" width="55" height="55">
+                           <img src="<?= base_url; ?>/img/direct.jpg" width="55" height="55">
                         </div>
                      </div>
                   </a>
@@ -233,7 +238,7 @@
                   <a href="./kebisinganP">
                      <div class="itemm">
                         <div class="bg-white itemm2">
-                           <img src="./img/kebisinganp.png" width="55" height="55">
+                           <img src="<?= base_url; ?>/img/kebisinganp.png" width="55" height="55">
                         </div>
                      </div>
                   </a>
@@ -247,7 +252,7 @@
                   <a href="./lingkunganHidup">
                      <div class="itemm">
                         <div class="bg-white itemm2">
-                           <img src="./img/Lhidup.png" width="55" height="55">
+                           <img src="<?= base_url; ?>/img/Lhidup.png" width="55" height="55">
                         </div>
                      </div>
                   </a>
@@ -264,7 +269,7 @@
                   <a href="./lingkunganKerja">
                      <div class="itemm">
                         <div class="bg-white itemm2">
-                           <img src="./img/Lkerja.jpg" width="55" height="55">
+                           <img src="<?= base_url; ?>/img/Lkerja.jpg" width="55" height="55">
                         </div>
                      </div>
                   </a>
@@ -278,7 +283,7 @@
                   <a href="./swabTest">
                      <div class="itemm">
                         <div class="bg-white itemm2">
-                           <img src="./img/swabtest.jpg" width="55" height="55">
+                           <img src="<?= base_url; ?>/img/swabtest.jpg" width="55" height="55">
                         </div>
                      </div>
                   </a>
@@ -292,7 +297,7 @@
                   <a href="./microBio">
                      <div class="itemm">
                         <div class="bg-white itemm2">
-                           <img src="./img/microBio.png" width="55" height="55">
+                           <img src="<?= base_url; ?>/img/microBio.png" width="55" height="55">
                         </div>
                      </div>
                   </a>
@@ -309,7 +314,7 @@
                   <a href="./emisiCerobong">
                      <div class="itemm">
                         <div class="bg-white itemm2" style="overflow: hidden;">
-                           <img src="./img/emisiCer.jpg" width="60" height="60">
+                           <img src="<?= base_url; ?>/img/emisiCer.jpg" width="60" height="60">
                         </div>
                      </div>
                   </a>
@@ -323,7 +328,7 @@
                   <a href="./partikulatIsokinetik">
                      <div class="itemm">
                         <div class="bg-white itemm2">
-                           <img src="./img/isokinetik.png" width="55" height="55">
+                           <img src="<?= base_url; ?>/img/isokinetik.png" width="55" height="55">
                         </div>
                      </div>
                   </a>
@@ -337,7 +342,7 @@
                   <a href="./kalkulatorDebit">
                      <div class="itemm">
                         <div class="bg-white itemm2">
-                           <img src="./img/calculator-icon.png" width="55" height="55">
+                           <img src="<?= base_url; ?>/img/calculator-icon.png" width="55" height="55">
                         </div>
                      </div>
                   </a>

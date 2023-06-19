@@ -54,6 +54,7 @@ class Kebisingan extends Controller {
     public function add_data(){
         $data['title'] = 'APPS INTILAB';
 		$data['token'] = $_SESSION['token'];
+		// $data['data'] = [];
         $this->view('templates/header', $data);
         $this->view('templates/sidebar', $data);
         $this->view('kebisingan/input', $data);
@@ -67,7 +68,6 @@ class Kebisingan extends Controller {
 	}
 
 	public function saveData(){
-		var_dump('test');
 		if ($_POST['jenis_durasi'] == "24 Jam" || $_POST['jenis_durasi'] == '8 Jam') {
 			$jendur = $_POST['jenis_durasi'] . '-' . json_encode($_POST['durasi_sampl']);
 		} else {
@@ -95,22 +95,52 @@ class Kebisingan extends Controller {
 			'is_sync' => '0');
 		$kon = $this->connection();
 		$save = $this->model('KebisinganModel')->saveDataUdara($data, $kon, $_POST);
-		// echo $save;
-		// var_dump($save['message'], $save['status']);
-		Flasher::setMessage($save['message'],'','success');
-		header('location: '. base_url . '/kebisingan');
-		// if($save['message'] == 'No Sample Ini Sudah ada'){
+
+		echo json_encode($save['status']);
+
+		// if($save['status'] == 'success'){
 		// 	Flasher::setMessage($save['message'],'',$save['status']);
 		// 	header('location: '. base_url . '/kebisingan');
-		// }else {
+		// } else {
+		// 	// error
 		// 	Flasher::setMessage($save['message'],'',$save['status']);
-		// 	header(' : '. base_url . '/kebisingan');
+		// 	header('location: '. base_url . '/kebisingan');
 		// }
 	}
 
 	public function upload_data_to_server(){
 		$data = $this->model('KebisinganModel')->syncronize();
 		echo $data;
+	}
+
+	public function viewDatakebisingan(){
+		$data['title'] = 'APPS INTILAB';
+		$data['token'] = $_SESSION['token'];
+		$val = $this->model('KebisinganModel')->getDataKebisingan();
+		$data['data'] = $val->data;
+        $this->view('templates/header', $data);
+        $this->view('templates/sidebar', $data);
+        $this->view('kebisingan/data', $data);
+        $this->view('templates/footer');
+	}
+
+	public function approveKebisingan(){
+		$id = $_POST['id'];
+		$data = $this->model('KebisinganModel')->approveData($id);
+		echo $data;
+	}
+
+	public function showData($id){
+		$data['title'] = 'APPS INTILAB';
+		$val = $this->model('KebisinganModel')->showDetail($id);
+		$data['lat'] = $val->lat;
+		$data['long'] = $val->long;
+		$data['coor'] = $val->coor;
+		$data['data'] = $val;
+        $this->view('templates/header', $data);
+        $this->view('templates/sidebar', $data);
+        $this->view('kebisingan/detail', $data);
+        $this->view('templates/footer');
 	}
 
 }

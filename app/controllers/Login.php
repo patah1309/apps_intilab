@@ -6,7 +6,7 @@ class Login extends Controller {
 		// var_dump(base_api);
 		$data['title'] = 'Halaman Login';
 
-		$this->view('login/login', $data);
+		$this->view('login/login2', $data);
 	}
 
 	public function prosesLogin() {

@@ -1,11 +1,11 @@
 <?php
 use GuzzleHttp\Client;
 
-class KebisinganModel {
+class KebisinganModel  extends Model{
 	
 	public function GetData($no_sample){
 		$client = new Client();
-		$guzzle = $client->request('POST', 'https://apps.intilab.com/eng/backend/public/default/api/getSample',
+		$guzzle = $client->request('POST', base_api.'/getSample',
 		[
 			'headers' => [ 'Content-Type' => 'application/json' ],
 			'body' => json_encode([
@@ -25,36 +25,17 @@ class KebisinganModel {
 
     public function saveDataUdara($data, $kon, $post){
         if($kon == true){
+           
             $client = new Client();
-            $guzzle = $client->request('POST', 'https://apps.intilab.com/eng/backend/public/default/api/addDataUdaraApi?token='.$_SESSION['token'],
+            $guzzle = $client->request('POST', base_api.'/addDataUdaraApi?token='.$_SESSION['token'],
                 [
                     'headers' => [ 'Content-Type' => 'application/json' ],
-                    // 'body' => json_encode([
-                    //     'token' => $_SESSION['token'],
-                    //     'no_sample' => $_POST['no_sample'],
-                    //     'id_kat' => $_POST['id_kat'],
-                    //     'keterangan_4' => $_POST['keterangan_4'],
-                    //     'information' => $_POST['information'],
-                    //     'posisi' => $_POST['posisi'],
-                    //     'lat' => $_POST['lat'],
-                    //     'longi' => $_POST['longi'],
-                    //     'jen_frek' => $_POST['jen_frek'],
-                    //     'waktu' => $_POST['waktu'],
-                    //     'sumber_keb' => $_POST['sumber_keb'],
-                    //     'jenis_kat' => $_POST['jenis_kat'],
-                    //     'jenis_durasi' => $_POST['jenis_durasi'],
-                    //     'kebisingan' => $_POST['kebisingan'],
-                    //     'suhu_udara' => $_POST['suhu_udara'],
-                    //     'kelembapan_udara' => $_POST['kelembapan_udara'],
-                    //     'permis' => $_POST['permis'],
-                    //     'foto_lok' => $_POST['foto_lok'],
-                    //     'foto_lain' => $_POST['foto_lain'],
-                    // ]),
                     'body' => json_encode($post),
                     'http_errors' => false
                 ]
             );
             if ($guzzle->getStatusCode() != 200) {
+                $before_save = $this->before_save('Kebisingan', $post);
                 $response['message'] = 'Data Gagal Dikirim';
                 $response['status'] = 'danger';
                 return $response;
@@ -64,6 +45,8 @@ class KebisinganModel {
                 return $response;
             }
         }else {
+            $before_save = $this->before_save('Kebisingan', $post);
+
             if(file_exists('file/data_kebisingan.json')){
                 $file = file_get_contents('file/data_kebisingan.json');
                 if($file){
@@ -129,31 +112,11 @@ class KebisinganModel {
                 $total = json_decode($file, true);
                 foreach($total as $key => $value){
                     $client = new Client();
-                    $guzzle = $client->request('POST', 'https://apps.intilab.com/eng/backend/public/default/api/addDataUdaraApi',
+                    $guzzle = $client->request('POST', base_api.'/addDataUdaraApi?token='.$_SESSION['token'],
                         [
                             'headers' => [ 'Content-Type' => 'application/json' ],
-                            'body' => json_encode([
-                                'token' => $_SESSION['token'],
-                                'no_sample' =>$value['no_sample'],
-                                'id_kat' =>$value['id_kat'],
-                                'keterangan_4' =>$value['keterangan_4'],
-                                'information' =>$value['information'],
-                                'posisi' =>$value['posisi'],
-                                'lat' =>$value['lat'],
-                                'longi' =>$value['longi'],
-                                'jen_frek' =>$value['jen_frek'],
-                                'waktu' =>$value['waktu'],
-                                'sumber_keb' =>$value['sumber_keb'],
-                                'jenis_kat' =>$value['jenis_kat'],
-                                'jenis_durasi' =>$value['jenis_durasi'],
-                                'kebisingan' =>$value['kebisingan'],
-                                'suhu_udara' =>$value['suhu_udara'],
-                                'kelembapan_udara' =>$value['kelembapan_udara'],
-                                'permis' =>$value['permis'],
-                                'foto_lok' =>$value['foto_lok'],
-                                'foto_lain' =>$value['foto_lain'],
-                            ]),
-                            'http_errors' => false
+                            'body' => json_encode($value),
+                            // 'http_errors' => false
                         ]
                     );
                     if ($guzzle->getStatusCode() != 200) {
@@ -162,15 +125,74 @@ class KebisinganModel {
                         unset($total[$key]);
                         $json = json_encode($total, JSON_PRETTY_PRINT);
                         file_put_contents('file/data_kebisingan.json', $json);
-                        $return = $guzzle->getBody()->getContents();
-                        return $return;
+                        // $return = $guzzle->getBody()->getContents();
+                        
                     }
                 }
+                return json_encode(array('message' => 'Data berhasil di sinkronisasi'));
             }else {
-                // $total = 0;
+                return json_encode(array());
             }
         }else {
-            // $total = 0;
+            return json_encode(array());
         }
     }
+
+    public function getDataKebisingan(){
+        $client = new Client();
+		$guzzle = $client->request('POST', base_api.'/showDataUdara',
+		[
+			'headers' => [ 'Content-Type' => 'application/json' ],
+			'body' => json_encode([
+				'token' => $_SESSION['token'],
+				'active' => 0
+			]),
+			'http_errors' => false
+		]);
+        if ($guzzle->getStatusCode() != 200) {
+            return json_encode(array());
+        } else {
+            $return = $guzzle->getBody()->getContents();
+            return json_decode($return);
+        }
+    }
+
+    public function approveData($id){
+        $client = new Client();
+		$guzzle = $client->request('POST', base_api.'/appDataAir',
+		[
+			'headers' => [ 'Content-Type' => 'application/json' ],
+			'body' => json_encode([
+				'token' => $_SESSION['token'],
+				'id' => $id
+			]),
+			'http_errors' => false
+		]);
+        if ($guzzle->getStatusCode() != 200) {
+            return json_encode(array());
+        } else {
+            $return = $guzzle->getBody()->getContents();
+            return $return;
+        }
+    }
+
+    public function showDetail($id){
+		$client = new Client();
+		$guzzle = $client->request('POST', base_api.'/detailLapanganUdara',
+		[
+			'headers' => [ 'Content-Type' => 'application/json' ],
+			'body' => json_encode([
+				'token' => $_SESSION['token'],
+                'id' => $id
+            ]),
+            // 'http_errors' => false
+		]);
+        if ($guzzle->getStatusCode() != 200) {
+            return json_encode(array());
+        } else {
+            $return = $guzzle->getBody()->getContents();
+            return json_decode($return);
+        }
+		
+	}
 }

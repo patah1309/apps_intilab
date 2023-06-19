@@ -32,7 +32,18 @@
    <link rel="stylesheet" href="<?= base_url;?>/assets/css/style.css">
    <link rel="stylesheet" href="<?= base_url;?>/assets/css/sw-custom.css">
    <script src="<?= base_url;?>/assets/js/lib/jquery-3.4.1.min.js"></script>
-   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+   <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+   <link rel="stylesheet" href="<?= base_url;?>/assets/js/plugins/select2/css/select2.min.css">
+   <link rel="stylesheet" href="<?= base_url;?>/assets/js/plugins/datatables/dataTables.bootstrap.css">
+   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css">
+   <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js"
+      integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q=="
+      crossorigin="">
+   </script>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css"
+      integrity="sha512-ZKX+BvQihRJPA8CROKBhDNvoc2aDMOdAlcm7TUQY+35XYtrd3yh95QOOhsPDQY9QnKE0Wqag9y38OIgEvb88cA=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <style>
 body {
@@ -113,101 +124,111 @@ body {
 }
 
 .btnBottom {
-            height: 56px;
-            position: fixed;
-            z-index: 999;
-            bottom: 0;
-            width: 100%;
-            background: #ffffff;
-            border-top: 27px solid #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+   height: 56px;
+   position: fixed;
+   z-index: 999;
+   bottom: 0;
+   width: 100%;
+   background: #ffffff;
+   border-top: 27px solid #ffffff;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
 
-        .btnTengah {
-         position: relative;
-         width: 65px;
-         height: 65px;
-         background: rgb(254, 35, 35);
-         border: 5px solid rgb(255, 255, 255);
-         border-radius: 50%;
-         cursor: pointer;
-         display: flex;
-         justify-content: center;
-         align-items: center;
-         z-index: 10;
-         /* background-image: url('icon/icon-add-pe.png'); */
-         transform: translateY(-30px);
-         
-        }
-        .btnTengah::before {
-         content: '+';
-         position: absolute;
-         font-size: 3em;
-         color: rgb(255, 255, 255);
-         /* transition: 1.5s; */
-        }
-        /* .btnTengah.active::before {
+.btnTengah {
+   position: relative;
+   width: 65px;
+   height: 65px;
+   background: rgb(254, 35, 35);
+   border: 5px solid rgb(255, 255, 255);
+   border-radius: 50%;
+   cursor: pointer;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   z-index: 10;
+   /* background-image: url('icon/icon-add-pe.png'); */
+   transform: translateY(-30px);
+
+}
+
+.btnTengah::before {
+   content: '+';
+   position: absolute;
+   font-size: 3em;
+   color: rgb(255, 255, 255);
+   /* transition: 1.5s; */
+}
+
+/* .btnTengah.active::before {
          transform: rotate(225deg);
         } */
-        .btnTengah i {
-         position: absolute;
-         inset: 0;
-        }
-        .btnTengah i::before {
-         content: '';
-         position: absolute;
-         top: 22px;
-         left: -23px;
-         width: 20px;
-         height: 20px;
-         background: transparent;
-         border-top-right-radius: 20px;
-         box-shadow: 3px -6px #ffffff;
-        }
-        .btnTengah i::after {
-         content: '';
-         position: absolute;
-         top: 22px;
-         right: -23px;
-         width: 20px;
-         height: 20px;
-         background: transparent;
-         border-top-left-radius: 20px;
-         box-shadow: -3px -6px #ffffff;
-        }
-        .btnMenu {
-         position: absolute;
-         width: 100%;
-         height: 70px;
-         background: #4778e9;
-         border-top-left-radius: 20px;
-         border-top-right-radius: 20px;
-        }
-        .btnMenu ul {
-         position: relative;
-         left: -18px;
-         display: flex;
-         justify-content: center;
-         align-items: center;
-         gap: 35px;
-         line-height: 60px;
-        }
-        .btnMenu ul li {
-         list-style: none;
-         cursor: pointer;
-        }
-        .btnMenu ul li:nth-child(3) {
-            width: 30px;
-        }
-        .btnMenu ul li a {
-         display: block;
-         font-size: 2em;
-         text-decoration: none;
-         color: #ffffff;
-        }
-        .btnMenu ul li:hover a {
-         color: cyan;
-        }
+.btnTengah i {
+   position: absolute;
+   inset: 0;
+}
+
+.btnTengah i::before {
+   content: '';
+   position: absolute;
+   top: 22px;
+   left: -23px;
+   width: 20px;
+   height: 20px;
+   background: transparent;
+   border-top-right-radius: 20px;
+   box-shadow: 3px -6px #ffffff;
+}
+
+.btnTengah i::after {
+   content: '';
+   position: absolute;
+   top: 22px;
+   right: -23px;
+   width: 20px;
+   height: 20px;
+   background: transparent;
+   border-top-left-radius: 20px;
+   box-shadow: -3px -6px #ffffff;
+}
+
+.btnMenu {
+   position: absolute;
+   width: 100%;
+   height: 70px;
+   background: #4778e9;
+   border-top-left-radius: 20px;
+   border-top-right-radius: 20px;
+}
+
+.btnMenu ul {
+   position: relative;
+   left: -18px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 35px;
+   line-height: 60px;
+}
+
+.btnMenu ul li {
+   list-style: none;
+   cursor: pointer;
+}
+
+.btnMenu ul li:nth-child(3) {
+   width: 30px;
+}
+
+.btnMenu ul li a {
+   display: block;
+   font-size: 2em;
+   text-decoration: none;
+   color: #ffffff;
+}
+
+.btnMenu ul li:hover a {
+   color: cyan;
+}
 </style>

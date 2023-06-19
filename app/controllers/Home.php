@@ -20,6 +20,8 @@ class Home extends Controller {
 		if($_SESSION['versi'] == $this->versi()){
 			$data['title'] = 'GPS INTILAB';
 			// $val = $this->model('UserModel')->getUserById();
+			$val = $this->model('UserModel')->getMessage();
+			$data['message'] = $val['pesan'];
 			$data['nama'] = $_SESSION['name'];
 			$data['koneksi'] = $this->connection();
 			$this->view('templates/header', $data);
@@ -27,8 +29,7 @@ class Home extends Controller {
 			$this->view('home/index', $data);
 			$this->view('templates/footer');
 		}else {
-			session_start();
-			session_destroy();
+			Flasher::setMessage('The application has been left behind','please update it to the IT department','danger');
 			header('location: '. base_url . '/login');
 		}
 		

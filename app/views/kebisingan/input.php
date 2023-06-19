@@ -10,17 +10,11 @@
                     </div>
                     <div class="form-group basic">
                         <div class="input-wrapper">
-                            <!-- <label class="label">No Sample</label>
-                            <input type="text" class="form-control" id="no_sample" name="no_sample" placeholder="Masukan No Sample" required>
-                            <input type="hidden" id="id_kat" name="id_kat">
-                            <i class="clear-input">
-                                <ion-icon name="close-circle" role="img" class="md hydrated" aria-label="close circle"></ion-icon>
-                            </i> -->
                             <label class="label">No Sample</label>
                             <div class="input-groups input-group-sm mb-2">
                                 <div class="row">
                                     <div class="col-8">
-                                        <input type="text" class="form-control" id="no_sample" name="no_sample" required autocomplete="off" style="font-size:12px">
+                                        <input type="text" class="form-control" id="no_sample" name="no_sample" required autocomplete="off" style="font-size:12px" >
                                         <!-- <input type="hidden" id="id_kat" name="id_kat"> -->
                                     </div>
                                     <div class="col-4">
@@ -244,7 +238,7 @@
                         </div>
                         <div class="col-6">
                             <div class="form-group basic">
-                                <button class="btn btn-success" type="submit" style="width:100%"> Save</button>
+                                <button class="btn btn-success" type="submit" style="width:100%" id="btn-submit"> Save</button>
                             </div>
                         </div>
                     </div>
@@ -260,7 +254,7 @@
             <li style="--i:0.1s;"><a href="<?= base_url;?>/home"><i class="fa-solid fa-gauge"></i></a></li>
             <li style="--i:0.2s;"><a href="<?= base_url;?>/kebisingan"><i class="fa-solid fa-house"></i></a></li>
             <li></li>
-            <li style="--i:0.2s;"><a href="<?= base_url;?>/datakebisingan"><i class="fa-solid fa-file-lines"></i></a></li>
+            <li style="--i:0.2s;"><a href="<?= base_url;?>/kebisingan/viewDatakebisingan"><i class="fa-solid fa-file-lines"></i></a></li>
             <li style="--i:0.1s;"><a href="<?= base_url;?>/profile"><i class="fa-solid fa-user"></i></a></li>
         </ul>
     </div>
@@ -270,6 +264,61 @@
     let uri = '<?= base_url; ?>/assets/sound/';
     var success = new Audio(uri + 'success.wav');
     var error = new Audio(uri + 'error.mp3');
+
+    $('#form-add').on('submit', function(e){
+        e.preventDefault()
+        let data_form = $(this).serialize();
+        $('#btn-submit').prop('disabled', true);
+        $.ajax({
+            statusCode: {
+                500: function() {
+                    Swal.fire({
+                        icon : 'error',
+                        title : 'Server Error',
+                        timer : 3000
+                    })
+                    $('#btn-submit').prop('disabled', false);
+                }
+            },
+            url: '/public/kebisingan/saveData',
+            method: 'POST',
+            data: data_form,
+            success: function(resp) {
+                resp = JSON.parse(resp)
+                if(resp == 'success'){
+                    Swal.fire({
+                        icon : 'success',
+                        title : 'Success',
+                        text : 'Data hasbeen Save',
+                        timer : 3000
+                    })
+                    document.getElementById("form-add").reset();
+                    $('#btn-submit').prop('disabled', false);
+                    $('#kebisingan').empty();
+                    $('#kebisingan-value').empty();
+                    document.getElementById("lokasi").style.setProperty("background-color", "#00B4FF", "important");
+                    document.getElementById("lokasi").style.setProperty("border-color", "#00B4FF", "important");
+                    document.getElementById("lain").style.setProperty("background-color", "#00B4FF", "important");
+                    document.getElementById("lain").style.setProperty("border-color", "#00B4FF", "important");
+                } else {
+                    Swal.fire({
+                        icon : 'error',
+                        title : 'Opps..!',
+                        text : 'Please Check the Data.',
+                        timer : 3000
+                    })
+                    $('#btn-submit').prop('disabled', false);
+                }
+            }, error : function(err){
+                Swal.fire({
+                    icon : 'error',
+                    title : err.responseJSON,
+                    timer : 3000
+                })
+                $('#btn-submit').prop('disabled', false);
+            }
+        })
+    })
 
     function getdata(){
         let net = $('#status-text').text();
@@ -559,17 +608,5 @@
       })
    }
 
-    // $('#form-add').on('submit', function(e){
-    //     e.preventDefault()
-    //     let data_form = $(this).serialize();
-    //     console.log(data_form)
-    //     $.ajax({
-    //         url: '/public/kebisingan/saveData',
-    //         method: 'POST',
-    //         data: data_form,
-    //         success: function(resp) {
-    //         }
-    //     })
-    // })
 
 </script>
