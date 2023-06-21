@@ -1,0 +1,40 @@
+[
+    {
+        "kode_qr": "ISL09421201",
+        "no_sample": "2302029\/004 ",
+        "nama": "Kepala Pusat Rehabilitasi Kemhan",
+        "lokasi_pengujian": "rest",
+        "jenis_kendaraan": "32",
+        "no_plat": "B 7615 BCL",
+        "no_mesin": "6281916191011",
+        "merk": "Hyundai",
+        "transmisi": "Manual",
+        "tahun": "2015",
+        "kategori_kendaraan": "Angkutan Orang",
+        "km": "758900",
+        "cc": "1200",
+        "bobot_kendaraan": "2.9",
+        "opasitas": [
+            "25",
+            "25",
+            "25"
+        ],
+        "nilai_k": [
+            "",
+            "",
+            ""
+        ],
+        "rpm": [
+            "",
+            "",
+            ""
+        ],
+        "oli": [
+            "",
+            "",
+            ""
+        ],
+        "regulasi": "5",
+        "catatan": "test"
+    }
+]

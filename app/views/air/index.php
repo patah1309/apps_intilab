@@ -35,7 +35,60 @@
       </div>
    </div>
 </div>
-
+<div class="row px-4">
+   <div class="col-12 mt-3 mb-3">
+      <div class="row d-flex justify-content-center">
+         <div class="col-4 d-flex justify-content-center mb-3">
+            <div class="itemair" style="background-color: #15bdb4;">
+               <div class="text-center">
+                  <h1 class="text-white"><?= $data['permukaan'] ?></h1>
+                  <h3 class="text-white">Pemukaan</h3>
+               </div>
+            </div>
+         </div>
+         <div class="col-4 d-flex justify-content-center mb-3">
+            <div class="itemair" style="background-color: #2229ba;">
+               <div class="text-center">
+                  <h1 class="text-white"><?= $data['limbah'] ?></h1>
+                  <h3 class="text-white">Limbah</h3>
+               </div>
+            </div>
+         </div>
+         <div class="col-4 d-flex justify-content-center mb-3">
+            <div class="itemair" style="background-color: #3095e3;">
+               <div class="text-center">
+                  <h1 class="text-white"><?= $data['laut'] ?></h1>
+                  <h3 class="text-white">Laut</h3>
+               </div>
+            </div>
+         </div>
+         <div class="col-4 d-flex justify-content-center mb-3">
+            <div class="itemair" style="background-color: #282a57;">
+               <div class="text-center">
+                  <h1 class="text-white"><?= $data['tanah'] ?></h1>
+                  <h3 class="text-white">Tanah</h3>
+               </div>
+            </div>
+         </div>
+         <div class="col-4 d-flex justify-content-center mb-3">
+            <div class="itemair" style="background-color: #db3be3;">
+               <div class="text-center">
+                  <h1 class="text-white"><?= $data['bersih'] ?></h1>
+                  <h3 class="text-white">Bersih</h3>
+               </div>
+            </div>
+         </div>
+         <div class="col-4 d-flex justify-content-center mb-3">
+            <div class="itemair" style="background-color: #541bb5;">
+               <div class="text-center">
+                  <h1 class="text-white"><?= $data['khusus'] ?></h1>
+                  <h3 class="text-white">Khusus</h3>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
 
 <div class="btnBottom">
    <div class="btnTengah" onclick="location.href='<?= base_url;?>/air/add_data'"></a></div>
@@ -71,6 +124,10 @@ $('#sync').on('click', function() {
                   icon: "success",
                   timer: 2000
                })
+               setTimeout(() => {
+                  location.href = "<?= base_url;?>/air";
+               }, 3000);
+
             }
          },
          error: function(e) {

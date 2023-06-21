@@ -1,15 +1,16 @@
 <?php
 use GuzzleHttp\Client;
 
-class KebisinganModel  extends Model{
+class EmisiModel extends Model{
 	
-	public function GetData($no_sample){
+	public function GetData($qr = null, $no_sample = null){
 		$client = new Client();
-		$guzzle = $client->request('POST', base_api.'/getSample',
+		$guzzle = $client->request('POST', base_api.'/checkQr',
 		[
 			'headers' => [ 'Content-Type' => 'application/json' ],
 			'body' => json_encode([
 				'token' => $_SESSION['token'],
+                'qr' => $qr,
                 'no_sample' => $no_sample
             ]),
             'http_errors' => false
@@ -23,11 +24,11 @@ class KebisinganModel  extends Model{
 		
 	}
 
-    public function saveDataUdara($data, $kon, $post){
+    public function saveData($kon, $post){
         if($kon == true){
            
             $client = new Client();
-            $guzzle = $client->request('POST', base_api.'/addDataUdaraApi?token='.$_SESSION['token'],
+            $guzzle = $client->request('POST', base_api.'/writeEmisi?token='.$_SESSION['token'],
                 [
                     'headers' => [ 'Content-Type' => 'application/json' ],
                     'body' => json_encode($post),
@@ -35,7 +36,7 @@ class KebisinganModel  extends Model{
                 ]
             );
             if ($guzzle->getStatusCode() != 200) {
-                $before_save = $this->before_save('Kebisingan', $post);
+                $before_save = $this->before_save('Emisi', $post);
                 $response['message'] = 'Data Gagal Dikirim';
                 $response['status'] = 'danger';
                 return $response;
@@ -45,35 +46,31 @@ class KebisinganModel  extends Model{
                 return $response;
             }
         }else {
-            $before_save = $this->before_save('Kebisingan', $post);
+            $before_save = $this->before_save('Emisi', $post);
 
-            if(file_exists('file/data_kebisingan.json')){
-                $file = file_get_contents('file/data_kebisingan.json');
+            if(file_exists('file/data_emisi.json')){
+                $file = file_get_contents('file/data_emisi.json');
                 if($file){
                     $array = [];
                     $old = json_decode($file, true);
                     foreach($old as $k => $v){
-                        if($v['no_sample'] == $data['no_sample'] && $data['jenis_durasi'] == 'Sesaat'){
+                        if($v['no_sample'] == $data['no_sample']){
                             $response['message'] = 'No Sample Ini Sudah ada';
                             $response['status'] = 'danger';
                             return $response;die();
                         }
                     }
-                    // var_dump('gamasuk');
-                    $i = 0;
-                    foreach($old as $key => $value){
-                        $array[$i++] = $value;
-                    }
-                    $array[$i] = $data;
-                    $myfile = fopen('file/data_kebisingan.json', "w");
-                    fwrite($myfile, json_encode($array, JSON_PRETTY_PRINT));
+                    $value = json_decode($file, true);
+                    array_push($value, $data);
+                    $myfile = fopen('file/data_emisi.json', "w");
+                    fwrite($myfile, json_encode($value, JSON_PRETTY_PRINT));
                     fclose($myfile);
                     $response['message'] = 'Data Berhasil Disimpan';
                     $response['status'] = 'success';
                     return $response;
                 }else {
-                    $array = [0 => $data];
-                    $myfile = fopen('file/data_kebisingan.json', "w");
+                    $array = [];
+				    array_push($array, $post);
                     fwrite($myfile, json_encode($array, JSON_PRETTY_PRINT));
                     fclose($myfile);
                     $response['message'] = 'Data Berhasil Disimpan';
@@ -81,8 +78,9 @@ class KebisinganModel  extends Model{
                     return $response;
                 }
             }else {
-                $array = [0 => $data];
-                file_put_contents('file/data_kebisingan.json', json_encode($array, JSON_PRETTY_PRINT));
+                $array = [];
+				array_push($array, $post);
+                file_put_contents('file/data_emisi.json', json_encode($array, JSON_PRETTY_PRINT));
                 $response['message'] = 'Data Berhasil Disimpan';
                 $response['status'] = 'success';
                 return $response;
@@ -91,8 +89,8 @@ class KebisinganModel  extends Model{
     }
 
     public function getJsonData(){
-        if(file_exists('file/data_kebisingan.json')){
-            $file = file_get_contents('file/data_kebisingan.json');
+        if(file_exists('file/data_emisi.json')){
+            $file = file_get_contents('file/data_emisi.json');
             if($file){
                 $total = count(json_decode($file, true));
             }else {
@@ -106,17 +104,17 @@ class KebisinganModel  extends Model{
     }
 
     public function syncronize(){
-        if(file_exists('file/data_kebisingan.json')){
-            $file = file_get_contents('file/data_kebisingan.json');
+        if(file_exists('file/data_emisi.json')){
+            $file = file_get_contents('file/data_emisi.json');
             if($file){
                 $total = json_decode($file, true);
                 foreach($total as $key => $value){
                     $client = new Client();
-                    $guzzle = $client->request('POST', base_api.'/addDataUdaraApi?token='.$_SESSION['token'],
+                    $guzzle = $client->request('POST', base_api.'/writeEmisi?token='.$_SESSION['token'],
                         [
                             'headers' => [ 'Content-Type' => 'application/json' ],
                             'body' => json_encode($value),
-                            // 'http_errors' => false
+                            'http_errors' => false
                         ]
                     );
                     if ($guzzle->getStatusCode() != 200) {
@@ -124,8 +122,7 @@ class KebisinganModel  extends Model{
                     } else {
                         unset($total[$key]);
                         $json = json_encode($total, JSON_PRETTY_PRINT);
-                        file_put_contents('file/data_kebisingan.json', $json);
-                        // $return = $guzzle->getBody()->getContents();
+                        file_put_contents('file/data_emisi.json', $json);
                         
                     }
                 }
@@ -138,9 +135,9 @@ class KebisinganModel  extends Model{
         }
     }
 
-    public function getDataKebisingan(){
+    public function getDataEmisi(){
         $client = new Client();
-		$guzzle = $client->request('POST', base_api.'/showDataUdara',
+		$guzzle = $client->request('POST', base_api.'/showfdlemisi',
 		[
 			'headers' => [ 'Content-Type' => 'application/json' ],
 			'body' => json_encode([
@@ -159,7 +156,7 @@ class KebisinganModel  extends Model{
 
     public function approveData($id){
         $client = new Client();
-		$guzzle = $client->request('POST', base_api.'/appDataAir',
+		$guzzle = $client->request('POST', base_api.'/appemisi',
 		[
 			'headers' => [ 'Content-Type' => 'application/json' ],
 			'body' => json_encode([
@@ -176,9 +173,9 @@ class KebisinganModel  extends Model{
         }
     }
 
-    public function rejectData($id){
+    public function deleteData($id){
         $client = new Client();
-		$guzzle = $client->request('POST', base_api.'/deleteUdara',
+		$guzzle = $client->request('POST', base_api.'/hapusemisi',
 		[
 			'headers' => [ 'Content-Type' => 'application/json' ],
 			'body' => json_encode([
@@ -204,7 +201,7 @@ class KebisinganModel  extends Model{
 				'token' => $_SESSION['token'],
                 'id' => $id
             ]),
-            // 'http_errors' => false
+            'http_errors' => false
 		]);
         if ($guzzle->getStatusCode() != 200) {
             return json_encode(array());
@@ -214,4 +211,43 @@ class KebisinganModel  extends Model{
         }
 		
 	}
+
+    public function regulasi(){
+       
+        $client = new Client();
+		$guzzle = $client->request('POST', base_api.'/regulasiemisi',
+		[
+			'headers' => [ 'Content-Type' => 'application/json' ],
+			'body' => json_encode([
+				'token' => $_SESSION['token'],
+                'emisi' => 5
+            ]),
+            'http_errors' => false
+		]);
+        if ($guzzle->getStatusCode() != 200) {
+            return json_encode(array());
+        } else {
+            $return = $guzzle->getBody()->getContents();
+            return $return;
+        }
+    }
+
+    public function getDetail($qr){
+        $client = new Client();
+		$guzzle = $client->request('GET', base_api.'/getDataEmisi',
+		[
+			'headers' => [ 'Content-Type' => 'application/json','key' => 'eb928269046b298bc2223eb1bacd797b' ],
+			'body' => json_encode([
+				'token' => $_SESSION['token'],
+                'qr' => $qr,
+            ]),
+            // 'http_errors' => false
+		]);
+        if ($guzzle->getStatusCode() != 200) {
+            return json_encode(array());
+        } else {
+            $return = $guzzle->getBody()->getContents();
+            return $return;
+        }
+    }
 }

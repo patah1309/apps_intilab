@@ -44,6 +44,7 @@
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css"
       integrity="sha512-ZKX+BvQihRJPA8CROKBhDNvoc2aDMOdAlcm7TUQY+35XYtrd3yh95QOOhsPDQY9QnKE0Wqag9y38OIgEvb88cA=="
       crossorigin="anonymous" referrerpolicy="no-referrer" />
+   <link rel="stylesheet" href="<?= base_url;?>/assets/js/plugins/datepicker/bootstrap-datepicker.css">
 </head>
 <style>
 body {
@@ -230,5 +231,72 @@ body {
 
 .btnMenu ul li:hover a {
    color: cyan;
+}
+
+.itemair {
+   border-radius: 10%;
+   width: 110px;
+   height: 110px;
+   box-shadow: 8px 8px 8px #eff757;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+
+}
+
+.itemair:active {
+   filter: brightness(150%);
+}
+
+
+.SizeChooser table {
+   border-collapse: separate;
+   border-spacing: 3px;
+}
+
+.SizeChooser td {
+   cursor: pointer;
+   border: 1px #ccc solid;
+   height: 22px;
+   min-width: 22px;
+   border-radius: 2px;
+   /* line-height: 10px; */
+}
+
+.SizeChooser-selected {
+   position: relative;
+   height: 9px;
+   /* this can be anything */
+   width: 9px;
+   /* ...but maintain 1:1 aspect ratio */
+   border: 1px #050505 solid !important;
+}
+
+.SizeChooser-selected::before,
+.SizeChooser-selected::after {
+   margin-top: -1px;
+   margin-left: -1px;
+   position: absolute;
+   content: '';
+   width: 100%;
+   height: 2px;
+   /* cross thickness */
+   background-color: black;
+}
+
+.SizeChooser-selected::before {
+   transform: rotate(45deg);
+}
+
+.SizeChooser-selected::after {
+   transform: rotate(-45deg);
+}
+
+.SizeChooser-hover {
+   background-color: #DEF;
+}
+
+.table_size_chooser {
+   width: 100%;
 }
 </style>

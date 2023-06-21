@@ -64,7 +64,7 @@
             }else {
                 var no_sample = $("#no_sample").val();
                 $.ajax({
-                    url: '/public/kebisingan/upload_data_to_server',
+                    url: '/public/emisi/upload_data_to_server',
                     method: 'POST',
                     success: function(resp) {
                         resp = JSON.parse(resp)
@@ -80,7 +80,7 @@
                                 timer : 2000
                             })
                             setTimeout(() => {
-                                location.href = "<?= base_url;?>/kebisingan";
+                                location.href = "<?= base_url;?>/emisi";
                             }, 3000);
                             
                         }     

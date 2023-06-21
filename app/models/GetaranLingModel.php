@@ -1,7 +1,7 @@
 <?php
 use GuzzleHttp\Client;
 
-class AirModel extends Model{
+class GetaranLingModel {
 	
 	public function Permission(){
 		$client = new Client();
@@ -22,7 +22,7 @@ class AirModel extends Model{
 	}
 	public function GetListData(){
 		$client = new Client();
-		$guzzle = $client->request('POST', base_api.'/showDataair',
+		$guzzle = $client->request('POST', base_api.'/indexGetaran',
 		[
 			'headers' => [ 'Content-Type' => 'application/json' ],
 			'body' => json_encode([
@@ -41,7 +41,7 @@ class AirModel extends Model{
 
 	public function ApproveDat($id){
 		$client = new Client();
-		$guzzle = $client->request('POST', base_api.'/appdatalapangan',
+		$guzzle = $client->request('POST', base_api.'/appGetaran',
 		[
 			'headers' => [ 'Content-Type' => 'application/json' ],
 			'body' => json_encode([
@@ -59,7 +59,7 @@ class AirModel extends Model{
 	}
 	public function HapusDat($id){
 		$client = new Client();
-		$guzzle = $client->request('POST', base_api.'/deleteair',
+		$guzzle = $client->request('POST', base_api.'/deleteGetaran',
 		[
 			'headers' => [ 'Content-Type' => 'application/json' ],
 			'body' => json_encode([
@@ -78,7 +78,7 @@ class AirModel extends Model{
 
 	public function showDetail($id){
 		$client = new Client();
-		$guzzle = $client->request('POST', base_api.'/detailDatalapanganAir',
+		$guzzle = $client->request('POST', base_api.'/detailGetaran',
 		[
 			'headers' => [ 'Content-Type' => 'application/json' ],
 			'body' => json_encode([
@@ -115,11 +115,11 @@ class AirModel extends Model{
 		
 	}
 
-    public function saveDataAir($kon, $post){
+    public function saveData($kon, $post){
         // var_dump(json_encode($data));
         if($kon == true){
             $client = new Client();
-            $guzzle = $client->post(base_api.'/addDatalapangan?token='.$_SESSION['token'],
+            $guzzle = $client->post(base_api.'/addDataUdaraApi?token='.$_SESSION['token'],
                 [
                     'headers' => [ 'Content-Type' => 'application/json' ],
                     'body' => json_encode($post),
@@ -127,7 +127,7 @@ class AirModel extends Model{
                 ]
             );
             if ($guzzle->getStatusCode() != 200) {
-                $before_save = $this->before_save('Air', $post);
+                $before_save = $this->before_save('Getaranling', $post);
                 $response['message'] = 'Data Gagal Dikirim';
                 $response['status'] = 'danger';
                 return $response;
@@ -137,9 +137,9 @@ class AirModel extends Model{
                 return $response;
             }
         }else {
-            $before_save = $this->before_save('Air', $post);
-            if(file_exists('file/data_air.json')){
-                $file = file_get_contents('file/data_air.json');
+            $before_save = $this->before_save('Getaranling', $post);
+            if(file_exists('file/data_getaranling.json')){
+                $file = file_get_contents('file/data_getaranling.json');
                 if($file){
                     $array = [];
                     $old = json_decode($file, true);
@@ -153,7 +153,7 @@ class AirModel extends Model{
                         $array[$i++] = $value;
                     }
                     $array[$i] = $data;
-                    $myfile = fopen('file/data_air.json', "w");
+                    $myfile = fopen('file/data_getaranling.json', "w");
                     fwrite($myfile, json_encode($array, JSON_PRETTY_PRINT));
                     fclose($myfile);
                     $response['message'] = 'Data Berhasil Disimpan';
@@ -161,7 +161,7 @@ class AirModel extends Model{
                     return $response;
                 }else {
                     $array = [0 => $data];
-                    $myfile = fopen('file/data_air.json', "w");
+                    $myfile = fopen('file/data_getaranling.json', "w");
                     fwrite($myfile, json_encode($array, JSON_PRETTY_PRINT));
                     fclose($myfile);
                     $response['message'] = 'Data Berhasil Disimpan';
@@ -170,7 +170,7 @@ class AirModel extends Model{
                 }
             }else {
                 $array = [0 => $data];
-                file_put_contents('file/data_air.json', json_encode($array, JSON_PRETTY_PRINT));
+                file_put_contents('file/data_getaranling.json', json_encode($array, JSON_PRETTY_PRINT));
                 $response['message'] = 'Data Berhasil Disimpan';
                 $response['status'] = 'success';
                 return $response;
@@ -179,8 +179,8 @@ class AirModel extends Model{
     }
 
     public function getJsonData(){
-        if(file_exists('file/data_air.json')){
-            $file = file_get_contents('file/data_air.json');
+        if(file_exists('file/data_getaranling.json')){
+            $file = file_get_contents('file/data_getaranling.json');
             if($file){
                 $total = count(json_decode($file, true));
             }else {
@@ -194,13 +194,13 @@ class AirModel extends Model{
     }
 
     public function syncronize(){
-        if(file_exists('file/data_air.json')){
-            $file = file_get_contents('file/data_air.json');
+        if(file_exists('file/data_getaranling.json')){
+            $file = file_get_contents('file/data_getaranling.json');
             if($file){
                 $total = json_decode($file, true);
                 foreach($total as $key => $value){
                     $client = new Client();
-                    $guzzle = $client->request('POST', base_api.'/addDatalapangan?token='.$_SESSION['token'],
+                    $guzzle = $client->request('POST', base_api.'/addDataUdaraApi?token='.$_SESSION['token'],
                         [
                             'headers' => [ 'Content-Type' => 'application/json' ],
                             'body' => json_encode($value),
@@ -212,7 +212,7 @@ class AirModel extends Model{
                     } else {
                         unset($total[$key]);
                         $json = json_encode($total, JSON_PRETTY_PRINT);
-                        file_put_contents('file/data_air.json', $json);
+                        file_put_contents('file/data_getaranling.json', $json);
                         // $return = $guzzle->getBody()->getContents();
                         // return $return;
                     }

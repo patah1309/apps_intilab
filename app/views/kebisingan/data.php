@@ -22,7 +22,7 @@
                                     <?php
                                     if($value->approve == 0) { ?>
                                         <a href="javascript:;" onclick="approve(<?= $value->id ?>)"><span class="col-by"><i class="fa-solid fa-check"></i></span></a>&nbsp;|&nbsp;
-                                        <a href="javascript:;"></a><span class="col-red"><i class="fa-solid fa-trash"></i></span></a>&nbsp;&nbsp;
+                                        <a href="javascript:;" onclick="del(<?= $value->id ?>)"></a><span class="col-red"><i class="fa-solid fa-trash"></i></span></a>&nbsp;&nbsp;
                                     <?php } ?>
                                 </td>
                                 <td><?= date('Y-m-d', strtotime($value->add_at)) ?></td>
@@ -107,38 +107,6 @@
         });
     }
 
-    function reject(id) {
-        Swal.fire({
-            title: 'Are you sure REJECT this data?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, Reject it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                let token = getCookie("token");
-                var path = global_var('dpath');
-                var api = global_var('rejectUdara');
-                $.ajax({
-                    url: path + api,
-                    method: 'post',
-                    data: {
-                        id: id,
-                        token: token
-                    },
-                    success: function(data) {
-                        toastMixin.fire({
-                            animation: true,
-                            title: data.message
-                        });
-                        tabel.ajax.reload();
-                    }
-                });
-            }
-        });
-    }
-
     function del(id) {
         Swal.fire({
             title: 'Are you sure DELETE this data?',
@@ -150,24 +118,27 @@
             cancelButtonText: 'No'
         }).then((result) => {
             if (result.isConfirmed) {
-                let token = getCookie("token");
-                var path = global_var('dpath');
-                var api = global_var('deleteUdara');
                 $.ajax({
-                    url: path + api,
-                    method: 'post',
-                    data: {
-                        id: id,
-                        token: token
-                    },
-                    success: function(data) {
-                        toastMixin.fire({
-                            animation: true,
-                            title: data.message
-                        });
-                        tabel.ajax.reload();
+                    url: '/public/kebisingan/deleteKebisingan',
+                    method: 'POST',
+                    data: {id:id},
+                    success: function(resp) {
+                        e = JSON.parse(resp)
+                        if(e.length == 0){
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Delete Data Galal.!',
+                            })
+                        }else {
+                            Swal.fire({
+                                title : e.message,
+                                icon : "success",
+                                timer : 2000
+                            })
+                            window.location.href = "<?= base_url; ?>/kebisingan/viewDatakebisingan";
+                        }     
                     }
-                });
+                })
             }
         });
     }

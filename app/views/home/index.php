@@ -4,7 +4,8 @@
       <div class="wallet-card">
          <div class="row">
             <?php if($data['message'] != "") { ?>
-               <marquee behavior="" direction="" class="col-sm-12" style="height: 80px;font-size: 25px;padding: 25px;"><?= $data['message'] ?></marquee>
+            <marquee behavior="" direction="" class="col-sm-12" style="height: 80px;font-size: 25px;padding: 25px;">
+               <?= $data['message'] ?></marquee>
             <?php }else { ?>
             <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                <div class="carousel-inner">
@@ -17,7 +18,7 @@
                   <div class="carousel-item">
                      <img class="d-block w-100 h-50 rounded" src="<?= base_url; ?>/img/gbr3.jpg" alt="Third slide">
                   </div>
-                 
+
                </div>
             </div>
             <?php } ?>
@@ -97,7 +98,7 @@
             </div>
             <div class="col-4">
                <div class="box-item">
-                  <a href="./pencahayaan">
+                  <a href="<?= base_url; ?>/cahaya">
                      <div class="itemm">
                         <div class="bg-white itemm2">
                            <img src="<?= base_url; ?>/img/cahaya.jpg" width="55" height="55">
@@ -111,7 +112,7 @@
             </div>
             <div class="col-4">
                <div class="box-item">
-                  <a href="./getaranling">
+                  <a href="<?= base_url; ?>/getaranling">
                      <div class="itemm">
                         <div class="bg-white itemm2">
                            <img src="<?= base_url; ?>/img/getaranLing.png" width="55" height="55">

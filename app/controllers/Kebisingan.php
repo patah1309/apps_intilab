@@ -97,15 +97,6 @@ class Kebisingan extends Controller {
 		$save = $this->model('KebisinganModel')->saveDataUdara($data, $kon, $_POST);
 
 		echo json_encode($save['status']);
-
-		// if($save['status'] == 'success'){
-		// 	Flasher::setMessage($save['message'],'',$save['status']);
-		// 	header('location: '. base_url . '/kebisingan');
-		// } else {
-		// 	// error
-		// 	Flasher::setMessage($save['message'],'',$save['status']);
-		// 	header('location: '. base_url . '/kebisingan');
-		// }
 	}
 
 	public function upload_data_to_server(){
@@ -127,6 +118,12 @@ class Kebisingan extends Controller {
 	public function approveKebisingan(){
 		$id = $_POST['id'];
 		$data = $this->model('KebisinganModel')->approveData($id);
+		echo $data;
+	}
+
+	public function deleteKebisingan(){
+		$id = $_POST['id'];
+		$data = $this->model('KebisinganModel')->deleteData($id);
 		echo $data;
 	}
 

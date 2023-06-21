@@ -10,8 +10,6 @@
                         <th nowrap>Tanggal</th>
                         <th nowrap>No Sample</th>
                         <th nowrap>Nama Perusahaan</th>
-                        <th nowrap>Jam Pengambilan</th>
-                        <th nowrap>Jenis Sample</th>
                      </tr>
                   </thead>
                   <tbody>
@@ -20,7 +18,7 @@
                      <tr>
                         <td>
                            <div class="d-flex">
-                              <a href="<?= base_url;?>/air/showData/<?=$value->id?>"><span class="col-blue"><i
+                              <a href="<?= base_url;?>/getaranling/showData/<?=$value->id?>"><span class="col-blue"><i
                                        class="fa-solid fa-eye"></i></span></a> &nbsp;|&nbsp;
                               <?php 
                            if($value->approve == 0) { ?>
@@ -36,8 +34,6 @@
                         <td><?= date('Y-m-d', strtotime($value->add_at))?></td>
                         <td><?= $value->no_sample?></td>
                         <td><?= $value->detail->nama?></td>
-                        <td><?= $value->jam_pengambilan?></td>
-                        <td><?= $value->jenis_sample?></td>
                      </tr>
                      <?php
                      endforeach;
@@ -49,13 +45,14 @@
       </div>
    </div>
    <div class="btnBottom">
-      <div class="btnTengah" onclick="location.href='<?= base_url;?>/air/add_data'"></a></div>
+      <div class="btnTengah" onclick="location.href='<?= base_url;?>/getaranling/add_data'"></a></div>
       <div class="btnMenu">
          <ul>
             <li style="--i:0.1s;"><a href="<?= base_url;?>/home"><i class="fa-solid fa-gauge"></i></a></li>
-            <li style="--i:0.2s;"><a href="<?= base_url;?>/air"><i class="fa-solid fa-house"></i></a></li>
+            <li style="--i:0.2s;"><a href="<?= base_url;?>/getaranling"><i class="fa-solid fa-house"></i></a></li>
             <li></li>
-            <li style="--i:0.2s;"><a href="<?= base_url;?>/air/data"><i class="fa-solid fa-file-lines"></i></a></li>
+            <li style="--i:0.2s;"><a href="<?= base_url;?>/getaranling/data"><i class="fa-solid fa-file-lines"></i></a>
+            </li>
             <li style="--i:0.1s;"><a href="<?= base_url;?>/profile"><i class="fa-solid fa-user"></i></a></li>
          </ul>
       </div>
@@ -64,14 +61,6 @@
    <script>
 var tabel = null
 $(document).ready(function() {
-   if ($('#status-text').text() == 'Offline') {
-      Swal.fire({
-         icon: 'info',
-         title: 'Info...',
-         text: 'Saat ini anda sedang offline...!',
-         timer: 3000
-      })
-   }
    tabel = $('#data-air').DataTable()
 })
 
@@ -100,7 +89,7 @@ function approve(id) {
    }).then((result) => {
       if (result.isConfirmed) {
          $.ajax({
-            url: '/public/air/approvedat',
+            url: '/public/getaranling/approvedat',
             method: 'post',
             data: {
                id: id
@@ -112,8 +101,7 @@ function approve(id) {
                   title: e.message,
                   timer: 2000,
                });
-               // tabel.ajax.reload();
-               window.location.href = "<?= base_url;?>/air/data";
+               window.location.href = "<?= base_url;?>/getaranling/data";
             }
          });
       }
@@ -146,7 +134,7 @@ function del(id) {
    }).then((result) => {
       if (result.isConfirmed) {
          $.ajax({
-            url: '/public/air/hapusdat',
+            url: '/public/getaranling/hapusdat',
             method: 'post',
             data: {
                id: id
@@ -158,7 +146,7 @@ function del(id) {
                   title: e.message,
                   timer: 2000,
                });
-               window.location.href = "<?= base_url;?>/air/data";
+               window.location.href = "<?= base_url;?>/getaranling/data";
             }
          });
       }
