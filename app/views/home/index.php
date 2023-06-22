@@ -80,8 +80,7 @@
             </div>
          </div>
 
-         <div class="row
-                        px-1 mt-1">
+         <div class="row px-1 mt-1">
             <div class="col-4">
                <div class="box-item">
                   <a href="./foto">
@@ -112,6 +111,20 @@
             </div>
             <div class="col-4">
                <div class="box-item">
+                  <a href="./kalkulatorDebit">
+                     <div class="itemm">
+                        <div class="bg-white itemm2">
+                           <img src="<?= base_url; ?>/img/calculator-icon.png" width="55" height="55">
+                        </div>
+                     </div>
+                  </a>
+               </div>
+               <div class="text-center">
+                  <h6 class="text-back mt-1">Kalkulator Debit</h6>
+               </div>
+            </div>
+            <div class="col-4" hidden>
+               <div class="box-item">
                   <a href="<?= base_url; ?>/getaranling">
                      <div class="itemm">
                         <div class="bg-white itemm2">
@@ -125,9 +138,8 @@
                </div>
             </div>
          </div>
-         <div class="row
-                        px-1 mt-1">
-            <div class="col-4">
+         <div class="row px-1 mt-1">
+            <div class="col-4" hidden>
                <div class="box-item">
                   <a href="<?= base_url; ?>/getaranpersonal">
                      <div class="itemm">
@@ -142,7 +154,7 @@
                      Personal</h6>
                </div>
             </div>
-            <div class="col-4">
+            <div class="col-4" hidden>
                <div class="box-item">
                   <a href="./iklimPanas">
                      <div class="itemm">
@@ -157,7 +169,7 @@
                      Kerja(Panas)</h6>
                </div>
             </div>
-            <div class="col-4">
+            <div class="col-4" hidden>
                <div class="box-item">
                   <a href="./iklimDingin">
                      <div class="itemm">
@@ -173,9 +185,8 @@
                </div>
             </div>
          </div>
-         <div class="row
-                        px-1 mt-1">
-            <div class="col-4">
+         <div class="row px-1 mt-1">
+            <div class="col-4" hidden>
                <div class="box-item">
                   <a href="./partikulat">
                      <div class="itemm">
@@ -189,7 +200,7 @@
                   <h6 class="text-back mt-1">Sensoric PM</h6>
                </div>
             </div>
-            <div class="col-4">
+            <div class="col-4" hidden>
                <div class="box-item">
                   <a href="./medanLM">
                      <div class="itemm">
@@ -203,7 +214,7 @@
                   <h6 class="text-back mt-1">Listrik & Magnet</h6>
                </div>
             </div>
-            <div class="col-4">
+            <div class="col-4" hidden>
                <div class="box-item">
                   <a href="./sinarUV">
                      <div class="itemm">
@@ -218,8 +229,7 @@
                </div>
             </div>
          </div>
-         <div class="row
-                        px-1 mt-1">
+         <div class="row px-1 mt-1" hidden>
             <div class="col-4">
                <div class="box-item">
                   <a href="./direct">
@@ -263,8 +273,7 @@
                </div>
             </div>
          </div>
-         <div class="row
-                        px-1 mt-1">
+         <div class="row px-1 mt-1" hidden>
             <div class="col-4">
                <div class="box-item">
                   <a href="./lingkunganKerja">
@@ -293,7 +302,7 @@
                   <h6 class="text-back mt-1">Swab Test</h6>
                </div>
             </div>
-            <div class="col-4">
+            <div class="col-4" hidden>
                <div class="box-item">
                   <a href="./microBio">
                      <div class="itemm">
@@ -308,9 +317,8 @@
                </div>
             </div>
          </div>
-         <div class="row
-                        px-1 mt-1">
-            <div class="col-4">
+         <div class="row px-1 mt-1">
+            <div class="col-4" hidden>
                <div class="box-item">
                   <a href="./emisiCerobong">
                      <div class="itemm">
@@ -324,7 +332,7 @@
                   <h6 class="text-back mt-1">Emisi Cerobong</h6>
                </div>
             </div>
-            <div class="col-4">
+            <div class="col-4" hidden>
                <div class="box-item">
                   <a href="./partikulatIsokinetik">
                      <div class="itemm">
@@ -338,20 +346,7 @@
                   <h6 class="text-back mt-1">Partikulat Isokinetik</h6>
                </div>
             </div>
-            <div class="col-4">
-               <div class="box-item">
-                  <a href="./kalkulatorDebit">
-                     <div class="itemm">
-                        <div class="bg-white itemm2">
-                           <img src="<?= base_url; ?>/img/calculator-icon.png" width="55" height="55">
-                        </div>
-                     </div>
-                  </a>
-               </div>
-               <div class="text-center">
-                  <h6 class="text-back mt-1">Kalkulator Debit</h6>
-               </div>
-            </div>
+            
          </div>
          <!-- * Wallet Footer -->
          <div class="mb-3"></div>

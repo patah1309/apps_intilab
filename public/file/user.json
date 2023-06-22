@@ -1,1 +1,16 @@
-{"uname":{"identity":"zakkiy","password":"zakkiy123"},"session":{"message":"Login Succe\r\n        ss","token":"b04833c86d39fae84b98821c50458b06067421ff91d85840ae195206feeb540c722df28e71392b651687386984","created_at":"2023-06-22 05:36:24","expired_at":"2023-06-29 05:36:24","created_at_js":"Jun 22 2023 05:36:24","expired_at_js":"Jun 29 2023 05:36:24","apps_ver":"3.0.0","status":"200"}}
+{
+   "uname": {
+      "identity": "zakkiy",
+      "password": "zakkiy123"
+   },
+   "session": {
+      "message": "Login Succe\r\n        ss",
+      "token": "b04833c86d39fae84b98821c50458b06067421ff91d85840ae195206feeb540c722df28e71392b651687386984",
+      "created_at": "2023-06-22 05:36:24",
+      "expired_at": "2023-06-29 05:36:24",
+      "created_at_js": "Jun 22 2023 05:36:24",
+      "expired_at_js": "Jun 29 2023 05:36:24",
+      "apps_ver": "3.0.0",
+      "status": "200"
+   }
+}

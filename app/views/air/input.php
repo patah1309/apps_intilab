@@ -150,7 +150,7 @@ var getDataSample = function(no_sample) {
 }
 
 $("#no_sample").on('keydown', function(e) {
-   e.preventDefault()
+
    $('#limbah').html('')
    $('#foto').html('')
    $('#foto2').html('')
@@ -178,6 +178,7 @@ $("#no_sample").on('keydown', function(e) {
             render_template(array_data);
          })
       }
+      e.preventDefault()
       return false;
    }
 });
