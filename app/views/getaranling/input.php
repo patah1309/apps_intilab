@@ -92,6 +92,7 @@ $("#no_sample").on('keydown', function(e) {
                e = JSON.parse(resp);
                if (e.id_ket == '13' || e.id_ket == '15' || e.id_ket == '16' || e.id_ket == '18' || e
                   .id_ket == '14' || e.id_ket == '19') {
+
                   $('#udara').html(getaranLingkungan).fadeIn('slow');
                   $('#keterangan-4').val(e.keterangan);
                   $('#id_kat').val(e.id_ket);

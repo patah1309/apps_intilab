@@ -21,6 +21,8 @@
                      </i>
                   </div>
                </div>
+               <div id="selectkategori" style="display:none;"><select id="kategori-air" class="form-control"></select>
+               </div>
                <div id="limbah"></div>
                <div id="foto" class="mt-1"></div>
                <div id="foto2" class="mt-1"></div>
@@ -55,347 +57,367 @@
 </div>
 
 <script>
+let data_kategori = [{
+      id: '5-Laut',
+      text: 'Laut'
+   },
+   {
+      id: '4-Minum',
+      text: 'Minum'
+   },
+   {
+      id: '92-Rawa',
+      text: 'Rawa'
+   },
+   {
+      id: '90-Situ',
+      text: 'Situ'
+   },
+   {
+      id: '1-Bersih',
+      text: 'Bersih'
+   },
+   {
+      id: '56-Danau',
+      text: 'Danau'
+   },
+   {
+      id: '89-Waduk',
+      text: 'Waduk'
+   },
+   {
+      id: '93-Muara',
+      text: 'Muara'
+   },
+   {
+      id: '72-Tanah',
+      text: 'Tanah'
+   },
+   {
+      id: '51-Limbah',
+      text: 'Limbah'
+   },
+   {
+      id: '54-Sungai',
+      text: 'Sungai'
+   },
+   {
+      id: '64-Khusus',
+      text: 'Khusus'
+   },
+   {
+      id: '91-Akuifer',
+      text: 'Akuifer'
+   },
+   {
+      id: '6-Permukaan',
+      text: 'Permukaan'
+   },
+   {
+      id: '2-Limbah Domestik',
+      text: 'Limbah Domestik'
+   },
+   {
+      id: '3-Limbah Industri',
+      text: 'Limbah Industri'
+   },
+   {
+      id: '94-Air dari Mata Air',
+      text: 'Air dari Mata Air'
+   },
+]
+
 let uri = '<?= base_url; ?>/assets/sound/';
 var success = new Audio(uri + 'success.wav');
 var error = new Audio(uri + 'error.mp3');
 
+var getDataSample = function(no_sample) {
+   var deffered = $.Deferred()
+   $.ajax({
+      url: '/public/air/getSampel',
+      method: 'POST',
+      data: {
+         no_sample: no_sample
+      },
+      success: function(resp) {
+         deffered.resolve(resp)
+      },
+      error: function(err) {
+         deffered.reject(err)
+      }
+   })
+   return deffered
+}
+
 $("#no_sample").on('keydown', function(e) {
+   e.preventDefault()
    $('#limbah').html('')
    $('#foto').html('')
    $('#foto2').html('')
    if (e.key === "Enter") {
       let net = $('#status-text').text();
       if (net == "Online") {
-         var no_sample = $("#no_sample").val();
-         $.ajax({
-            url: '/public/air/getSampel',
-            method: 'POST',
-            data: {
-               no_sample: no_sample
-            },
-            success: function(resp) {
-               e = JSON.parse(resp);
-               if (e.id_ket === '2' || e.id_ket === '3' || e.id_ket === '51') {
-                  $('#limbah').html(limbah).fadeIn('slow');
-                  $('#foto').html(foto).fadeIn('slow');
-                  $('#jenis_sample').val(e.jenis);
-                  $('#keterangan-1').val(e.keterangan);
-                  $('#katVal').val(e.id_ket);
-                  $('#turunan-pengawet').hide();
-                  $('#btnBawah').hide()
-                  $('#jenis-pengawet').on('change', function() {
-                     var e = $('#jenis-pengawet').val();
-
-                     if (e.includes('kimia')) {
-                        $('#turunan-pengawet').show();
-                     } else {
-                        $('#turunan-pengawet').hide();
-                     }
-                  });
-
-                  // var api1 = global_var('selectvolum');
-                  // $.ajax({
-                  //    url: path + api1,
-                  //    data: {
-                  //       token: token
-                  //    },
-                  //    method: 'post',
-                  //    success: function(data) {
-                  //       $('#volume').html(data);
-                  //    },
-                  // });
-                  $('#jam').clockTimePicker();
-                  $('#jamm').clockTimePicker();
-                  $('.select2').select2()
-                  valDecimal();
-               } else if (e.id_ket === '5') {
-                  $('#limbah').html(laut).fadeIn('slow');
-                  $('#foto').html(foto).fadeIn('slow');
-                  $('#keterangan-1').val(e.keterangan);
-                  $('#katVal').val(e.id_ket);
-                  $('#turunan-pengawet').hide();
-                  $('#turunan-titik-pegambilan').hide();
-                  $('#btnBawah').hide()
-                  $('#jenis-pengawet').on('change', function() {
-                     var e = $('#jenis-pengawet').val();
-
-                     if (e.includes('kimia')) {
-                        $('#turunan-pengawet').show();
-                     } else {
-                        $('#turunan-pengawet').hide();
-                     }
-                  });
-
-                  $('#titik_lokasi').on('change', function() {
-                     if ($('#titik_lokasi').val() == 'Estuari') {
-                        $('#turunan-titik-pegambilan').show();
-                        if ($('#kedalaman').val() <= 1) {
-                           $('#jtpeng').val('0.5 D');
-                        } else {
-                           $('#jtpeng').val('0.2 D, 0.5 D, 0.8 D');
-                        }
-                     } else if ($('#titik_lokasi').val() == 'Pesisir') {
-                        $('#turunan-titik-pegambilan').show();
-                        if ($('#kedalaman').val() >= 0 && $('#kedalaman').val() <= 1) {
-                           $('#jtpeng').val('0.2 D, 0.5 D, 0.8 D');
-                        }
-                     } else {
-                        $('#turunan-titik-pegambilan').show();
-                        if ($('#kedalaman').val() <= 100) {
-                           $('#jtpeng').val('0.2 D, 0.5 D, 0.8 D');
-                        } else {
-                           $('#jtpeng').val('0.2 D, 0.4 D, 0.6 D, 0.8 D');
-                        }
-                     }
-
-                  });
-
-                  $('#kedalaman').on('keyup', function() {
-                     if ($('#titik_lokasi').val() == 'Estuari') {
-                        $('#turunan-titik-pegambilan').show();
-                        if ($('#kedalaman').val() <= 1) {
-                           $('#jtpeng').val('0.5 D');
-                        } else if ($('#kedalaman').val() > 1) {
-                           $('#jtpeng').val('0.2 D, 0.5 D, 0.8 D');
-                        } else {
-                           $('#jtpeng').val('Kedalaman tidak sesuai');
-                        }
-                     } else if ($('#titik_lokasi').val() == 'Pesisir') {
-                        $('#turunan-titik-pegambilan').show();
-                        if ($('#kedalaman').val() >= 0 && $('#kedalaman').val() <= 1) {
-                           $('#jtpeng').val('0.2 D, 0.5 D, 0.8 D');
-                        } else if ($('#kedalaman').val() > 1) {
-                           $('#jtpeng').val('Kedalaman tidak sesuai');
-                        }
-                     } else if ($('#titik_lokasi').val() == 'Laut_Lepas') {
-                        $('#turunan-titik-pegambilan').show();
-                        if ($('#kedalaman').val() >= 1 && $('#kedalaman').val() <= 100) {
-                           $('#jtpeng').val('0.2 D, 0.5 D, 0.8 D');
-                        } else if ($('#kedalaman').val() > 100) {
-                           $('#jtpeng').val('0.2 D, 0.4 D, 0.6 D, 0.8 D');
-                        } else {
-                           $('#jtpeng').val('Kedalaman tidak sesuai');
-                        }
-                     }
-
-                  });
-
-                  // var api1 = global_var('selectvolum');
-                  // $.ajax({
-                  //    url: path + api1,
-                  //    data: {
-                  //       token: token
-                  //    },
-                  //    method: 'post',
-                  //    success: function(data) {
-                  //       $('#volume').html(data);
-                  //    },
-                  // });
-
-                  $('#jam').clockTimePicker();
-                  $('#jamm').clockTimePicker();
-
-                  $("#addRow").click(function() {
-                     var html = '';
-                     html += '<div class="mb-2" id="inputFormRow">'
-                     html += '<div class="row">'
-                     html += '<div class="col-4">'
-                     html += '<div class="form-group basic">'
-                     html += '<div class="input-wrapper">'
-                     html +=
-                        '<input type="text" class="form-control jam" name="jam_pengamatan[]" autocomplete="off" readonly>'
-                     html += '</div></div></div>'
-                     html += '<div class="col-8">'
-                     html += '<div class="form-group basic">'
-                     html += '<div class="input-wrapper">'
-                     html += '<div class="input-group">'
-                     html +=
-                        '<input type="number" class="form-control" name="hasil_pengamatan[]" autocomplete="off" step="any">'
-                     html += '<div class="input-group-append">'
-                     html += '<span class="input-group-text" style="font-size: 10px">m</span>'
-                     html +=
-                        '<button id="removeRow" type="button" class="btns btn-danger"><i class="fa fa-close"></i></button>'
-                     html += '</div>'
-                     html += '</div></div></div>'
-                     html += '</div>'
-                     html += '</div>'
-                     html += '</div>'
-                     $('#newRow').append(html);
-                     $('.jam').clockTimePicker();
-                  });
-                  $(document).on('click', '#removeRow', function() {
-                     $(this).closest('#inputFormRow').remove();
-                  });
-                  $('.select2').select2()
-                  valDecimal();
-               } else if (e.id_ket === '54' || e.id_ket === '56' || e.id_ket === '89' || e.id_ket ===
-                  '90' || e.id_ket === '91' || e.id_ket === '92' || e.id_ket === '93' || e.id_ket ===
-                  '94' || e.id_ket === '6') {
-                  $('#limbah').html(permukaan).fadeIn('slow');
-                  $('#foto').html(foto).fadeIn('slow');
-                  $('#jenis_sample').val(e.jenis);
-                  $('#keterangan-1').val(e.keterangan);
-                  $('#katVal').val(e.id_ket);
-                  $('#turunan-pengawet').hide();
-                  $('#btnBawah').hide()
-                  $('#jenis-pengawet').on('change', function() {
-                     var e = $('#jenis-pengawet').val();
-
-                     if (e.includes('kimia')) {
-                        $('#turunan-pengawet').show();
-                     } else {
-                        $('#turunan-pengawet').hide();
-                     }
-                  });
-
-                  // var api1 = global_var('selectvolum');
-                  // $.ajax({
-                  //    url: path + api1,
-                  //    data: {
-                  //       token: token
-                  //    },
-                  //    method: 'post',
-                  //    success: function(data) {
-                  //       $('#volume').html(data);
-                  //    },
-                  // });
-                  $('#jam').clockTimePicker();
-                  $('#jamm').clockTimePicker();
-                  $('.select2').select2()
-                  valDecimal()
-               } else if (e.id_ket === '72') {
-                  $('#limbah').html(tanah).fadeIn('slow');
-                  $('#foto').html(foto).fadeIn('slow');
-                  $('#jenis_sample').val(e.jenis);
-                  $('#keterangan-1').val(e.keterangan);
-                  $('#katVal').val(e.id_ket);
-                  $('#turunan-pengawet').hide();
-                  $('#btnBawah').hide()
-                  $('#jenis-pengawet').on('change', function() {
-                     var e = $('#jenis-pengawet').val();
-
-                     if (e.includes('kimia')) {
-                        $('#turunan-pengawet').show();
-                     } else {
-                        $('#turunan-pengawet').hide();
-                     }
-                  });
-
-                  // var api1 = global_var('selectvolum');
-                  // $.ajax({
-                  //    url: path + api1,
-                  //    data: {
-                  //       token: token
-                  //    },
-                  //    method: 'post',
-                  //    success: function(data) {
-                  //       $('#volume').html(data);
-                  //    },
-                  // });
-                  $('#jam').clockTimePicker();
-                  $('#jamm').clockTimePicker();
-                  $('.select2').select2();
-                  valDecimal();
-                  $('#kedalaman_sumur_kedua').on('change keyup', function() {
-                     var a = $('#kedalaman_sumur_pertama').val();
-                     var b = $('#kedalaman_sumur_kedua').val();
-                     var c = (b - a);
-                     $('#kedalaman_sumur_terambil').val(c);
-                  })
-               } else if (e.id_ket === '1' || e.id_ket === '4') {
-                  $('#limbah').html(airBersih).fadeIn('slow');
-                  $('#foto').html(foto).fadeIn('slow');
-                  $('#jenis_sample').val(e.jenis);
-                  $('#keterangan-1').val(e.keterangan);
-                  $('#katVal').val(e.id_ket);
-                  $('#turunan-pengawet').hide();
-                  $('#btnBawah').hide()
-                  $('#jenis-pengawet').on('change', function() {
-                     var e = $('#jenis-pengawet').val();
-
-                     if (e.includes('kimia')) {
-                        $('#turunan-pengawet').show();
-                     } else {
-                        $('#turunan-pengawet').hide();
-                     }
-                  });
-
-                  // var api1 = global_var('selectvolum');
-                  // $.ajax({
-                  //    url: path + api1,
-                  //    data: {
-                  //       token: token
-                  //    },
-                  //    method: 'post',
-                  //    success: function(data) {
-                  //       $('#volume').html(data);
-                  //    },
-                  // });
-                  $('#jam').clockTimePicker();
-                  $('#jamm').clockTimePicker();
-                  $('.select2').select2()
-                  valDecimal();
-               } else if (e.id_ket === '64') {
-                  $('#limbah').html(khusus).fadeIn('slow');
-                  $('#foto').html(foto).fadeIn('slow');
-                  $('#jenis_sample').val(e.jenis);
-                  $('#keterangan-1').val(e.keterangan);
-                  $('#katVal').val(e.id_ket);
-                  $('#turunan-pengawet').hide();
-                  $('#btnBawah').hide()
-                  $('#jenis-pengawet').on('change', function() {
-                     var e = $('#jenis-pengawet').val();
-
-                     if (e.includes('kimia')) {
-                        $('#turunan-pengawet').show();
-                     } else {
-                        $('#turunan-pengawet').hide();
-                     }
-                  });
-
-
-                  // var api1 = global_var('selectvolum');
-                  // $.ajax({
-                  //    url: path + api1,
-                  //    data: {
-                  //       token: token
-                  //    },
-                  //    method: 'post',
-                  //    success: function(data) {
-                  //       $('#volume').html(data);
-                  //    },
-                  // });
-                  $('#jam').clockTimePicker();
-                  $('#jamm').clockTimePicker();
-                  $('.select2').select2()
-                  valDecimal();
-               } else {
-                  error.play();
-                  Swal.fire({
-                     title: 'Tidak ada kategori FDL air di No Sample tersebut',
-                     icon: 'warning',
-                     confirmButtonColor: '#3085d6',
-                  })
-                  $('#limbah').empty();
-               }
-            },
-            error: function(e) {
-               Swal.fire({
-                  icon: 'error',
-                  title: e.responseJSON.message,
-               })
-            }
+         $.when(getDataSample($("#no_sample").val())).then(function(resp) {
+            render_template(JSON.parse(resp))
          })
       } else {
-         Swal.fire({
-            icon: 'info',
-            title: 'Anda Sedang Offline',
-            timer: 3000
+         $('#selectkategori').show()
+         $('#kategori-air').select2({
+            data: data_kategori,
+            placeholder: 'Select Kategori Air'
+         })
+
+         $('#kategori-air').on('change', function() {
+            let data_select = $(this).val()
+            let array_data = {
+               'id_ket': data_select.split('-')[0],
+               'id_ket2': 1,
+               'jenis': data_select.split('-')[1],
+               'keterangan': ''
+            }
+            render_template(array_data);
          })
       }
       return false;
    }
 });
+
+function render_template(e) {
+   if (e.id_ket === '2' || e.id_ket === '3' || e.id_ket === '51') {
+      $('#limbah').html(limbah).fadeIn('slow');
+      $('#foto').html(foto).fadeIn('slow');
+      $('#jenis_sample').val(e.jenis);
+      $('#keterangan-1').val(e.keterangan);
+      $('#katVal').val(e.id_ket);
+      $('#turunan-pengawet').hide();
+      $('#btnBawah').hide()
+      $('#jenis-pengawet').on('change', function() {
+         var e = $('#jenis-pengawet').val();
+
+         if (e.includes('kimia')) {
+            $('#turunan-pengawet').show();
+         } else {
+            $('#turunan-pengawet').hide();
+         }
+      });
+      $('#jam').clockTimePicker();
+      $('#jamm').clockTimePicker();
+      $('.select2').select2()
+      valDecimal();
+   } else if (e.id_ket === '5') {
+      $('#limbah').html(laut).fadeIn('slow');
+      $('#foto').html(foto).fadeIn('slow');
+      $('#keterangan-1').val(e.keterangan);
+      $('#katVal').val(e.id_ket);
+      $('#turunan-pengawet').hide();
+      $('#turunan-titik-pegambilan').hide();
+      $('#btnBawah').hide()
+      $('#jenis-pengawet').on('change', function() {
+         var e = $('#jenis-pengawet').val();
+
+         if (e.includes('kimia')) {
+            $('#turunan-pengawet').show();
+         } else {
+            $('#turunan-pengawet').hide();
+         }
+      });
+
+      $('#titik_lokasi').on('change', function() {
+         if ($('#titik_lokasi').val() == 'Estuari') {
+            $('#turunan-titik-pegambilan').show();
+            if ($('#kedalaman').val() <= 1) {
+               $('#jtpeng').val('0.5 D');
+            } else {
+               $('#jtpeng').val('0.2 D, 0.5 D, 0.8 D');
+            }
+         } else if ($('#titik_lokasi').val() == 'Pesisir') {
+            $('#turunan-titik-pegambilan').show();
+            if ($('#kedalaman').val() >= 0 && $('#kedalaman').val() <= 1) {
+               $('#jtpeng').val('0.2 D, 0.5 D, 0.8 D');
+            }
+         } else {
+            $('#turunan-titik-pegambilan').show();
+            if ($('#kedalaman').val() <= 100) {
+               $('#jtpeng').val('0.2 D, 0.5 D, 0.8 D');
+            } else {
+               $('#jtpeng').val('0.2 D, 0.4 D, 0.6 D, 0.8 D');
+            }
+         }
+
+      });
+
+      $('#kedalaman').on('keyup', function() {
+         if ($('#titik_lokasi').val() == 'Estuari') {
+            $('#turunan-titik-pegambilan').show();
+            if ($('#kedalaman').val() <= 1) {
+               $('#jtpeng').val('0.5 D');
+            } else if ($('#kedalaman').val() > 1) {
+               $('#jtpeng').val('0.2 D, 0.5 D, 0.8 D');
+            } else {
+               $('#jtpeng').val('Kedalaman tidak sesuai');
+            }
+         } else if ($('#titik_lokasi').val() == 'Pesisir') {
+            $('#turunan-titik-pegambilan').show();
+            if ($('#kedalaman').val() >= 0 && $('#kedalaman').val() <= 1) {
+               $('#jtpeng').val('0.2 D, 0.5 D, 0.8 D');
+            } else if ($('#kedalaman').val() > 1) {
+               $('#jtpeng').val('Kedalaman tidak sesuai');
+            }
+         } else if ($('#titik_lokasi').val() == 'Laut_Lepas') {
+            $('#turunan-titik-pegambilan').show();
+            if ($('#kedalaman').val() >= 1 && $('#kedalaman').val() <= 100) {
+               $('#jtpeng').val('0.2 D, 0.5 D, 0.8 D');
+            } else if ($('#kedalaman').val() > 100) {
+               $('#jtpeng').val('0.2 D, 0.4 D, 0.6 D, 0.8 D');
+            } else {
+               $('#jtpeng').val('Kedalaman tidak sesuai');
+            }
+         }
+
+      });
+
+      $('#jam').clockTimePicker();
+      $('#jamm').clockTimePicker();
+
+      $("#addRow").click(function() {
+         var html = '';
+         html += '<div class="mb-2" id="inputFormRow">'
+         html += '<div class="row">'
+         html += '<div class="col-4">'
+         html += '<div class="form-group basic">'
+         html += '<div class="input-wrapper">'
+         html +=
+            '<input type="text" class="form-control jam" name="jam_pengamatan[]" autocomplete="off" readonly>'
+         html += '</div></div></div>'
+         html += '<div class="col-8">'
+         html += '<div class="form-group basic">'
+         html += '<div class="input-wrapper">'
+         html += '<div class="input-group">'
+         html +=
+            '<input type="number" class="form-control" name="hasil_pengamatan[]" autocomplete="off" step="any">'
+         html += '<div class="input-group-append">'
+         html += '<span class="input-group-text" style="font-size: 10px">m</span>'
+         html +=
+            '<button id="removeRow" type="button" class="btns btn-danger"><i class="fa fa-close"></i></button>'
+         html += '</div>'
+         html += '</div></div></div>'
+         html += '</div>'
+         html += '</div>'
+         html += '</div>'
+         $('#newRow').append(html);
+         $('.jam').clockTimePicker();
+      });
+      $(document).on('click', '#removeRow', function() {
+         $(this).closest('#inputFormRow').remove();
+      });
+      $('.select2').select2()
+      valDecimal();
+   } else if (e.id_ket === '54' || e.id_ket === '56' || e.id_ket === '89' || e.id_ket ===
+      '90' || e.id_ket === '91' || e.id_ket === '92' || e.id_ket === '93' || e.id_ket ===
+      '94' || e.id_ket === '6') {
+      $('#limbah').html(permukaan).fadeIn('slow');
+      $('#foto').html(foto).fadeIn('slow');
+      $('#jenis_sample').val(e.jenis);
+      $('#keterangan-1').val(e.keterangan);
+      $('#katVal').val(e.id_ket);
+      $('#turunan-pengawet').hide();
+      $('#btnBawah').hide()
+      $('#jenis-pengawet').on('change', function() {
+         var e = $('#jenis-pengawet').val();
+
+         if (e.includes('kimia')) {
+            $('#turunan-pengawet').show();
+         } else {
+            $('#turunan-pengawet').hide();
+         }
+      });
+      $('#jam').clockTimePicker();
+      $('#jamm').clockTimePicker();
+      $('.select2').select2()
+      valDecimal()
+   } else if (e.id_ket === '72') {
+      $('#limbah').html(tanah).fadeIn('slow');
+      $('#foto').html(foto).fadeIn('slow');
+      $('#jenis_sample').val(e.jenis);
+      $('#keterangan-1').val(e.keterangan);
+      $('#katVal').val(e.id_ket);
+      $('#turunan-pengawet').hide();
+      $('#btnBawah').hide()
+      $('#jenis-pengawet').on('change', function() {
+         var e = $('#jenis-pengawet').val();
+
+         if (e.includes('kimia')) {
+            $('#turunan-pengawet').show();
+         } else {
+            $('#turunan-pengawet').hide();
+         }
+      });
+      $('#jam').clockTimePicker();
+      $('#jamm').clockTimePicker();
+      $('.select2').select2();
+      valDecimal();
+      $('#kedalaman_sumur_kedua').on('change keyup', function() {
+         var a = $('#kedalaman_sumur_pertama').val();
+         var b = $('#kedalaman_sumur_kedua').val();
+         var c = (b - a);
+         $('#kedalaman_sumur_terambil').val(c);
+      })
+   } else if (e.id_ket === '1' || e.id_ket === '4') {
+      $('#limbah').html(airBersih).fadeIn('slow');
+      $('#foto').html(foto).fadeIn('slow');
+      $('#jenis_sample').val(e.jenis);
+      $('#keterangan-1').val(e.keterangan);
+      $('#katVal').val(e.id_ket);
+      $('#turunan-pengawet').hide();
+      $('#btnBawah').hide()
+      $('#jenis-pengawet').on('change', function() {
+         var e = $('#jenis-pengawet').val();
+
+         if (e.includes('kimia')) {
+            $('#turunan-pengawet').show();
+         } else {
+            $('#turunan-pengawet').hide();
+         }
+      });
+
+      $('#jam').clockTimePicker();
+      $('#jamm').clockTimePicker();
+      $('.select2').select2()
+      valDecimal();
+   } else if (e.id_ket === '64') {
+      $('#limbah').html(khusus).fadeIn('slow');
+      $('#foto').html(foto).fadeIn('slow');
+      $('#jenis_sample').val(e.jenis);
+      $('#keterangan-1').val(e.keterangan);
+      $('#katVal').val(e.id_ket);
+      $('#turunan-pengawet').hide();
+      $('#btnBawah').hide()
+      $('#jenis-pengawet').on('change', function() {
+         var e = $('#jenis-pengawet').val();
+
+         if (e.includes('kimia')) {
+            $('#turunan-pengawet').show();
+         } else {
+            $('#turunan-pengawet').hide();
+         }
+      });
+
+      $('#jam').clockTimePicker();
+      $('#jamm').clockTimePicker();
+      $('.select2').select2()
+      valDecimal();
+   } else {
+      error.play();
+      Swal.fire({
+         title: 'Tidak ada kategori FDL air di No Sample tersebut',
+         icon: 'warning',
+         confirmButtonColor: '#3085d6',
+      })
+      $('#limbah').empty();
+   }
+
+   $('#selectkategori').hide()
+}
 
 function valDecimal() {
    var p = 100;
@@ -685,64 +707,75 @@ function reset() {
 $('#form-add').on('submit', function(e) {
    e.preventDefault()
    let data_form = $(this).serialize();
-   $('#btn-submit').prop('disabled', true);
-   $.ajax({
-      statusCode: {
-         500: function() {
+   if ($("input[name=permis]").is(':checked')) {
+      $('#btn-submit').prop('disabled', true);
+      $.ajax({
+         statusCode: {
+            500: function() {
+               Swal.fire({
+                  icon: 'error',
+                  title: 'Server Error',
+                  timer: 3000
+               })
+               $('#btn-submit').prop('disabled', false);
+            }
+         },
+         url: '/public/air/saveData',
+         method: 'POST',
+         data: data_form,
+         success: function(resp) {
+            resp = JSON.parse(resp)
+            if (resp == 'success') {
+               Swal.fire({
+                  icon: 'success',
+                  title: 'Success',
+                  text: 'Data hasbeen Save',
+                  timer: 3000
+               })
+               document.getElementById("form-add").reset();
+               $('#btn-submit').prop('disabled', false);
+               document.getElementById("lokasi").style.setProperty("background-color", "#00B4FF",
+                  "important");
+               document.getElementById("lokasi").style.setProperty("border-color", "#00B4FF",
+                  "important");
+               document.getElementById("sample").style.setProperty("background-color", "#00B4FF",
+                  "important");
+               document.getElementById("sample").style.setProperty("border-color", "#00B4FF",
+                  "important");
+               document.getElementById("lain").style.setProperty("background-color", "#00B4FF",
+                  "important");
+               document.getElementById("lain").style.setProperty("border-color", "#00B4FF", "important");
+               $('#limbah').empty();
+               $('#foto').empty();
+               $('#foto2').empty();
+               $('#btnBawah').show()
+            } else {
+               Swal.fire({
+                  icon: 'error',
+                  title: 'Opps..!',
+                  text: 'Please Check the Data.',
+                  timer: 3000
+               })
+               $('#btn-submit').prop('disabled', false);
+            }
+         },
+         error: function(err) {
             Swal.fire({
                icon: 'error',
-               title: 'Server Error',
+               title: err.responseJSON,
                timer: 3000
             })
             $('#btn-submit').prop('disabled', false);
          }
-      },
-      url: '/public/air/saveData',
-      method: 'POST',
-      data: data_form,
-      success: function(resp) {
-         resp = JSON.parse(resp)
-         if (resp == 'success') {
-            Swal.fire({
-               icon: 'success',
-               title: 'Success',
-               text: 'Data hasbeen Save',
-               timer: 3000
-            })
-            document.getElementById("form-add").reset();
-            $('#btn-submit').prop('disabled', false);
-            document.getElementById("lokasi").style.setProperty("background-color", "#00B4FF",
-               "important");
-            document.getElementById("lokasi").style.setProperty("border-color", "#00B4FF", "important");
-            document.getElementById("sample").style.setProperty("background-color", "#00B4FF",
-               "important");
-            document.getElementById("sample").style.setProperty("border-color", "#00B4FF", "important");
-            document.getElementById("lain").style.setProperty("background-color", "#00B4FF",
-               "important");
-            document.getElementById("lain").style.setProperty("border-color", "#00B4FF", "important");
-            $('#limbah').empty();
-            $('#foto').empty();
-            $('#foto2').empty();
-            $('#btnBawah').show()
-         } else {
-            Swal.fire({
-               icon: 'error',
-               title: 'Opps..!',
-               text: 'Please Check the Data.',
-               timer: 3000
-            })
-            $('#btn-submit').prop('disabled', false);
-         }
-      },
-      error: function(err) {
-         Swal.fire({
-            icon: 'error',
-            title: err.responseJSON,
-            timer: 3000
-         })
-         $('#btn-submit').prop('disabled', false);
-      }
-   })
+      })
+   } else {
+      error.play();
+      Swal.fire({
+         icon: 'info',
+         title: 'Please checked Confirm permission',
+         timer: 3000
+      })
+   }
 })
 
 var foto2 =
@@ -762,15 +795,15 @@ function bukaCam1() {
 }
 
 var khusus =
-   '<div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Titik</label><input type="text" name="keterangan_1" id="keterangan-1" class="form-control" autocomplete="off"></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Tambahan</label><textarea class="form-control rounded" name="information"></textarea></div></div></div></div></div><div class="form-group basic"><div class="row"><div class="col-sm-12"><label class="label label-1">Titik Koordinat Sampling</label><div class="input-groups input-group-sm mb-2"><input type="hidden" name="lat" id="lat"> <input type="hidden" name="longi" id="longi"><div class="row"><div class="col-8"><input type="text" class="form-control" name="posisi" id="posisi" autocomplete="off" style="font-size:12px" required></div><div class="col-4"><span class="input-group-prepends" style="width:30%"><a class="btn btn-info fa fa-map-marker" onclick="getlocation()">Get Location</a></span></div></div></div></div></div></div><div class="mb-2 row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Teknik Sampling</label><select class="form-control" name="teknik_sampling"><option value="Sesaat">Sesaat</option><option value="Gabungan_Waktu">Gabungan Waktu</option><option value="Gabungan_Tempat">Gabungan Tempat</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jam Pengambilan</label><div class="row"><div class="col-8"><input type="text" class="form-control" name="jam" id="jam" readonly="readonly"></div><div class="col-2 px-0"><span class="d-flex align-items-center btn btn-danger"><a onclick="mulai()"><i class="fa-regular fa-clock"></i></a></span></div></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Volume (ml)</label><select class="form-control" id="volume" name="volume" required></select></div></div></div><div class="form-group basic"><div class="input-wrapper"><label>Jenis Pengawet</label><select class="form-control select2" name="parent_pengawet[]" id="jenis-pengawet" multiple="multiple" data-placeholder="Pilih jenis Pengawet" style="width:100%" required><option value="fisika">Fisika</option><option value="kimia">Kimia</option></select></div></div></div></div><div class="mb-2" id="turunan-pengawet"><label class="label label-1" for="modalInputusername">Jenis Pengawet</label><div class="row"><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck1" value="H2SO4"><span>H2SO4</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck2" value="HNO3"><span>HNO3</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck3" value="HCI"><span>HCI</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck4" value="NaOH"><span>NaOH</span></label></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Perlakuan Penyaringan</label><select class="form-control" name="penyaringan" id="penyaringan" required><option value="">-</option><option value="Ada">Ada</option><option value="Tidak_Ada">Tidak Ada</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Pengendalian Mutu</label><select class="form-control select2" name="mutu[]" multiple="multiple" data-placeholder="Pilih Pengendalian Mutu" style="width:100%"><option value="Split">Split</option><option value="Duplikat">Duplikat</option><option value="Blangko_Media">Blangko Media</option><option value="Blangko_Perjalanan">Blangko Perjalanan</option></select></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">DHL</label><div class="input-group"><input type="number" class="form-control" name="dhl" id="dhl" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">µS/cm</span></div></div><span class="text-danger text-bold" id="valdhl" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">pH</label><input type="number" class="form-control" name="ph" id="ph" autocomplete="off" step="0.1" required></div><span class="text-danger text-bold" id="valph" style="font-size:10px;display:none">Ex. 14.00</span></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Suhu Air</label><div class="input-group"><input type="number" class="form-control" id="suhuAir" name="suhu_air" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">°C</span></div></div><span class="text-danger text-bold" id="valsuhuAir" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Suhu Udara</label><div class="input-group"><input type="number" class="form-control" id="suhuUdara" name="suhu_udara" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">°C</span></div></div><span class="text-danger text-bold" id="valsuhuUdara" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Warna</label><select class="form-control" name="warna" id="warna" required><option value="">-</option><option value="Berwarna">Berwarna</option><option value="Tidak Berwarna">Tidak Berwarna</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Bau</label><select class="form-control" name="bau" id="bau" required><option value="">-</option><option value="Berbau">Berbau</option><option value="Tidak Berbau">Tidak Berbau</option></select></div></div></div></div></div>';
+   '<div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Titik</label><input type="text" name="keterangan_1" id="keterangan-1" class="form-control" autocomplete="off"></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Tambahan</label><textarea class="form-control rounded" name="information"></textarea></div></div></div></div></div><div class="form-group basic"><div class="row"><div class="col-sm-12"><label class="label label-1">Titik Koordinat Sampling</label><div class="input-groups input-group-sm mb-2"><input type="hidden" name="lat" id="lat"> <input type="hidden" name="longi" id="longi"><div class="row"><div class="col-8"><input type="text" class="form-control" name="posisi" id="posisi" autocomplete="off" style="font-size:12px" required></div><div class="col-4"><span class="input-group-prepends" style="width:30%"><a class="btn btn-info" onclick="getlocation()"><i class="fa-solid fa-location-dot"></i> Get Location</a></span></div></div></div></div></div></div><div class="mb-2 row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Teknik Sampling</label><select class="form-control" name="teknik_sampling"><option value="Sesaat">Sesaat</option><option value="Gabungan_Waktu">Gabungan Waktu</option><option value="Gabungan_Tempat">Gabungan Tempat</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jam Pengambilan</label><div class="row"><div class="col-8"><input type="text" class="form-control" name="jam" id="jam" readonly="readonly"></div><div class="col-2 px-0"><span class="d-flex align-items-center btn btn-danger"><a onclick="mulai()"><i class="fa-regular fa-clock"></i></a></span></div></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Volume (ml)</label><select class="form-control" id="volume" name="volume" required></select></div></div></div><div class="form-group basic"><div class="input-wrapper"><label>Jenis Pengawet</label><select class="form-control select2" name="parent_pengawet[]" id="jenis-pengawet" multiple="multiple" data-placeholder="Pilih jenis Pengawet" style="width:100%" required><option value="fisika">Fisika</option><option value="kimia">Kimia</option></select></div></div></div></div><div class="mb-2" id="turunan-pengawet"><label class="label label-1" for="modalInputusername">Jenis Pengawet</label><div class="row"><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck1" value="H2SO4"><span>H2SO4</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck2" value="HNO3"><span>HNO3</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck3" value="HCI"><span>HCI</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck4" value="NaOH"><span>NaOH</span></label></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Perlakuan Penyaringan</label><select class="form-control" name="penyaringan" id="penyaringan" required><option value="">-</option><option value="Ada">Ada</option><option value="Tidak_Ada">Tidak Ada</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Pengendalian Mutu</label><select class="form-control select2" name="mutu[]" multiple="multiple" data-placeholder="Pilih Pengendalian Mutu" style="width:100%"><option value="Split">Split</option><option value="Duplikat">Duplikat</option><option value="Blangko_Media">Blangko Media</option><option value="Blangko_Perjalanan">Blangko Perjalanan</option></select></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">DHL</label><div class="input-group"><input type="number" class="form-control" name="dhl" id="dhl" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">µS/cm</span></div></div><span class="text-danger text-bold" id="valdhl" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">pH</label><input type="number" class="form-control" name="ph" id="ph" autocomplete="off" step="0.1" required></div><span class="text-danger text-bold" id="valph" style="font-size:10px;display:none">Ex. 14.00</span></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Suhu Air</label><div class="input-group"><input type="number" class="form-control" id="suhuAir" name="suhu_air" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">°C</span></div></div><span class="text-danger text-bold" id="valsuhuAir" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Suhu Udara</label><div class="input-group"><input type="number" class="form-control" id="suhuUdara" name="suhu_udara" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">°C</span></div></div><span class="text-danger text-bold" id="valsuhuUdara" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Warna</label><select class="form-control" name="warna" id="warna" required><option value="">-</option><option value="Berwarna">Berwarna</option><option value="Tidak Berwarna">Tidak Berwarna</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Bau</label><select class="form-control" name="bau" id="bau" required><option value="">-</option><option value="Berbau">Berbau</option><option value="Tidak Berbau">Tidak Berbau</option></select></div></div></div></div></div>';
 var airBersih =
-   '<div class="row mb-2"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jenis Sample</label><select name="jenis_sample" class="form-control" id="jenis_sample" autocomplete="off"><option>Air Keperluan Hygiene Sanitasi</option><option>Air Khusus RS</option><option>Air Dalam Kemasan</option><option>Air RO</option></select></div></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Titik</label><input type="text" name="keterangan_1" id="keterangan-1" class="form-control" autocomplete="off"></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Tambahan</label><textarea class="form-control rounded" name="information"></textarea></div></div></div></div></div><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Titik Koordinat Sampling</label><div class="input-groups input-group-sm mb-2"><input type="hidden" name="lat" id="lat"> <input type="hidden" name="longi" id="longi"><div class="row"><div class="col-8"><input type="text" class="form-control" name="posisi" id="posisi" required autocomplete="off" style="font-size:12px" required></div><div class="col-4"><span class="input-group-prepends" style="width:30%"><a class="btn btn-info fa fa-map-marker" onclick="getlocation()">Get Location</a></span></div></div></div></div></div></div></div><div class="mb-2 row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Teknik Sampling</label><select class="form-control" name="teknik_sampling"><option value="Sesaat">Sesaat</option><option value="Gabungan_Waktu">Gabungan Waktu</option><option value="Gabungan_Tempat">Gabungan Tempat</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jam Pengambilan</label><div class="row"><div class="col-8"><input type="text" class="form-control" name="jam" id="jam" readonly="readonly"></div><div class="col-2 px-0"><span class="d-flex align-items-center btn btn-danger"><a onclick="mulai()"><i class="fa-regular fa-clock"></i></a></span></div></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Volume (ml)</label><select class="form-control" id="volume" name="volume" required></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label>Jenis Pengawet</label><select class="form-control select2" name="parent_pengawet[]" id="jenis-pengawet" multiple="multiple" data-placeholder="Pilih jenis Pengawet" style="width:100%" required><option value="fisika">Fisika</option><option value="kimia">Kimia</option></select></div></div></div></div></div><div class="mb-2" id="turunan-pengawet"><label class="label label-1" for="modalInputusername">Jenis Pengawet</label><div class="row"><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck1" value="H2SO4"><span>H2SO4</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck2" value="HNO3"><span>HNO3</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck3" value="HCI"><span>HCI</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck4" value="NaOH"><span>NaOH</span></label></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Perlakuan Penyaringan</label><select class="form-control" name="penyaringan " id="penyaringan" required><option value="">-</option><option value="Ada">Ada</option><option value="Tidak_Ada">Tidak Ada</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Pengendalian Mutu</label><select class="form-control select2" name="mutu[]" multiple="multiple" data-placeholder="Pilih Pengendalian Mutu" style="width:100%"><option value="Split">Split</option><option value="Duplikat">Duplikat</option><option value="Blangko_Media">Blangko Media</option><option value="Blangko_Perjalanan">Blangko Perjalanan</option></select></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">DHL</label><div class="input-group"><input type="number" class="form-control" name="dhl" id="dhl" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">µS/cm</span></div></div><span class="text-danger text-bold" id="valdhl" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">pH</label><input type="number" class="form-control" name="ph" id="ph" autocomplete="off" step="0.01" required></div><span class="text-danger text-bold" id="valph" style="font-size:10px;display:none">Ex. 14.00</span></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Suhu Air</label><div class="input-group"><input type="number" class="form-control" id="suhuAir" name="suhu_air" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">°C</span></div></div><span class="text-danger text-bold" id="valsuhuAir" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Suhu Udara</label><div class="input-group"><input type="number" class="form-control" id="suhuUdara" name="suhu_udara" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">°C</span></div></div><span class="text-danger text-bold" id="valsuhuUdara" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Warna</label><select class="form-control" name="warna" id="warna" required><option value="">-</option><option value="Berwarna">Berwarna</option><option value="Tidak Berwarna">Tidak Berwarna</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Bau</label><select class="form-control" name="bau" id="bau" required><option value="">-</option><option value="Berbau">Berbau</option><option value="Tidak Berbau">Tidak Berbau</option></select></div></div></div></div></div>';
+   '<div class="row mb-2"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jenis Sample</label><select name="jenis_sample" class="form-control" id="jenis_sample" autocomplete="off"><option>Air Keperluan Hygiene Sanitasi</option><option>Air Khusus RS</option><option>Air Dalam Kemasan</option><option>Air RO</option></select></div></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Titik</label><input type="text" name="keterangan_1" id="keterangan-1" class="form-control" autocomplete="off"></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Tambahan</label><textarea class="form-control rounded" name="information"></textarea></div></div></div></div></div><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Titik Koordinat Sampling</label><div class="input-groups input-group-sm mb-2"><input type="hidden" name="lat" id="lat"> <input type="hidden" name="longi" id="longi"><div class="row"><div class="col-8"><input type="text" class="form-control" name="posisi" id="posisi" required autocomplete="off" style="font-size:12px" required></div><div class="col-4"><span class="input-group-prepends" style="width:30%"><a class="btn btn-info" onclick="getlocation()"><i class="fa-solid fa-location-dot"></i> Get Location</a></span></div></div></div></div></div></div></div><div class="mb-2 row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Teknik Sampling</label><select class="form-control" name="teknik_sampling"><option value="Sesaat">Sesaat</option><option value="Gabungan_Waktu">Gabungan Waktu</option><option value="Gabungan_Tempat">Gabungan Tempat</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jam Pengambilan</label><div class="row"><div class="col-8"><input type="text" class="form-control" name="jam" id="jam" readonly="readonly"></div><div class="col-2 px-0"><span class="d-flex align-items-center btn btn-danger"><a onclick="mulai()"><i class="fa-regular fa-clock"></i></a></span></div></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Volume (ml)</label><select class="form-control" id="volume" name="volume" required></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label>Jenis Pengawet</label><select class="form-control select2" name="parent_pengawet[]" id="jenis-pengawet" multiple="multiple" data-placeholder="Pilih jenis Pengawet" style="width:100%" required><option value="fisika">Fisika</option><option value="kimia">Kimia</option></select></div></div></div></div></div><div class="mb-2" id="turunan-pengawet"><label class="label label-1" for="modalInputusername">Jenis Pengawet</label><div class="row"><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck1" value="H2SO4"><span>H2SO4</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck2" value="HNO3"><span>HNO3</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck3" value="HCI"><span>HCI</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck4" value="NaOH"><span>NaOH</span></label></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Perlakuan Penyaringan</label><select class="form-control" name="penyaringan " id="penyaringan" required><option value="">-</option><option value="Ada">Ada</option><option value="Tidak_Ada">Tidak Ada</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Pengendalian Mutu</label><select class="form-control select2" name="mutu[]" multiple="multiple" data-placeholder="Pilih Pengendalian Mutu" style="width:100%"><option value="Split">Split</option><option value="Duplikat">Duplikat</option><option value="Blangko_Media">Blangko Media</option><option value="Blangko_Perjalanan">Blangko Perjalanan</option></select></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">DHL</label><div class="input-group"><input type="number" class="form-control" name="dhl" id="dhl" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">µS/cm</span></div></div><span class="text-danger text-bold" id="valdhl" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">pH</label><input type="number" class="form-control" name="ph" id="ph" autocomplete="off" step="0.01" required></div><span class="text-danger text-bold" id="valph" style="font-size:10px;display:none">Ex. 14.00</span></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Suhu Air</label><div class="input-group"><input type="number" class="form-control" id="suhuAir" name="suhu_air" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">°C</span></div></div><span class="text-danger text-bold" id="valsuhuAir" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Suhu Udara</label><div class="input-group"><input type="number" class="form-control" id="suhuUdara" name="suhu_udara" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">°C</span></div></div><span class="text-danger text-bold" id="valsuhuUdara" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Warna</label><select class="form-control" name="warna" id="warna" required><option value="">-</option><option value="Berwarna">Berwarna</option><option value="Tidak Berwarna">Tidak Berwarna</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Bau</label><select class="form-control" name="bau" id="bau" required><option value="">-</option><option value="Berbau">Berbau</option><option value="Tidak Berbau">Tidak Berbau</option></select></div></div></div></div></div>';
 var tanah =
-   '<div class="row mb-2"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jenis Sample</label><select name="jenis_sample" class="form-control" id="jenis_sample" autocomplete="off"><option>Air Sumur Bor</option><option>Air Sumur Gali</option><option>Air Sumur Pantek</option></select></div></div></div></div><div class="mb-2"><div class="form-group basic"><div class="input-wrapper"><label>Jenis Fungsi Air</label><select name="jenis_fungsi[]" class="select2" multiple="multiple" data-placeholder="Pilih jenis fungsi air" style="width:100%"><option>Air Pemantauan Pencemaran Pertanian</option><option>Air Pemantauan Pencemaran Industri</option><option>Air Pemantauan Pencemaran Industri Air Laut</option><option>Air Sumber Keperluan Sehari-hari</option></select></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Titik</label><input type="text" name="keterangan_1" id="keterangan-1" class="form-control" autocomplete="off"></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Tambahan</label><textarea class="form-control rounded" name="information"></textarea></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Diameter Dalam Sumur</label><div class="input-group"><input type="number" class="form-control" name="diameter_sumur" autocomplete="off" step="any"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">m</span></div></div></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Kedalaman Sumur Pertama</label><div class="input-group"><input type="number" class="form-control" name="kedalaman_sumur_pertama" id="kedalaman_sumur_pertama" autocomplete="off" step="any"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">m</span></div></div></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Kedalaman Sumur Kedua</label><div class="input-group"><input type="number" class="form-control" name="kedalaman_sumur_kedua" id="kedalaman_sumur_kedua" autocomplete="off" step="any"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">m</span></div></div></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Kedalaman Air Terambil</label><div class="input-group"><input type="number" class="form-control" name="kedalaman_sumur_terambil" id="kedalaman_sumur_terambil" autocomplete="off" readonly="readonly"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">m</span></div></div></div></div></div></div></div><div class="mb-2"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Total Waktu Pengambilan</label><div class="input-group"><input type="number" class="form-control" name="total_waktu" id="total_waktu" autocomplete="off" step="any"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">detik</span></div></div></div></div></div><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Titik Koordinat Sampling</label><div class="input-groups input-group-sm mb-2"><input type="hidden" name="lat" id="lat"> <input type="hidden" name="longi" id="longi"><div class="row"><div class="col-8"><input type="text" class="form-control" name="posisi" id="posisi" autocomplete="off" style="font-size:12px" required></div><div class="col-4"><span class="input-group-prepends" style="width:30%"><a class="btn btn-info fa fa-map-marker" onclick="getlocation()">Get Location</a></span></div></div></div></div></div></div></div><div class="mb-2 row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Teknik Sampling</label><select class="form-control" name="teknik_sampling"><option value="Sesaat">Sesaat</option><option value="Gabungan_Waktu">Gabungan Waktu</option><option value="Gabungan_Tempat">Gabungan Tempat</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jam Pengambilan</label><div class="row"><div class="col-8"><input type="text" class="form-control" name="jam" id="jam" readonly="readonly"></div><div class="col-2 px-0"><span class="d-flex align-items-center btn btn-danger"><a onclick="mulai()"><i class="fa-regular fa-clock"></i></a></span></div></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Volume (ml)</label><select class="form-control" id="volume" name="volume" required></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label>Jenis Pengawet</label><select class="form-control select2" name="parent_pengawet[]" id="jenis-pengawet" multiple="multiple" data-placeholder="Pilih jenis Pengawet" style="width:100%"><option value="fisika">Fisika</option><option value="kimia">Kimia</option></select></div></div></div></div></div><div class="mb-2" id="turunan-pengawet"><label class="label label-1" for="modalInputusername">Jenis Pengawet</label><div class="row"><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck1" value="H2SO4"><span>H2SO4</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck2" value="HNO3"><span>HNO3</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck3" value="HCI"><span>HCI</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck4" value="NaOH"><span>NaOH</span></label></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Perlakuan Penyaringan</label><select class="form-control" name="penyaringan" id="penyaringan" required><option value="">-</option><option value="Ada">Ada</option><option value="Tidak_Ada">Tidak Ada</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Pengendalian Mutu</label><select class="form-control select2" name="mutu[]" multiple="multiple" data-placeholder="Pilih Pengendalian Mutu" style="width:100%"><option value="Split">Split</option><option value="Duplikat">Duplikat</option><option value="Blangko_Media">Blangko Media</option><option value="Blangko_Perjalanan">Blangko Perjalanan</option></select></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">DO</label><div class="input-group"><input type="number" class="form-control" name="do" id="do" autocomplete="off" step="any"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">mg/L</span></div></div><span class="text-danger text-bold" id="valdo" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">pH</label><input type="number" class="form-control" name="ph" id="ph" autocomplete="off" step="0.01" min="0.00" max="14.00" required></div><span class="text-danger text-bold" id="valph" style="font-size:10px;display:none">Ex. 14.00</span></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Suhu Air</label><div class="input-group"><input type="number" class="form-control" id="suhuAir" name="suhu_air" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">°C</span></div></div><span class="text-danger text-bold" id="valsuhuAir" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Suhu Udara</label><div class="input-group"><input type="number" class="form-control" id="suhuUdara" name="suhu_udara" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">°C</span></div></div><span class="text-danger text-bold" id="valsuhuUdara" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">DHL</label><div class="input-group"><input type="number" class="form-control" name="dhl" id="dhl" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">µS/cm</span></div></div><span class="text-danger text-bold" id="valdhl" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Warna</label><select class="form-control" name="warna" id="warna" required><option value="">-</option><option value="Berwarna">Berwarna</option><option value="Tidak Berwarna">Tidak Berwarna</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Bau</label><select class="form-control" name="bau" id="bau" required><option value="">-</option><option value="Berbau">Berbau</option><option value="Tidak Berbau">Tidak Berbau</option></select></div></div></div></div></div>';
+   '<div class="row mb-2"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jenis Sample</label><select name="jenis_sample" class="form-control" id="jenis_sample" autocomplete="off"><option>Air Sumur Bor</option><option>Air Sumur Gali</option><option>Air Sumur Pantek</option></select></div></div></div></div><div class="mb-2"><div class="form-group basic"><div class="input-wrapper"><label>Jenis Fungsi Air</label><select name="jenis_fungsi[]" class="select2" multiple="multiple" data-placeholder="Pilih jenis fungsi air" style="width:100%"><option>Air Pemantauan Pencemaran Pertanian</option><option>Air Pemantauan Pencemaran Industri</option><option>Air Pemantauan Pencemaran Industri Air Laut</option><option>Air Sumber Keperluan Sehari-hari</option></select></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Titik</label><input type="text" name="keterangan_1" id="keterangan-1" class="form-control" autocomplete="off"></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Tambahan</label><textarea class="form-control rounded" name="information"></textarea></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Diameter Dalam Sumur</label><div class="input-group"><input type="number" class="form-control" name="diameter_sumur" autocomplete="off" step="any"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">m</span></div></div></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Kedalaman Sumur Pertama</label><div class="input-group"><input type="number" class="form-control" name="kedalaman_sumur_pertama" id="kedalaman_sumur_pertama" autocomplete="off" step="any"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">m</span></div></div></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Kedalaman Sumur Kedua</label><div class="input-group"><input type="number" class="form-control" name="kedalaman_sumur_kedua" id="kedalaman_sumur_kedua" autocomplete="off" step="any"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">m</span></div></div></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Kedalaman Air Terambil</label><div class="input-group"><input type="number" class="form-control" name="kedalaman_sumur_terambil" id="kedalaman_sumur_terambil" autocomplete="off" readonly="readonly"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">m</span></div></div></div></div></div></div></div><div class="mb-2"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Total Waktu Pengambilan</label><div class="input-group"><input type="number" class="form-control" name="total_waktu" id="total_waktu" autocomplete="off" step="any"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">detik</span></div></div></div></div></div><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Titik Koordinat Sampling</label><div class="input-groups input-group-sm mb-2"><input type="hidden" name="lat" id="lat"> <input type="hidden" name="longi" id="longi"><div class="row"><div class="col-8"><input type="text" class="form-control" name="posisi" id="posisi" autocomplete="off" style="font-size:12px" required></div><div class="col-4"><span class="input-group-prepends" style="width:30%"><a class="btn btn-info" onclick="getlocation()"><i class="fa-solid fa-location-dot"></i> Get Location</a></span></div></div></div></div></div></div></div><div class="mb-2 row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Teknik Sampling</label><select class="form-control" name="teknik_sampling"><option value="Sesaat">Sesaat</option><option value="Gabungan_Waktu">Gabungan Waktu</option><option value="Gabungan_Tempat">Gabungan Tempat</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jam Pengambilan</label><div class="row"><div class="col-8"><input type="text" class="form-control" name="jam" id="jam" readonly="readonly"></div><div class="col-2 px-0"><span class="d-flex align-items-center btn btn-danger"><a onclick="mulai()"><i class="fa-regular fa-clock"></i></a></span></div></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Volume (ml)</label><select class="form-control" id="volume" name="volume" required></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label>Jenis Pengawet</label><select class="form-control select2" name="parent_pengawet[]" id="jenis-pengawet" multiple="multiple" data-placeholder="Pilih jenis Pengawet" style="width:100%"><option value="fisika">Fisika</option><option value="kimia">Kimia</option></select></div></div></div></div></div><div class="mb-2" id="turunan-pengawet"><label class="label label-1" for="modalInputusername">Jenis Pengawet</label><div class="row"><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck1" value="H2SO4"><span>H2SO4</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck2" value="HNO3"><span>HNO3</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck3" value="HCI"><span>HCI</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck4" value="NaOH"><span>NaOH</span></label></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Perlakuan Penyaringan</label><select class="form-control" name="penyaringan" id="penyaringan" required><option value="">-</option><option value="Ada">Ada</option><option value="Tidak_Ada">Tidak Ada</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Pengendalian Mutu</label><select class="form-control select2" name="mutu[]" multiple="multiple" data-placeholder="Pilih Pengendalian Mutu" style="width:100%"><option value="Split">Split</option><option value="Duplikat">Duplikat</option><option value="Blangko_Media">Blangko Media</option><option value="Blangko_Perjalanan">Blangko Perjalanan</option></select></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">DO</label><div class="input-group"><input type="number" class="form-control" name="do" id="do" autocomplete="off" step="any"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">mg/L</span></div></div><span class="text-danger text-bold" id="valdo" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">pH</label><input type="number" class="form-control" name="ph" id="ph" autocomplete="off" step="0.01" min="0.00" max="14.00" required></div><span class="text-danger text-bold" id="valph" style="font-size:10px;display:none">Ex. 14.00</span></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Suhu Air</label><div class="input-group"><input type="number" class="form-control" id="suhuAir" name="suhu_air" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">°C</span></div></div><span class="text-danger text-bold" id="valsuhuAir" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Suhu Udara</label><div class="input-group"><input type="number" class="form-control" id="suhuUdara" name="suhu_udara" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">°C</span></div></div><span class="text-danger text-bold" id="valsuhuUdara" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">DHL</label><div class="input-group"><input type="number" class="form-control" name="dhl" id="dhl" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">µS/cm</span></div></div><span class="text-danger text-bold" id="valdhl" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Warna</label><select class="form-control" name="warna" id="warna" required><option value="">-</option><option value="Berwarna">Berwarna</option><option value="Tidak Berwarna">Tidak Berwarna</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Bau</label><select class="form-control" name="bau" id="bau" required><option value="">-</option><option value="Berbau">Berbau</option><option value="Tidak Berbau">Tidak Berbau</option></select></div></div></div></div></div>';
 var laut =
-   '<div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Kedalaman Titik Samping</label><div class="input-group"><input type="number" class="form-control" name="kedalaman" id="kedalaman" autocomplete="off" step="any" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">m</span></div></div></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Lokasi Titik Pengambilan</label><select class="form-control" name="titik_lokasi" id="titik_lokasi"><option>-</option><option value="Estuari">Estuari</option><option value="Pesisir">Pesisir</option><option value="Laut_Lepas">Laut Lepas</option></select></div></div></div></div></div><div class="mb-2" id="turunan-titik-pegambilan"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jumlah Titik Pengambilan</label><input type="text" name="jtpeng" id="jtpeng" class="form-control" autocomplete="off" readonly="readonly"></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Titik</label><input type="text" name="keterangan_1" id="keterangan-1" class="form-control" autocomplete="off"></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Tambahan</label><textarea class="form-control rounded" name="information"></textarea></div></div></div></div></div><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Titik Koordinat Sampling</label><div class="input-groups input-group-sm mb-2"><input type="hidden" name="lat" id="lat"> <input type="hidden" name="longi" id="longi"><div class="row"><div class="col-8"><input type="text" class="form-control" name="posisi" id="posisi" required autocomplete="off" style="font-size:12px" required></div><div class="col-4"><span class="input-group-prepends" style="width:30%"><a class="btn btn-info fa fa-map-marker" onclick="getlocation()">Get Location</a></span></div></div></div></div></div></div></div><div class="mb-2 row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Teknik Sampling</label><select class="form-control" name="teknik_sampling"><option value="Sesaat">Sesaat</option><option value="Gabungan_Kedalaman">Gabungan Kedalaman</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jam Pengambilan</label><div class="row"><div class="col-8"><input type="text" class="form-control" name="jam" id="jam" readonly="readonly"></div><div class="col-2 px-0"><span class="d-flex align-items-center btn btn-danger"><a onclick="mulai()"><i class="fa-regular fa-clock"></i></a></span></div></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Volume (ml)</label><select class="form-control" id="volume" name="volume" required></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label>Jenis Pengawet</label><select class="form-control select2" name="parent_pengawet[]" id="jenis-pengawet" multiple="multiple" data-placeholder="Pilih jenis Pengawet" style="width:100%"><option value="fisika">Fisika</option><option value="kimia">Kimia</option></select></div></div></div></div></div><div class="mb-2" id="turunan-pengawet"><label class="label label-1" for="modalInputusername">Jenis Pengawet</label><div class="row"><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck1" value="H2SO4"><span>H2SO4</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck2" value="HNO3"><span>HNO3</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck3" value="HCI"><span>HCI</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck4" value="NaOH"><span>NaOH</span></label></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Perlakuan Penyaringan</label><select class="form-control" name="penyaringan" id="penyaringan" required><option value="">-</option><option value="Ada">Ada</option><option value="Tidak_Ada">Tidak Ada</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Pengendalian Mutu</label><select class="form-control select2" name="mutu[]" multiple="multiple" data-placeholder="Pilih Pengendalian Mutu" style="width:100%"><option value="Split">Split</option><option value="Duplikat">Duplikat</option><option value="Blangko_Media">Blangko Media</option><option value="Blangko_Perjalanan">Blangko Perjalanan</option></select></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">DO</label><div class="input-group"><input type="number" class="form-control" name="do" id="do" autocomplete="off" step="any"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">mg/L</span></div></div><span class="text-danger text-bold" id="valdo" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">pH</label><input type="number" class="form-control" name="ph" id="ph" autocomplete="off" step="0.01" min="0.00" max="14.00" required></div><span class="text-danger text-bold" id="valph" style="font-size:10px;display:none">Ex. 14.00</span></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Suhu Air</label><div class="input-group"><input type="number" class="form-control" id="suhuAir" name="suhu_air" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">°C</span></div></div><span class="text-danger text-bold" id="valsuhuAir" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Suhu Udara</label><div class="input-group"><input type="number" class="form-control" id="suhuUdara" name="suhu_udara" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">°C</span></div></div><span class="text-danger text-bold" id="valsuhuUdara" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Salinitas</label><div class="input-group"><input type="number" class="form-control" name="salinitas" autocomplete="off" step="any"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">‰</span></div></div></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Kecepatan Arus</label><div class="input-group"><input type="number" class="form-control" name="kecepatan_arus" autocomplete="off" step="any"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">m/detik</span></div></div></div></div></div></div></div><div class="row mb-2"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Arah Arus</label><select class="form-control" name="arah_arus"><option>Utara</option><option>Timur Laut</option><option>Timur</option><option>Tenggara</option><option>Selatan</option><option>Barat Daya</option><option>Barat</option><option>Barat Laut</option></select></div></div></div></div><div class="mb-2"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Pasang Surut Air Laut</label><div class="col-12 mb-2"><button id="addRow" type="button" class="btns btn-info">Tambah Pengamatan</button></div><div class="mb-2"><div id="newRow"></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Kecerahan</label><div class="input-group"><input type="number" class="form-control" name="kecerahan" autocomplete="off" step="any"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">m</span></div></div></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Warna</label><select class="form-control" name="warna" id="warna" required><option value="">-</option><option value="Berwarna">Berwarna</option><option value="Tidak_Berwarna">Tidak Berwarna</option></select></div></div></div></div></div><div class="row mb-2"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Bau</label><select class="form-control" name="bau" id="bau" required><option value="">-</option><option value="Berbau">Berbau</option><option value="Tidak_Berbau">Tidak Berbau</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Lapisan Minyak</label><select class="form-control" name="minyak" id="penyaringan"><option value="">-</option><option value="Ada">Ada</option><option value="Tidak_Ada">Tidak Ada</option></select></div></div></div></div><div class="row mb-3"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Cuaca</label><select class="form-control" name="cuaca" id="penyaringan"><option value="Cerah">Cerah</option><option value="Mendung">Mendung</option><option value="Berawan">Berawan</option><option value="Setelah_Hujan">Setelah Hujan</option></select></div></div></div></div>';
+   '<div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Kedalaman Titik Samping</label><div class="input-group"><input type="number" class="form-control" name="kedalaman" id="kedalaman" autocomplete="off" step="any" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">m</span></div></div></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Lokasi Titik Pengambilan</label><select class="form-control" name="titik_lokasi" id="titik_lokasi"><option>-</option><option value="Estuari">Estuari</option><option value="Pesisir">Pesisir</option><option value="Laut_Lepas">Laut Lepas</option></select></div></div></div></div></div><div class="mb-2" id="turunan-titik-pegambilan"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jumlah Titik Pengambilan</label><input type="text" name="jtpeng" id="jtpeng" class="form-control" autocomplete="off" readonly="readonly"></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Titik</label><input type="text" name="keterangan_1" id="keterangan-1" class="form-control" autocomplete="off"></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Tambahan</label><textarea class="form-control rounded" name="information"></textarea></div></div></div></div></div><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Titik Koordinat Sampling</label><div class="input-groups input-group-sm mb-2"><input type="hidden" name="lat" id="lat"> <input type="hidden" name="longi" id="longi"><div class="row"><div class="col-8"><input type="text" class="form-control" name="posisi" id="posisi" required autocomplete="off" style="font-size:12px" required></div><div class="col-4"><span class="input-group-prepends" style="width:30%"><a class="btn btn-info" onclick="getlocation()"><i class="fa-solid fa-location-dot"></i> Get Location</a></span></div></div></div></div></div></div></div><div class="mb-2 row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Teknik Sampling</label><select class="form-control" name="teknik_sampling"><option value="Sesaat">Sesaat</option><option value="Gabungan_Kedalaman">Gabungan Kedalaman</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jam Pengambilan</label><div class="row"><div class="col-8"><input type="text" class="form-control" name="jam" id="jam" readonly="readonly"></div><div class="col-2 px-0"><span class="d-flex align-items-center btn btn-danger"><a onclick="mulai()"><i class="fa-regular fa-clock"></i></a></span></div></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Volume (ml)</label><select class="form-control" id="volume" name="volume" required></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label>Jenis Pengawet</label><select class="form-control select2" name="parent_pengawet[]" id="jenis-pengawet" multiple="multiple" data-placeholder="Pilih jenis Pengawet" style="width:100%"><option value="fisika">Fisika</option><option value="kimia">Kimia</option></select></div></div></div></div></div><div class="mb-2" id="turunan-pengawet"><label class="label label-1" for="modalInputusername">Jenis Pengawet</label><div class="row"><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck1" value="H2SO4"><span>H2SO4</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck2" value="HNO3"><span>HNO3</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck3" value="HCI"><span>HCI</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck4" value="NaOH"><span>NaOH</span></label></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Perlakuan Penyaringan</label><select class="form-control" name="penyaringan" id="penyaringan" required><option value="">-</option><option value="Ada">Ada</option><option value="Tidak_Ada">Tidak Ada</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Pengendalian Mutu</label><select class="form-control select2" name="mutu[]" multiple="multiple" data-placeholder="Pilih Pengendalian Mutu" style="width:100%"><option value="Split">Split</option><option value="Duplikat">Duplikat</option><option value="Blangko_Media">Blangko Media</option><option value="Blangko_Perjalanan">Blangko Perjalanan</option></select></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">DO</label><div class="input-group"><input type="number" class="form-control" name="do" id="do" autocomplete="off" step="any"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">mg/L</span></div></div><span class="text-danger text-bold" id="valdo" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">pH</label><input type="number" class="form-control" name="ph" id="ph" autocomplete="off" step="0.01" min="0.00" max="14.00" required></div><span class="text-danger text-bold" id="valph" style="font-size:10px;display:none">Ex. 14.00</span></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Suhu Air</label><div class="input-group"><input type="number" class="form-control" id="suhuAir" name="suhu_air" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">°C</span></div></div><span class="text-danger text-bold" id="valsuhuAir" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Suhu Udara</label><div class="input-group"><input type="number" class="form-control" id="suhuUdara" name="suhu_udara" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">°C</span></div></div><span class="text-danger text-bold" id="valsuhuUdara" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Salinitas</label><div class="input-group"><input type="number" class="form-control" name="salinitas" autocomplete="off" step="any"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">‰</span></div></div></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Kecepatan Arus</label><div class="input-group"><input type="number" class="form-control" name="kecepatan_arus" autocomplete="off" step="any"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">m/detik</span></div></div></div></div></div></div></div><div class="row mb-2"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Arah Arus</label><select class="form-control" name="arah_arus"><option>Utara</option><option>Timur Laut</option><option>Timur</option><option>Tenggara</option><option>Selatan</option><option>Barat Daya</option><option>Barat</option><option>Barat Laut</option></select></div></div></div></div><div class="mb-2"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Pasang Surut Air Laut</label><div class="col-12 mb-2"><button id="addRow" type="button" class="btns btn-info">Tambah Pengamatan</button></div><div class="mb-2"><div id="newRow"></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Kecerahan</label><div class="input-group"><input type="number" class="form-control" name="kecerahan" autocomplete="off" step="any"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">m</span></div></div></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Warna</label><select class="form-control" name="warna" id="warna" required><option value="">-</option><option value="Berwarna">Berwarna</option><option value="Tidak_Berwarna">Tidak Berwarna</option></select></div></div></div></div></div><div class="row mb-2"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Bau</label><select class="form-control" name="bau" id="bau" required><option value="">-</option><option value="Berbau">Berbau</option><option value="Tidak_Berbau">Tidak Berbau</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Lapisan Minyak</label><select class="form-control" name="minyak" id="penyaringan"><option value="">-</option><option value="Ada">Ada</option><option value="Tidak_Ada">Tidak Ada</option></select></div></div></div></div><div class="row mb-3"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Cuaca</label><select class="form-control" name="cuaca" id="penyaringan"><option value="Cerah">Cerah</option><option value="Mendung">Mendung</option><option value="Berawan">Berawan</option><option value="Setelah_Hujan">Setelah Hujan</option></select></div></div></div></div>';
 var permukaan =
-   '<div class="row mb-2"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jenis Sample</label><input type="text" name="jenis_sample" class="form-control" id="jenis_sample" autocomplete="off" readonly="readonly"></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jumlah Titik Pengambilan</label><select class="form-control" name="jumlah_titik"><option value="">Pilih Titik</option><option value="1 Titik">1 Titik</option><option value="2 Titik">2 Titik</option><option value="3 Titik">3 Titik</option><option value="4 Titik">4 Titik</option><option value="5 Titik">5 Titik</option><option value="6 Titik">6 Titik</option><option value="7 Titik">7 Titik</option><option value="8 Titik">8 Titik</option><option value="9 Titik">9 Titik</option><option value="10 Titik">10 Titik</option></select></div></div></div></div><div class="mb-2"><div class="form-group basic"><div class="input-wrapper"><label>Jenis Fungsi Air</label><select class="select2" name="jenis_fungsi[]" class="select2" multiple="multiple" data-placeholder="Pilih jenis fungsi air" style="width:100%"><option>Air Alamiah</option><option>Air untuk Perkotaan</option><option>Air untuk Industri</option><option>Air yang Sudah Tercampur Limbah</option><option>Air yang Siap Masuk ke Danau/Laut</option></select></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Titik</label><input type="text" name="keterangan_1" id="keterangan-1" class="form-control" autocomplete="off"></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Tambahan</label><textarea class="form-control rounded" name="information"></textarea></div></div></div></div></div><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Titik Koordinat Sampling</label><div class="input-groups input-group-sm mb-2"><input type="hidden" name="lat" id="lat"> <input type="hidden" name="longi" id="longi"><div class="row"><div class="col-8"><input type="text" class="form-control" name="posisi" id="posisi" autocomplete="off" style="font-size:12px" required></div><div class="col-4"><span class="input-group-prepends" style="width:30%"><a class="btn btn-info fa fa-map-marker" onclick="getlocation()">Get Location</a></span></div></div></div></div></div></div></div><div class="mb-2 row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Teknik Sampling</label><select class="form-control" name="teknik_sampling"><option value="Sesaat">Sesaat</option><option value="Gabungan_Kedalaman">Gabungan Kedalaman</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jam Pengambilan</label><div class="row"><div class="col-8"><input type="text" class="form-control" name="jam" id="jam" readonly="readonly"></div><div class="col-2 px-0"><span class="d-flex align-items-center btn btn-danger"><a onclick="mulai()"><i class="fa-regular fa-clock"></i></a></span></div></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Volume (ml)</label><select class="form-control" id="volume" name="volume" required></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label>Jenis Pengawet</label><select class="form-control select2" name="parent_pengawet[]" id="jenis-pengawet" multiple="multiple" data-placeholder="Pilih jenis Pengawet" style="width:100%"><option value="fisika">Fisika</option><option value="kimia">Kimia</option></select></div></div></div></div></div><div class="mb-2" id="turunan-pengawet"><label class="label label-1" for="modalInputusername">Jenis Pengawet</label><div class="row"><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck1" value="H2SO4"><span>H2SO4</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck2" value="HNO3"><span>HNO3</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck3" value="HCI"><span>HCI</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck4" value="NaOH"><span>NaOH</span></label></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Perlakuan Penyaringan</label><select class="form-control" name="penyaringan" id="penyaringan"><option value="">-</option><option value="Ada">Ada</option><option value="Tidak_Ada">Tidak Ada</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Pengendalian Mutu</label><select class="form-control select2" name="mutu[]" multiple="multiple" data-placeholder="Pilih Pengendalian Mutu" style="width:100%"><option value="Split">Split</option><option value="Duplikat">Duplikat</option><option value="Blangko_Media">Blangko Media</option><option value="Blangko_Perjalanan">Blangko Perjalanan</option></select></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Teknik Pengukuran Debit</label><select class="form-control" name="pengukuran_debit" id="pengukuran_debit"><option>-</option><option value="Sederhana">Sederhana</option><option value="Instrument Current Meter">Instrument Current Meter</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Pilih Debit Air</label><select class="form-control" id="sel_debit" name="sel_debit"><option>-</option><option value="Input Data">Input Data</option><option value="Data By Customer">Data By Customer</option></select></div></div></div></div></div><div class="row"><div class="col-6" id="opt_deb_cust"></div><div class="col-6" id="data_by_cust"></div></div><div class="row"><div class="col-6" id="input_deb"></div><div class="col-6" style="display:none" id="satDebit"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1 mb-1">Satuan Debit</label><select name="satuan_debit" class="form-control selInput" autocomplete="off" style="width:100%"><option value="mL/detik" style="font-size:10px">mL/detik</option><option value="L/detik" style="font-size:10px">L/detik</option><option value="L/jam" style="font-size:10px">L/jam</option><option value="L/hari" style="font-size:10px">L/hari</option></select></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">pH</label><input type="number" class="form-control" name="ph" id="ph" autocomplete="off" step="0.01" min="0.00" max="14.00" required></div><span class="text-danger text-bold" id="valph" style="font-size:10px;display:none">Ex. 14.00</span>></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Suhu Air</label><div class="input-group"><input type="number" class="form-control" id="suhuAir" name="suhu_air" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">°C</span></div></div><span class="text-danger text-bold" id="valsuhuAir" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Suhu Udara</label><div class="input-group"><input type="number" class="form-control" id="suhuUdara" name="suhu_udara" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">°C</span></div></div><span class="text-danger text-bold" id="valsuhuUdara" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">DHL</label><div class="input-group"><input type="number" class="form-control" name="dhl" id="dhl" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">µS/cm</span></div></div><span class="text-danger text-bold" id="valdhl" style="font-size:10px;display:none">Ex. 7.0</span></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Klor Bebas</label><div class="input-group"><input type="number" class="form-control" name="klor" id="klor" autocomplete="off" step="any"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">mg/L</span></div></div><span class="text-danger text-bold" id="valklor" style="font-size:10px;display:none">Ex. 14.00</span></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Warna</label><select class="form-control" name="warna" id="warna" required><option value="">-</option><option value="Berwarna">Berwarna</option><option value="Tidak Berwarna">Tidak Berwarna</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Bau</label><select class="form-control" name="bau" id="bau" required><option value="">-</option><option value="Berbau">Berbau</option><option value="Tidak Berbau">Tidak Berbau</option></select></div></div></div></div></div>';
+   '<div class="row mb-2"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jenis Sample</label><input type="text" name="jenis_sample" class="form-control" id="jenis_sample" autocomplete="off" readonly="readonly"></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jumlah Titik Pengambilan</label><select class="form-control" name="jumlah_titik"><option value="">Pilih Titik</option><option value="1 Titik">1 Titik</option><option value="2 Titik">2 Titik</option><option value="3 Titik">3 Titik</option><option value="4 Titik">4 Titik</option><option value="5 Titik">5 Titik</option><option value="6 Titik">6 Titik</option><option value="7 Titik">7 Titik</option><option value="8 Titik">8 Titik</option><option value="9 Titik">9 Titik</option><option value="10 Titik">10 Titik</option></select></div></div></div></div><div class="mb-2"><div class="form-group basic"><div class="input-wrapper"><label>Jenis Fungsi Air</label><select class="select2" name="jenis_fungsi[]" class="select2" multiple="multiple" data-placeholder="Pilih jenis fungsi air" style="width:100%"><option>Air Alamiah</option><option>Air untuk Perkotaan</option><option>Air untuk Industri</option><option>Air yang Sudah Tercampur Limbah</option><option>Air yang Siap Masuk ke Danau/Laut</option></select></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Titik</label><input type="text" name="keterangan_1" id="keterangan-1" class="form-control" autocomplete="off"></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Tambahan</label><textarea class="form-control rounded" name="information"></textarea></div></div></div></div></div><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Titik Koordinat Sampling</label><div class="input-groups input-group-sm mb-2"><input type="hidden" name="lat" id="lat"> <input type="hidden" name="longi" id="longi"><div class="row"><div class="col-8"><input type="text" class="form-control" name="posisi" id="posisi" autocomplete="off" style="font-size:12px" required></div><div class="col-4"><span class="input-group-prepends" style="width:30%"><a class="btn btn-info" onclick="getlocation()"><i class="fa-solid fa-location-dot"></i> Get Location</a></span></div></div></div></div></div></div></div><div class="mb-2 row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Teknik Sampling</label><select class="form-control" name="teknik_sampling"><option value="Sesaat">Sesaat</option><option value="Gabungan_Kedalaman">Gabungan Kedalaman</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jam Pengambilan</label><div class="row"><div class="col-8"><input type="text" class="form-control" name="jam" id="jam" readonly="readonly"></div><div class="col-2 px-0"><span class="d-flex align-items-center btn btn-danger"><a onclick="mulai()"><i class="fa-regular fa-clock"></i></a></span></div></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Volume (ml)</label><select class="form-control" id="volume" name="volume" required></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label>Jenis Pengawet</label><select class="form-control select2" name="parent_pengawet[]" id="jenis-pengawet" multiple="multiple" data-placeholder="Pilih jenis Pengawet" style="width:100%"><option value="fisika">Fisika</option><option value="kimia">Kimia</option></select></div></div></div></div></div><div class="mb-2" id="turunan-pengawet"><label class="label label-1" for="modalInputusername">Jenis Pengawet</label><div class="row"><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck1" value="H2SO4"><span>H2SO4</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck2" value="HNO3"><span>HNO3</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck3" value="HCI"><span>HCI</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck4" value="NaOH"><span>NaOH</span></label></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Perlakuan Penyaringan</label><select class="form-control" name="penyaringan" id="penyaringan"><option value="">-</option><option value="Ada">Ada</option><option value="Tidak_Ada">Tidak Ada</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Pengendalian Mutu</label><select class="form-control select2" name="mutu[]" multiple="multiple" data-placeholder="Pilih Pengendalian Mutu" style="width:100%"><option value="Split">Split</option><option value="Duplikat">Duplikat</option><option value="Blangko_Media">Blangko Media</option><option value="Blangko_Perjalanan">Blangko Perjalanan</option></select></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Teknik Pengukuran Debit</label><select class="form-control" name="pengukuran_debit" id="pengukuran_debit"><option>-</option><option value="Sederhana">Sederhana</option><option value="Instrument Current Meter">Instrument Current Meter</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Pilih Debit Air</label><select class="form-control" id="sel_debit" name="sel_debit"><option>-</option><option value="Input Data">Input Data</option><option value="Data By Customer">Data By Customer</option></select></div></div></div></div></div><div class="row"><div class="col-6" id="opt_deb_cust"></div><div class="col-6" id="data_by_cust"></div></div><div class="row"><div class="col-6" id="input_deb"></div><div class="col-6" style="display:none" id="satDebit"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1 mb-1">Satuan Debit</label><select name="satuan_debit" class="form-control selInput" autocomplete="off" style="width:100%"><option value="mL/detik" style="font-size:10px">mL/detik</option><option value="L/detik" style="font-size:10px">L/detik</option><option value="L/jam" style="font-size:10px">L/jam</option><option value="L/hari" style="font-size:10px">L/hari</option></select></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">pH</label><input type="number" class="form-control" name="ph" id="ph" autocomplete="off" step="0.01" min="0.00" max="14.00" required></div><span class="text-danger text-bold" id="valph" style="font-size:10px;display:none">Ex. 14.00</span>></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Suhu Air</label><div class="input-group"><input type="number" class="form-control" id="suhuAir" name="suhu_air" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">°C</span></div></div><span class="text-danger text-bold" id="valsuhuAir" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Suhu Udara</label><div class="input-group"><input type="number" class="form-control" id="suhuUdara" name="suhu_udara" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">°C</span></div></div><span class="text-danger text-bold" id="valsuhuUdara" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">DHL</label><div class="input-group"><input type="number" class="form-control" name="dhl" id="dhl" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">µS/cm</span></div></div><span class="text-danger text-bold" id="valdhl" style="font-size:10px;display:none">Ex. 7.0</span></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Klor Bebas</label><div class="input-group"><input type="number" class="form-control" name="klor" id="klor" autocomplete="off" step="any"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">mg/L</span></div></div><span class="text-danger text-bold" id="valklor" style="font-size:10px;display:none">Ex. 14.00</span></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Warna</label><select class="form-control" name="warna" id="warna" required><option value="">-</option><option value="Berwarna">Berwarna</option><option value="Tidak Berwarna">Tidak Berwarna</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Bau</label><select class="form-control" name="bau" id="bau" required><option value="">-</option><option value="Berbau">Berbau</option><option value="Tidak Berbau">Tidak Berbau</option></select></div></div></div></div></div>';
 var limbah =
-   '<div class="mb-2"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jenis Sample</label><input type="text" name="jenis_sample" class="form-control" id="jenis_sample" autocomplete="off" readonly="readonly"></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jenis Produksi</label><textarea class="form-control rounded" name="jenis_produksi"></textarea></div></div></div></div></div><div class="mb-2 row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Status Ketersediaan Ipal</label><select class="form-control" name="ipal"><option>-</option><option value="Ada">Ada</option><option value="Tidak_Ada">Tidak Ada</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Lokasi Sampling</label><select class="form-control" name="lokasi_sampling"><option>-</option><option value="Inlet">Inlet</option><option value="Outlet">Outlet</option><option value="Outfall">Outfall</option></select></div></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Titik</label><input type="text" name="keterangan_1" id="keterangan-1" class="form-control" autocomplete="off"></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Tambahan</label><textarea class="form-control rounded" name="information"></textarea></div></div></div></div></div><div class="form-group basic"><div class="row"><div class="col-sm-12"><label class="label label-1">Titik Koordinat</label><div class="input-groups input-group-sm mb-2"><input type="hidden" name="lat" id="lat"> <input type="hidden" name="longi" id="longi"><div class="row"><div class="col-8"><input type="text" class="form-control" name="posisi" id="posisi" autocomplete="off" style="font-size:12px" required></div><div class="col-4"><span class="input-group-prepends" style="width:30%"><a class="btn btn-info fa fa-map-marker" onclick="getlocation()">Get Location</a></span></div></div></div></div></div></div><div class="mb-2 row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Teknik Sampling</label><select class="form-control" name="teknik_sampling"><option value="Sesaat">Sesaat</option><option value="Gabungan_Waktu">Gabungan Waktu</option><option value="Gabungan_Tempat">Gabungan Tempat</option><option value="Gabungan_Waktu_dan_Tempat">Gabungan Waktu & Tempat</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jam Pengambilan</label><div class="row"><div class="col-8"><input type="text" class="form-control" name="jam" id="jam" readonly="readonly"></div><div class="col-2 px-0"><span class="d-flex align-items-center btn btn-danger"><a onclick="mulai()"><i class="fa-regular fa-clock"></i></a></span></div></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Volume (ml)</label><select class="form-control" id="volume" name="volume" required></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label>Jenis Pengawet</label><select class="form-control select2" name="parent_pengawet[]" id="jenis-pengawet" multiple="multiple" data-placeholder="Pilih jenis Pengawet" style="width:100%"><option value="fisika">Fisika</option><option value="kimia">Kimia</option></select></div></div></div></div></div><div class="mb-2" id="turunan-pengawet"><label class="label label-1" for="modalInputusername">Jenis Pengawet</label><div class="row"><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck1" value="H2SO4"><span>H2SO4</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck2" value="HNO3"><span>HNO3</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck3" value="HCI"><span>HCI</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck4" value="NaOH"><span>NaOH</span></label></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Perlakuan Penyaringan</label><select class="form-control" name="penyaringan" id="penyaringan"><option value="">-</option><option value="Ada">Ada</option><option value="Tidak_Ada">Tidak Ada</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Pengendalian Mutu</label><select class="form-control select2" name="mutu[]" multiple="multiple" data-placeholder="Pilih Pengendalian Mutu" style="width:100%"><option value="Split">Split</option><option value="Duplikat">Duplikat</option><option value="Blangko_Media">Blangko Media</option><option value="Blangko_Perjalanan">Blangko Perjalanan</option></select></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">DO</label><div class="input-group"><input type="number" class="form-control" name="do" id="do" autocomplete="off" step="any"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">mg/L</span></div></div><span class="text-danger text-bold" id="valdo" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Pilih Debit Air</label><select class="form-control" id="sel_debit" name="sel_debit"><option>-</option><option value="Input Data">Input Data</option><option value="Data By Customer">Data By Customer</option></select></div></div></div></div></div><div class="row"><div class="col-6" id="opt_deb_cust"></div><div class="col-6" id="data_by_cust"></div></div><div class="row"><div class="col-6" id="input_deb"></div><div class="col-6" style="display:none" id="satDebit"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1 mb-1">Satuan Debit</label><select name="satuan_debit" class="form-control selInput" autocomplete="off" style="width:100%"><option value="mL/detik" style="font-size:10px">mL/detik</option><option value="L/detik" style="font-size:10px">L/detik</option><option value="L/jam" style="font-size:10px">L/jam</option><option value="L/hari" style="font-size:10px">L/hari</option></select></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">pH</label><input type="number" class="form-control" name="ph" id="ph" autocomplete="off" step="0.01" min="0.00" max="14.00" required></div><span class="text-danger text-bold" id="valph" style="font-size:10px;display:none">Ex. 14.00</span></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Suhu Air</label><div class="input-group"><input type="number" class="form-control" id="suhuAir" name="suhu_air" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">°C</span></div></div><span class="text-danger text-bold" id="valsuhuAir" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Suhu Udara</label><div class="input-group"><input type="number" class="form-control" id="suhuUdara" name="suhu_udara" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">°C</span></div></div><span class="text-danger text-bold" id="valsuhuUdara" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">DHL</label><div class="input-group"><input type="number" class="form-control" name="dhl" id="dhl" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">µS/cm</span></div></div><span class="text-danger text-bold" id="valdhl" style="font-size:10px;display:none">Ex. 7.0</span></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Warna</label><select class="form-control" name="warna" id="warna" required><option value="">-</option><option value="Berwarna">Berwarna</option><option value="Tidak_Berwarna">Tidak Berwarna</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Bau</label><select class="form-control" name="bau" id="bau" required><option value="">-</option><option value="Bau">Bau</option><option value="Tidak_Bau">Tidak Bau</option></select></div></div></div></div></div>';
+   '<div class="mb-2"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jenis Sample</label><input type="text" name="jenis_sample" class="form-control" id="jenis_sample" autocomplete="off" readonly="readonly"></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jenis Produksi</label><textarea class="form-control rounded" name="jenis_produksi"></textarea></div></div></div></div></div><div class="mb-2 row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Status Ketersediaan Ipal</label><select class="form-control" name="ipal"><option>-</option><option value="Ada">Ada</option><option value="Tidak_Ada">Tidak Ada</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Lokasi Sampling</label><select class="form-control" name="lokasi_sampling"><option>-</option><option value="Inlet">Inlet</option><option value="Outlet">Outlet</option><option value="Outfall">Outfall</option></select></div></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Titik</label><input type="text" name="keterangan_1" id="keterangan-1" class="form-control" autocomplete="off"></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Tambahan</label><textarea class="form-control rounded" name="information"></textarea></div></div></div></div></div><div class="form-group basic"><div class="row"><div class="col-sm-12"><label class="label label-1">Titik Koordinat</label><div class="input-groups input-group-sm mb-2"><input type="hidden" name="lat" id="lat"> <input type="hidden" name="longi" id="longi"><div class="row"><div class="col-8"><input type="text" class="form-control" name="posisi" id="posisi" autocomplete="off" style="font-size:12px" required></div><div class="col-4"><span class="input-group-prepends" style="width:30%"><a class="btn btn-info" onclick="getlocation()"><i class="fa-solid fa-location-dot"></i> Get Location</a></span></div></div></div></div></div></div><div class="mb-2 row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Teknik Sampling</label><select class="form-control" name="teknik_sampling"><option value="Sesaat">Sesaat</option><option value="Gabungan_Waktu">Gabungan Waktu</option><option value="Gabungan_Tempat">Gabungan Tempat</option><option value="Gabungan_Waktu_dan_Tempat">Gabungan Waktu & Tempat</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jam Pengambilan</label><div class="row"><div class="col-8"><input type="text" class="form-control" name="jam" id="jam" readonly="readonly"></div><div class="col-2 px-0"><span class="d-flex align-items-center btn btn-danger"><a onclick="mulai()"><i class="fa-regular fa-clock"></i></a></span></div></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Volume (ml)</label><select class="form-control" id="volume" name="volume" required></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label>Jenis Pengawet</label><select class="form-control select2" name="parent_pengawet[]" id="jenis-pengawet" multiple="multiple" data-placeholder="Pilih jenis Pengawet" style="width:100%"><option value="fisika">Fisika</option><option value="kimia">Kimia</option></select></div></div></div></div></div><div class="mb-2" id="turunan-pengawet"><label class="label label-1" for="modalInputusername">Jenis Pengawet</label><div class="row"><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck1" value="H2SO4"><span>H2SO4</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck2" value="HNO3"><span>HNO3</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck3" value="HCI"><span>HCI</span></label></div><div class="col-sm-3"><label><input type="checkbox" name="jenis_pengawet[]" id="iCheck4" value="NaOH"><span>NaOH</span></label></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Perlakuan Penyaringan</label><select class="form-control" name="penyaringan" id="penyaringan"><option value="">-</option><option value="Ada">Ada</option><option value="Tidak_Ada">Tidak Ada</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Pengendalian Mutu</label><select class="form-control select2" name="mutu[]" multiple="multiple" data-placeholder="Pilih Pengendalian Mutu" style="width:100%"><option value="Split">Split</option><option value="Duplikat">Duplikat</option><option value="Blangko_Media">Blangko Media</option><option value="Blangko_Perjalanan">Blangko Perjalanan</option></select></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">DO</label><div class="input-group"><input type="number" class="form-control" name="do" id="do" autocomplete="off" step="any"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">mg/L</span></div></div><span class="text-danger text-bold" id="valdo" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Pilih Debit Air</label><select class="form-control" id="sel_debit" name="sel_debit"><option>-</option><option value="Input Data">Input Data</option><option value="Data By Customer">Data By Customer</option></select></div></div></div></div></div><div class="row"><div class="col-6" id="opt_deb_cust"></div><div class="col-6" id="data_by_cust"></div></div><div class="row"><div class="col-6" id="input_deb"></div><div class="col-6" style="display:none" id="satDebit"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1 mb-1">Satuan Debit</label><select name="satuan_debit" class="form-control selInput" autocomplete="off" style="width:100%"><option value="mL/detik" style="font-size:10px">mL/detik</option><option value="L/detik" style="font-size:10px">L/detik</option><option value="L/jam" style="font-size:10px">L/jam</option><option value="L/hari" style="font-size:10px">L/hari</option></select></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">pH</label><input type="number" class="form-control" name="ph" id="ph" autocomplete="off" step="0.01" min="0.00" max="14.00" required></div><span class="text-danger text-bold" id="valph" style="font-size:10px;display:none">Ex. 14.00</span></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Suhu Air</label><div class="input-group"><input type="number" class="form-control" id="suhuAir" name="suhu_air" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">°C</span></div></div><span class="text-danger text-bold" id="valsuhuAir" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Suhu Udara</label><div class="input-group"><input type="number" class="form-control" id="suhuUdara" name="suhu_udara" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">°C</span></div></div><span class="text-danger text-bold" id="valsuhuUdara" style="font-size:10px;display:none">Ex. 14.0</span></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">DHL</label><div class="input-group"><input type="number" class="form-control" name="dhl" id="dhl" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">µS/cm</span></div></div><span class="text-danger text-bold" id="valdhl" style="font-size:10px;display:none">Ex. 7.0</span></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Warna</label><select class="form-control" name="warna" id="warna" required><option value="">-</option><option value="Berwarna">Berwarna</option><option value="Tidak_Berwarna">Tidak Berwarna</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Bau</label><select class="form-control" name="bau" id="bau" required><option value="">-</option><option value="Bau">Bau</option><option value="Tidak_Bau">Tidak Bau</option></select></div></div></div></div></div>';
 </script>

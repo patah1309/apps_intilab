@@ -13,7 +13,6 @@
                      </tr>
                   </thead>
                   <tbody>
-
                      <?php foreach($data['data']->data as $value):?>
                      <tr>
                         <td>

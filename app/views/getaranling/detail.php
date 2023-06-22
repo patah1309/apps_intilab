@@ -31,10 +31,27 @@
 <script>
 $('#cahaya').empty();
 
-var e = '<?= $data['nilai_peng'] ?>'
-var html = "-";
-var text = JSON.parse(e.replace(/;/g, ' : '));
-var html = '<div class="row">'
+var id_kat = '<?= $data['id_kat'] ?>'
+
+var e = '<?= $data['pengukuran'] ?>'
+if (id_kat !== 14 || id_kat !== 19) {
+   $('#getaran').empty();
+   var html = "-";
+   if (e != null) {
+      var text = JSON.parse(e.replace(/;/g, ' : '));
+      var html = '<div class="row">'
+
+      $.each(text, function(key, value) {
+         html += '<div class="col-12 border">'
+         html += '<span class="text-nowrap">' + key + " = " + value + '</span>'
+         html += '</div>'
+      });
+      html += '</div>'
+   }
+   $('#getaran').html(html);
+} else {
+   $('#getaran').empty();
+}
 
 $.each(text, function(key, value) {
    html += '<div class="col-sm-6 border">'
@@ -46,16 +63,16 @@ $.each(text, function(key, value) {
 html += '</div>'
 $('#cahaya').html(html);
 
-function fotoD(file) {
-   var path = 'http://localhost/eng/backend/public/dokumentasi/'
-   var filename = file.getAttribute("value");
+// function fotoD(file) {
+//    var path = 'http://localhost/eng/backend/public/dokumentasi/'
+//    var filename = file.getAttribute("value");
 
-   var file_path = path + filename;
-   var a = document.createElement('a');
-   a.href = file_path;
-   a.download = file_path.substr(file_path.lastIndexOf('/') + 1);
-   document.body.appendChild(a);
-   a.click();
-   document.body.removeChild(a);
-}
+//    var file_path = path + filename;
+//    var a = document.createElement('a');
+//    a.href = file_path;
+//    a.download = file_path.substr(file_path.lastIndexOf('/') + 1);
+//    document.body.appendChild(a);
+//    a.click();
+//    document.body.removeChild(a);
+// }
 </script>

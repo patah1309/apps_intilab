@@ -129,7 +129,7 @@
                         px-1 mt-1">
             <div class="col-4">
                <div class="box-item">
-                  <a href="./getaranPer">
+                  <a href="<?= base_url; ?>/getaranpersonal">
                      <div class="itemm">
                         <div class="bg-white itemm2">
                            <img src="<?= base_url; ?>/img/getaranPer.png" width="55" height="55">

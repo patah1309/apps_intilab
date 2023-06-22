@@ -16,7 +16,8 @@ class Kebisingan extends Controller {
 				exit;
 			}
 		}
-	} 
+	}
+	 
 	public function index()
 	{
 		if($_SESSION['versi'] == $this->versi()){
