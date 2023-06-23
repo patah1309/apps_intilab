@@ -68,6 +68,13 @@
                         </div> Logout
                      </a>
                   </li>
+                  <li>
+                     <a href="<?= base_url;?>/emisi/download_regulasi" class="item">
+                        <div class="icon-box bg-primary">
+                           <i class="fa-solid fa-refresh"></i>
+                        </div> Sync Regulasi
+                     </a>
+                  </li>
                </ul>
             </div>
          </div>

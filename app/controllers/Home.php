@@ -17,10 +17,12 @@ class Home extends Controller {
 	} 
 	public function index()
 	{
+		$kon = $this->connection();
 		if($_SESSION['versi'] == $this->versi()){
 			$data['title'] = 'GPS INTILAB';
 			// $val = $this->model('UserModel')->getUserById();
-			$val = $this->model('UserModel')->getMessage();
+			$val = $this->model('UserModel')->getMessage($kon);
+			// var_dump($val);die();
 			$data['message'] = $val['pesan'];
 			$data['nama'] = $_SESSION['name'];
 			$data['koneksi'] = $this->connection();

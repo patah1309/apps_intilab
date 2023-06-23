@@ -140,14 +140,14 @@
         })) : $("#load").empty();
 
         $.ajax({
-            url: 'getregulasi',
-            type: "post",
-            data: {
-                emisi: 5
-            },
+            url: '<?= base_url; ?>/emisi/getregulasi',
             success: function(e) {
-                $("#regulasi").html(e)
-                $("#regulasi").select2()
+                e = JSON.parse(e)
+                console.log(e)
+                $('#regulasi').select2({
+                    data: e,
+                    placeholder: '--Pilih Regulasi--'
+                })
             }
         })
 
@@ -161,7 +161,7 @@
     })
 
     var timeout = null
-    $('input').on('keyup', function() {
+    $('#no_sample').on('keyup', function() {
 
         clearTimeout(timeout)
         timeout = setTimeout(function() {
@@ -175,11 +175,32 @@
                 },
                 success: function(e) {
                     e = JSON.parse(e)
-                    $('#nama').val(e.client);
+                    if(e.message != 'No Data'){
+                        $('#nama').val(e.client);
+                    }
                 }
             })
         }, 3000)
     })
+
+    var getEmisi = function(no_sample=null){
+        var deferred = $.Deferred()
+            $.ajax({
+                url: 'scann',
+                type: "post",
+                data: {
+                    no_sample: no_sample,
+                    qr : null
+                },
+                success: function(ff) {
+                    deferred.resolve(ff)
+                },
+                error : function (err){
+                    deferred.reject(err)
+                }
+            })
+        return deferred.promise()
+    }
 
     $('#form-add').on('submit', function(e){
         e.preventDefault()
@@ -192,15 +213,9 @@
             })
         } else {
             var no_sample = document.getElementById('no_sample').value;
-            $.ajax({
-                url: 'scann',
-                type: "post",
-                data: {
-                    no_sample: no_sample,
-                    qr : null
-                },
-                success: function(ff) {
-                    ff = JSON.parse(ff)
+            $.when(getEmisi(no_sample)).then(function(ff){
+                ff = JSON.parse(ff)
+                if(ff.message != 'No Data'){
                     if (ff.kategori_3 != $('#jenis_kendaraan').val()) {
                         Swal.fire({
                             icon: 'error',
@@ -252,6 +267,51 @@
                             }
                         })
                     }
+                }else {
+                    $.ajax({
+                        statusCode: {
+                            500: function() {
+                                Swal.fire({
+                                    icon : 'error',
+                                    title : 'Server Error',
+                                    timer : 3000
+                                })
+                                $('#btn-submit').prop('disabled', false);
+                            }
+                        },
+                        url: 'saveData',
+                        method: 'POST',
+                        data: data_form,
+                        success: function(resp) {
+                            resp = JSON.parse(resp)
+                            if(resp == 'success'){
+                                Swal.fire({
+                                    icon : 'success',
+                                    title : 'Success',
+                                    text : 'Data hasbeen Save',
+                                    timer : 3000
+                                })
+                                document.getElementById("form-add").reset();
+                                $('#btn-submit').prop('disabled', false);
+                                $('#load').empty();
+                            } else {
+                                Swal.fire({
+                                    icon : 'error',
+                                    title : 'Opps..!',
+                                    text : 'Please Check the Data.',
+                                    timer : 3000
+                                })
+                                $('#btn-submit').prop('disabled', false);
+                            }
+                        }, error : function(err){
+                            Swal.fire({
+                                icon : 'error',
+                                title : err.responseJSON,
+                                timer : 3000
+                            })
+                            $('#btn-submit').prop('disabled', false);
+                        }
+                    })
                 }
             })
         }

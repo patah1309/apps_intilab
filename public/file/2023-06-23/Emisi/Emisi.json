@@ -1,0 +1,230 @@
+[
+    {
+        "kode_qr": "2207196\/009",
+        "no_sample": "2207196\/009",
+        "nama": "PT SINDANG CERIA",
+        "lokasi_pengujian": "Jakarta",
+        "jenis_kendaraan": "32",
+        "no_plat": "B 6739 JIU",
+        "no_mesin": "729162910000",
+        "merk": "Toyota",
+        "transmisi": "Manual",
+        "tahun": "2012",
+        "kategori_kendaraan": "Angkutan Orang",
+        "km": "25453",
+        "cc": "1000",
+        "bobot_kendaraan": "1.2",
+        "opasitas": [
+            "12",
+            "15",
+            "25"
+        ],
+        "nilai_k": [
+            "",
+            "",
+            ""
+        ],
+        "rpm": [
+            "",
+            "",
+            ""
+        ],
+        "oli": [
+            "",
+            "",
+            ""
+        ],
+        "regulasi": "5",
+        "catatan": "test"
+    },
+    {
+        "kode_qr": "2207196\/009",
+        "no_sample": "2207196\/009",
+        "nama": "PT SINDANG CERIA",
+        "lokasi_pengujian": "Jakarta",
+        "jenis_kendaraan": "32",
+        "no_plat": "B 6739 JIU",
+        "no_mesin": "729162910000",
+        "merk": "Toyota",
+        "transmisi": "Manual",
+        "tahun": "2012",
+        "kategori_kendaraan": "Angkutan Orang",
+        "km": "25453",
+        "cc": "1000",
+        "bobot_kendaraan": "1.2",
+        "opasitas": [
+            "12",
+            "15",
+            "25"
+        ],
+        "nilai_k": [
+            "",
+            "",
+            ""
+        ],
+        "rpm": [
+            "",
+            "",
+            ""
+        ],
+        "oli": [
+            "",
+            "",
+            ""
+        ],
+        "regulasi": "5",
+        "catatan": "test"
+    },
+    {
+        "kode_qr": "2207196\/009",
+        "no_sample": "2207196\/009",
+        "nama": "PT SINDANG CERIA",
+        "lokasi_pengujian": "Jakarta",
+        "jenis_kendaraan": "32",
+        "no_plat": "B 6739 JIU",
+        "no_mesin": "729162910000",
+        "merk": "Toyota",
+        "transmisi": "Manual",
+        "tahun": "2012",
+        "kategori_kendaraan": "Angkutan Orang",
+        "km": "25453",
+        "cc": "1000",
+        "bobot_kendaraan": "1.2",
+        "opasitas": [
+            "12",
+            "15",
+            "25"
+        ],
+        "nilai_k": [
+            "",
+            "",
+            ""
+        ],
+        "rpm": [
+            "",
+            "",
+            ""
+        ],
+        "oli": [
+            "",
+            "",
+            ""
+        ],
+        "regulasi": "5",
+        "catatan": "test"
+    },
+    {
+        "kode_qr": "ISL04106139",
+        "no_sample": "2206994\/027",
+        "nama": "Hi Lex Indonesia, PT",
+        "lokasi_pengujian": "haha",
+        "jenis_kendaraan": "32",
+        "no_plat": "B 7615 BCT",
+        "no_mesin": "6281916191012",
+        "merk": "Grandia",
+        "transmisi": "Manual",
+        "tahun": "2016",
+        "kategori_kendaraan": "Angkutan Orang",
+        "km": "654742",
+        "cc": "3200",
+        "bobot_kendaraan": "3",
+        "opasitas": [
+            "22",
+            "25",
+            "30"
+        ],
+        "nilai_k": [
+            "",
+            "",
+            ""
+        ],
+        "rpm": [
+            "",
+            "",
+            ""
+        ],
+        "oli": [
+            "",
+            "",
+            ""
+        ],
+        "regulasi": "7",
+        "catatan": "hahah"
+    },
+    {
+        "kode_qr": "ISL04106139",
+        "no_sample": "2206994\/027",
+        "nama": "Hi Lex Indonesia, PT",
+        "lokasi_pengujian": "haha",
+        "jenis_kendaraan": "32",
+        "no_plat": "B 7615 BCT",
+        "no_mesin": "6281916191012",
+        "merk": "Grandia",
+        "transmisi": "Manual",
+        "tahun": "2016",
+        "kategori_kendaraan": "Angkutan Orang",
+        "km": "654742",
+        "cc": "3200",
+        "bobot_kendaraan": "3",
+        "opasitas": [
+            "22",
+            "25",
+            "30"
+        ],
+        "nilai_k": [
+            "",
+            "",
+            ""
+        ],
+        "rpm": [
+            "",
+            "",
+            ""
+        ],
+        "oli": [
+            "",
+            "",
+            ""
+        ],
+        "regulasi": "7",
+        "catatan": "hahah"
+    },
+    {
+        "kode_qr": "ISL04106139",
+        "no_sample": "2206994\/027",
+        "nama": "Hi Lex Indonesia, PT",
+        "lokasi_pengujian": "haha",
+        "jenis_kendaraan": "32",
+        "no_plat": "B 7615 BCT",
+        "no_mesin": "6281916191012",
+        "merk": "Grandia",
+        "transmisi": "Manual",
+        "tahun": "2016",
+        "kategori_kendaraan": "Angkutan Orang",
+        "km": "654742",
+        "cc": "3200",
+        "bobot_kendaraan": "3",
+        "opasitas": [
+            "22",
+            "25",
+            "30"
+        ],
+        "nilai_k": [
+            "",
+            "",
+            ""
+        ],
+        "rpm": [
+            "",
+            "",
+            ""
+        ],
+        "oli": [
+            "",
+            "",
+            ""
+        ],
+        "regulasi": "7",
+        "catatan": "hahah"
+    }
+]

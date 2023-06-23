@@ -38,19 +38,23 @@ class Air extends Controller {
 		$tanah = [];
 		$bersih = [];
 		$khusus = [];
-		foreach($kateg->data as $key => $val) {
-			if($val->jenis_sample == 'Sungai' || $val->jenis_sample == 'Danau' || $val->jenis_sample == 'Waduk' || $val->jenis_sample == 'Situ' || $val->jenis_sample == 'Akuifer' || $val->jenis_sample == 'Rawa' || $val->jenis_sample == 'Muara' || $val->jenis_sample == 'Air dari Mata Air') {
-				array_push($permukaan, $val);
-			}else if($val->jenis_sample == 'Limbah Domestik' || $val->jenis_sample == 'Limbah Industri' || $val->jenis_sample == 'Limbah') {
-				array_push($limbah, $val);
-			}else if($val->lokasi_titik_pengambilan != null || $val->arah_arus != null) {
-				array_push($laut, $val);
-			}else if($val->jenis_sample == 'Air Sumur Bor' || $val->jenis_sample == 'Air Sumur Gali' || $val->jenis_sample == 'Air Sumur Pantek') {
-				array_push($tanah, $val);
-			}else if($val->jenis_sample == 'Air Keperluan Hygiene Sanitasi' || $val->jenis_sample == 'Air Khusus RS' || $val->jenis_sample == 'Air Dalam Kemasan' || $val->jenis_sample == 'Air RO') {
-				array_push($bersih, $val);
-			}else if($val->lokasi_titik_pengambilan == null && $val->jenis_sample == null && $val->keterangan != null) {
-				array_push($khusus, $val);
+		$konek = $this->connection();
+		if($konek == true) {
+			$kateg = $this->model('AirModel')->GetListData();
+			foreach($kateg->data as $key => $val) {
+				if($val->jenis_sample == 'Sungai' || $val->jenis_sample == 'Danau' || $val->jenis_sample == 'Waduk' || $val->jenis_sample == 'Situ' || $val->jenis_sample == 'Akuifer' || $val->jenis_sample == 'Rawa' || $val->jenis_sample == 'Muara' || $val->jenis_sample == 'Air dari Mata Air') {
+					array_push($permukaan, $val);
+				}else if($val->jenis_sample == 'Limbah Domestik' || $val->jenis_sample == 'Limbah Industri' || $val->jenis_sample == 'Limbah') {
+					array_push($limbah, $val);
+				}else if($val->lokasi_titik_pengambilan != null || $val->arah_arus != null) {
+					array_push($laut, $val);
+				}else if($val->jenis_sample == 'Air Sumur Bor' || $val->jenis_sample == 'Air Sumur Gali' || $val->jenis_sample == 'Air Sumur Pantek') {
+					array_push($tanah, $val);
+				}else if($val->jenis_sample == 'Air Keperluan Hygiene Sanitasi' || $val->jenis_sample == 'Air Khusus RS' || $val->jenis_sample == 'Air Dalam Kemasan' || $val->jenis_sample == 'Air RO') {
+					array_push($bersih, $val);
+				}else if($val->lokasi_titik_pengambilan == null && $val->jenis_sample == null && $val->keterangan != null) {
+					array_push($khusus, $val);
+				}
 			}
 		}
 		$data['title'] = 'APPS INTILAB';

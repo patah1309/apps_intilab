@@ -97,8 +97,12 @@
                 mirror: !1
             });
             scanner.addListener("scan", function(e) {
-                    var t = e.substr(e.length - 11);
-                    $("#ccc").modal("hide"), scanner.stop();
+                var t = e.substr(e.length - 11);
+                $("#ccc").modal("hide"), scanner.stop();
+                $('#qr').val(t)
+                $('#qr_code').val(t)
+                if($('#status-text').text == 'Online'){
+                    
                     $.ajax({
                         url: '/public/emisi/scann',
                         type: "post",
@@ -108,9 +112,7 @@
                         },
                         success: function(e) {
                             e = JSON.parse(e)
-                            $("#sum").html(e.record),
-                            $('#qr').val(t)
-                            $('#qr_code').val(t)
+                            $("#sum").html(e.record)
                             localStorage.setItem("id_qr", e.id),
                             Swal.fire({
                                 icon: "success",
@@ -126,6 +128,14 @@
                             });
                         },
                     });
+                }else {
+                    Swal.fire({
+                        icon: "info",
+                        title: 'Ooops.....',
+                        text: 'Anda Sedang Dalam Mode Offile',
+                        timer: 2e3
+                    });
+                }
                 }),
                 Instascan.Camera.getCameras()
                 .then(function(e) {

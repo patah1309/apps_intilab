@@ -18,19 +18,25 @@ class UserModel {
 		return $res;
 	}
 
-	public function getMessage(){
-		$client = new Client();
-		$response = $client->request('POST', base_api.'/statususer',
-		[
-			'headers' => [ 'Content-Type' => 'application/json' ],
-			'body' => json_encode([
-				'token' => $_SESSION['token'],
-				'status' => 1
-			]),
-			'http_errors' => false
-		]);
-		$return = $response->getBody()->getContents();
-		$res = (array)json_decode($return);
-		return $res;
+	public function getMessage($kon){
+		if($kon == true){
+			$client = new Client();
+			$response = $client->request('POST', base_api.'/statususer',
+			[
+				'headers' => [ 'Content-Type' => 'application/json' ],
+				'body' => json_encode([
+					'token' => $_SESSION['token'],
+					'status' => 1
+				]),
+				'http_errors' => false
+			]);
+			$return = $response->getBody()->getContents();
+			$res = (array)json_decode($return);
+			return $res;
+		}else {
+			return array(
+				'pesan' => ''
+			);
+		}
 	}
 }

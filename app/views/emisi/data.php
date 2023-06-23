@@ -1,3 +1,4 @@
+
  <!-- * App Sidebar -->
  <div id="appCapsule">
     <div class="card">

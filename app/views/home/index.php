@@ -352,3 +352,22 @@
          <div class="mb-3"></div>
       </div>
    </div>
+
+   <script>
+      $(document).ready(function(){
+         $.ajax({
+            url: '<?= base_url; ?>/emisi/getregulasi',
+            success: function(e) {
+               e = JSON.parse(e)
+               if(e.length == 0){
+                  Swal.fire({
+                     icon : 'info',
+                     title : 'Ooooops....',
+                     text : 'Regulasi Belum Terdownload Silahkan Lakukan Sync Regulasi Pada Ikon Hamburger',
+                     timer : 3000
+                  })
+               }
+            }
+         })
+      })
+   </script>

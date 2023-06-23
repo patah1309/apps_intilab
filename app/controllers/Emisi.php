@@ -68,7 +68,7 @@ class Emisi extends Controller {
         $no_sample = '';
         $qr = $_POST['qr'];
         $no_sample = $_POST['no_sample'];
-		$val = $this->model('EmisiModel')->GetData($qr, $no_sample);
+		$val = $this->model('EmisiModel')->GetData($qr, $no_sample, $this->connection());
 		echo $val;
     }
 
@@ -127,8 +127,19 @@ class Emisi extends Controller {
     }
 
     public function getregulasi(){
-        $val = $this->model('EmisiModel')->regulasi();
-        echo $val;
+        $kon = $this->connection();
+        $val = $this->model('EmisiModel')->regulasi($kon);
+        if(is_array($val) == true){
+            $arr = [];
+            foreach($val as $key){
+                if($key['id_kategori'] == '5'){
+                    array_push($arr , array('id' => $key['id'], 'text' => $key['peraturan']));
+                }
+            }
+            echo json_encode($arr);
+        }else {
+            echo json_encode($val);
+        }
     }
 
     public function saveData(){
@@ -162,9 +173,15 @@ class Emisi extends Controller {
     }
 
     public function viewData(){
+        $kon = $this->connection();
         $data['title'] = 'APPS INTILAB';
-        $val = $this->model('EmisiModel')->getDataEmisi();
-		$data['data'] = $val->data;
+        $val = $this->model('EmisiModel')->getDataEmisi($kon);
+        // var_dump($val);die();
+        if($val == '[]'){
+            $data['data'] = '';
+        }else {
+            $data['data'] = $val->data;
+        }
         $this->view('templates/header', $data);
         $this->view('templates/sidebar', $data);
         $this->view('emisi/data', $data);
@@ -182,4 +199,11 @@ class Emisi extends Controller {
 		$data = $this->model('EmisiModel')->deleteData($id);
 		echo $data;
 	}
+
+    public function download_regulasi(){
+        $kon = $this->connection();
+		$save = $this->model('EmisiModel')->sync_regulasi($kon);
+        Flasher::setMessage('Sync Regulasi',$save['message'],$save['status']);
+        header('location: '. base_url . '/home');
+    }
 }
