@@ -69,6 +69,14 @@
     var table = null;
 
     $(document).ready(function(){
+        if($('#status-text').text() == 'Offline'){
+            Swal.fire({
+                icon : 'info',
+                title : 'Oooops....',
+                text : 'Saat ini anda sedang offline...!',
+                timer : 3000
+            })
+        }
         tabel = $('#data').DataTable()
     })
 

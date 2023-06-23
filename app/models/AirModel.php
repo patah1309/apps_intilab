@@ -3,40 +3,46 @@ use GuzzleHttp\Client;
 
 class AirModel extends Model{
 	
-	public function Permission(){
-		$client = new Client();
-		$guzzle = $client->request('POST', base_api.'/permissionapi',
-		[
-			'headers' => [ 'Content-Type' => 'application/json' ],
-			'body' => json_encode([
-				'token' => $_SESSION['token'],
-            ]),
-		]);
-        if ($guzzle->getStatusCode() != 200) {
+	public function Permission($kon){
+        if($kon == true){
+            $client = new Client();
+            $guzzle = $client->request('POST', base_api.'/permissionapi',
+            [
+                'headers' => [ 'Content-Type' => 'application/json' ],
+                'body' => json_encode([
+                    'token' => $_SESSION['token'],
+                ]),
+            ]);
+            if ($guzzle->getStatusCode() != 200) {
+                return json_encode(array());
+            } else {
+                $return = $guzzle->getBody()->getContents();
+                return json_decode($return);
+            }
+        }else {
             return json_encode(array());
-        } else {
-            $return = $guzzle->getBody()->getContents();
-            return json_decode($return);
         }
-		
 	}
-	public function GetListData(){
-		$client = new Client();
-		$guzzle = $client->request('POST', base_api.'/showDataair',
-		[
-			'headers' => [ 'Content-Type' => 'application/json' ],
-			'body' => json_encode([
-				'token' => $_SESSION['token'],
-                'active' => 0
-            ]),
-		]);
-        if ($guzzle->getStatusCode() != 200) {
+	public function GetListData($kon=null){
+        if($kon == true){
+            $client = new Client();
+            $guzzle = $client->request('POST', base_api.'/showDataair',
+            [
+                'headers' => [ 'Content-Type' => 'application/json' ],
+                'body' => json_encode([
+                    'token' => $_SESSION['token'],
+                    'active' => 0
+                ]),
+            ]);
+            if ($guzzle->getStatusCode() != 200) {
+                return json_encode(array());
+            } else {
+                $return = $guzzle->getBody()->getContents();
+                return json_decode($return);
+            }
+        }else {
             return json_encode(array());
-        } else {
-            $return = $guzzle->getBody()->getContents();
-            return json_decode($return);
         }
-		
 	}
 
 	public function ApproveDat($id){

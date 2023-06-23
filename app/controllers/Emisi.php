@@ -46,7 +46,7 @@ class Emisi extends Controller {
 			$this->view('emisi/index', $data);
 			$this->view('templates/footer');
 		}else {
-			session_start();
+			// session_start();
 			session_destroy();
 			header('location: '. base_url . '/login');
 		}

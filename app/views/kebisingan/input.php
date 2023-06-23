@@ -332,32 +332,34 @@
                },
                success: function(resp) {
                 e = JSON.parse(resp);
-                  if (e.id_ket == '23' || e.id_ket == '24' || e.id_ket == '25' || e.id_ket === '26') {
-                    //  $('#btnBawah').hide()
-                    //  $('#udara').html(kebisingan).fadeIn('slow');
-                     $('#keterangan-4').val(e.keterangan);
-                     $('#id_kat').val(e.id_ket);
-                     $('#jam').clockTimePicker();
-                     $('#jamm').clockTimePicker();
-                     input_kebisingan(5);
-                     jendur();
-                     kelas(5);
-                  } else {
-                    //  error.play();
-                    // $('#form-add').trigger('reset');
-                     Swal.fire({
-                        title: 'Tidak ada kategori FDL kebisingan di No Sample tersebut',
-                        icon: 'warning',
-                        confirmButtonColor: '#3085d6',
-                     })
-                  }
-               },
-               error: function(e) {
+                    if (e.id_ket == '23' || e.id_ket == '24' || e.id_ket == '25' || e.id_ket === '26') {
+                        //  $('#btnBawah').hide()
+                        //  $('#udara').html(kebisingan).fadeIn('slow');
+                        $('#keterangan-4').val(e.keterangan);
+                        $('#id_kat').val(e.id_ket);
+                        $('#jam').clockTimePicker();
+                        $('#jamm').clockTimePicker();
+                        input_kebisingan(5);
+                        jendur();
+                        kelas(5);
+                    } else {
+                        //  error.play();
+                        // $('#form-add').trigger('reset');
+                        Swal.fire({
+                            title: 'Tidak ada kategori FDL kebisingan di No Sample tersebut',
+                            icon: 'warning',
+                            confirmButtonColor: '#3085d6',
+                        })
+                    }
+                },
+                error: function(e) {
+                    e = JSON.parse(e)  
                     Swal.fire({
                         icon: 'error',
-                        title: e.responseJSON.message,
+                        title: 'Ooooops.....',
+                        text: e.message
                     })
-               }
+                }
             })
         } else {
             Swal.fire({

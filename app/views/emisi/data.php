@@ -70,7 +70,7 @@
         if($('#status-text').text() == 'Offline'){
             Swal.fire({
                 icon : 'info',
-                title : 'Info...',
+                title : 'Oooops...',
                 text : 'Saat ini anda sedang offline...!',
                 timer : 3000
             })

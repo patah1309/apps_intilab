@@ -3,24 +3,27 @@ use GuzzleHttp\Client;
 
 class KebisinganModel  extends Model{
 	
-	public function GetData($no_sample){
-		$client = new Client();
-		$guzzle = $client->request('POST', base_api.'/getSample',
-		[
-			'headers' => [ 'Content-Type' => 'application/json' ],
-			'body' => json_encode([
-				'token' => $_SESSION['token'],
-                'no_sample' => $no_sample
-            ]),
-            'http_errors' => false
-		]);
-        if ($guzzle->getStatusCode() != 200) {
-            return json_encode(array());
-        } else {
-            $return = $guzzle->getBody()->getContents();
-            return $return;
+	public function GetData($no_sample, $kon){
+        if($kon == true){
+            $client = new Client();
+            $guzzle = $client->request('POST', base_api.'/getSample',
+            [
+                'headers' => [ 'Content-Type' => 'application/json' ],
+                'body' => json_encode([
+                    'token' => $_SESSION['token'],
+                    'no_sample' => $no_sample
+                ]),
+                'http_errors' => false
+            ]);
+            if ($guzzle->getStatusCode() != 200) {
+                return json_encode(array('message' => 'No Sample Tidak Ditemukan'));
+            } else {
+                $return = $guzzle->getBody()->getContents();
+                return $return;
+            }
+        }else {
+            return json_encode(array('message' => 'Anda sedang offline tidak dapat mendapatkan data dari server'));
         }
-		
 	}
 
     public function saveDataUdara($data, $kon, $post){
@@ -138,22 +141,26 @@ class KebisinganModel  extends Model{
         }
     }
 
-    public function getDataKebisingan(){
-        $client = new Client();
-		$guzzle = $client->request('POST', base_api.'/showDataUdara',
-		[
-			'headers' => [ 'Content-Type' => 'application/json' ],
-			'body' => json_encode([
-				'token' => $_SESSION['token'],
-				'active' => 0
-			]),
-			'http_errors' => false
-		]);
-        if ($guzzle->getStatusCode() != 200) {
+    public function getDataKebisingan($kon){
+        if($kon == true){
+            $client = new Client();
+            $guzzle = $client->request('POST', base_api.'/showDataUdara',
+            [
+                'headers' => [ 'Content-Type' => 'application/json' ],
+                'body' => json_encode([
+                    'token' => $_SESSION['token'],
+                    'active' => 0
+                ]),
+                'http_errors' => false
+            ]);
+            if ($guzzle->getStatusCode() != 200) {
+                return json_encode(array());
+            } else {
+                $return = $guzzle->getBody()->getContents();
+                return json_decode($return);
+            }
+        }else {
             return json_encode(array());
-        } else {
-            $return = $guzzle->getBody()->getContents();
-            return json_decode($return);
         }
     }
 

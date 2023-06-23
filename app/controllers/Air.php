@@ -84,8 +84,14 @@ class Air extends Controller {
 		$data['title'] = 'APPS INTILAB';
 		$data['token'] = $_SESSION['token'];
 		$data['koneksi'] = $this->connection();
-		$data['data'] = $this->model('AirModel')->GetListData();
-		$data['akses'] = $this->model('AirModel')->Permission();
+		$val = $this->model('AirModel')->GetListData($this->connection());
+		if($val == []){
+			$data['data'] = $val;
+			$data['akses'] = $val;
+		}else {
+			$data['data'] = $val;
+			$data['akses'] = $this->model('AirModel')->Permission($this->connection());
+		}
 		$this->view('templates/header', $data);
 		$this->view('templates/sidebar', $data);
 		$this->view('air/data', $data);

@@ -28,7 +28,7 @@
             <img src="<?= base_url; ?>/assets/img/admin.png" alt="image" class="imaged w40">
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <!-- <a class="dropdown-item"  href="#"><ion-icon size="small" name="person-outline"></ion-icon>Profil</a> -->
-                <a class="dropdown-item"  href="#" onclick="location.href='logout';"><i class="fa-solid fa-right-from-bracket"></i> Keluar</a>
+                <a class="dropdown-item"  href="#" onclick="location.href='<?= base_url; ?>/logout';"><i class="fa-solid fa-right-from-bracket"></i> Keluar</a>
             </div>
          </div>
       </div>

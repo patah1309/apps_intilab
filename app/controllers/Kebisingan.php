@@ -45,7 +45,7 @@ class Kebisingan extends Controller {
 			$this->view('kebisingan/index', $data);
 			$this->view('templates/footer');
 		}else {
-			session_start();
+			// session_start();
 			session_destroy();
 			header('location: '. base_url . '/login');
 		}
@@ -64,7 +64,7 @@ class Kebisingan extends Controller {
 
 	public function getSampel(){
 		$no_sample = $_POST['no_sample'];
-		$val = $this->model('KebisinganModel')->GetData($no_sample);
+		$val = $this->model('KebisinganModel')->GetData($no_sample, $this->connection());
 		echo $val;
 	}
 
@@ -108,8 +108,12 @@ class Kebisingan extends Controller {
 	public function viewDatakebisingan(){
 		$data['title'] = 'APPS INTILAB';
 		$data['token'] = $_SESSION['token'];
-		$val = $this->model('KebisinganModel')->getDataKebisingan();
-		$data['data'] = $val->data;
+		$val = $this->model('KebisinganModel')->getDataKebisingan($this->connection());
+		if($val == '[]'){
+            $data['data'] = '';
+        }else {
+            $data['data'] = $val->data;
+        }
         $this->view('templates/header', $data);
         $this->view('templates/sidebar', $data);
         $this->view('kebisingan/data', $data);
