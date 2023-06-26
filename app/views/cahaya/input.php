@@ -276,7 +276,7 @@ function input_pencahayaanS() {
       boddi += '<label class="label label-1">Keterangan</label>'
       boddi += '<select name="ket_peng[]" id="ket_peng-' + hi +
          '" class="form-control" style="font-size: 10px;" required>'
-      boddi += '<option>--Input Keterangan--</option>'
+      boddi += '<option value="">--Input Keterangan--</option>'
       boddi += '<option value="Lampu Stabil">Lampu Stabil</option>'
       boddi += '<option value="Lampu Tidak Stabil">Lampu Tidak Stabil</option>'
       boddi += '<option value="Dekat Jendela & Cuaca Cerah">Dekat Jendela & Cuaca Cerah</option>'
@@ -301,7 +301,7 @@ function input_pencahayaanS() {
       boddi += '<label class="label label-1">Kendala Lampu</label>'
       boddi += '<select name="ken_lampu[]" id="ken_lampu-' + hi +
          '" class="form-control" style="font-size: 10px;" required>'
-      boddi += '<option>--Input Kendala--</option>'
+      boddi += '<option value="">--Input Kendala--</option>'
       boddi += '<option value="Lampu Normal">Lampu Normal</option>'
       boddi += '<option value="Lampu Mati">Lampu Mati</option>'
       boddi += '<option value="Lampu Berkedip">Lampu Berkedip</option>'
@@ -327,7 +327,7 @@ function input_pencahayaanS() {
       boddi += '<label class="label label-1">Warna Lampu</label>'
       boddi += '<select name="war_lampu[]" id="war_lampu-' + hi +
          '" class="form-control" style="font-size: 10px;" required>'
-      boddi += '<option>--Input Warna--</option>'
+      boddi += '<option value="">--Input Warna--</option>'
       boddi += '<option value="Putih">Putih</option>'
       boddi += '<option value="Kuning">Kuning</option>'
       boddi += '<option value="Biru">Biru</option>'
@@ -484,7 +484,7 @@ function input_pencahayaan() {
       boddi += '<label class="label label-1">Keterangan</label>'
       boddi += '<select name="ket_peng[]" id="ket_peng-' + hi +
          '" class="form-control" style="font-size: 10px;" required>'
-      boddi += '<option>--Input Keterangan--</option>'
+      boddi += '<option value="">--Input Keterangan--</option>'
       boddi += '<option value="Lampu Stabil">Lampu Stabil</option>'
       boddi += '<option value="Lampu Tidak Stabil">Lampu Tidak Stabil</option>'
       boddi += '<option value="Dekat Jendela & Cuaca Cerah">Dekat Jendela & Cuaca Cerah</option>'
@@ -509,7 +509,7 @@ function input_pencahayaan() {
       boddi += '<label class="label label-1">Kendala Lampu</label>'
       boddi += '<select name="ken_lampu[]" id="ken_lampu-' + hi +
          '" class="form-control" style="font-size: 10px;" required>'
-      boddi += '<option>--Input Kendala--</option>'
+      boddi += '<option value="">--Input Kendala--</option>'
       boddi += '<option value="Lampu Normal">Lampu Normal</option>'
       boddi += '<option value="Lampu Mati">Lampu Mati</option>'
       boddi += '<option value="Lampu Berkedip">Lampu Berkedip</option>'
@@ -535,7 +535,7 @@ function input_pencahayaan() {
       boddi += '<label class="label label-1">Warna Lampu</label>'
       boddi += '<select name="war_lampu[]" id="war_lampu-' + hi +
          '" class="form-control" style="font-size: 10px;" required>'
-      boddi += '<option>--Input Warna--</option>'
+      boddi += '<option value="">--Input Warna--</option>'
       boddi += '<option value="Putih">Putih</option>'
       boddi += '<option value="Kuning">Kuning</option>'
       boddi += '<option value="Biru">Biru</option>'
@@ -804,8 +804,8 @@ $('#form-add').on('submit', function(e) {
 function selected(titik) {
    $("#foto_lain").val('');
    document.getElementById("lain").classList.remove("sukses");
-   document.getElementById("attachment").style.setProperty("background-color", "#00B4FF", "important");
-   document.getElementById("attachment").style.setProperty("border-color", "#00B4FF", "important");
+   document.getElementById("lain").style.setProperty("background-color", "#00B4FF", "important");
+   document.getElementById("lain").style.setProperty("border-color", "#00B4FF", "important");
    if ($('#tblsz').hasClass("d-none")) {
       $('#resetB').text(" Draw");
       // $('#resetB').removeClass("fa-camera");

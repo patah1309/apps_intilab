@@ -51,13 +51,12 @@ class Cahaya extends Controller {
 	public function data(){
 		$data['title'] = 'APPS INTILAB';
 		$data['token'] = $_SESSION['token'];
-		// $data['koneksi'] = $this->connection();
 		$val = $this->model('CahayaModel')->GetListData($this->connection());
-		// $data['akses'] = $this->model('CahayaModel')->Permission();
-		if($val == '[]'){
-            $data['data'] = '';
+		if($val == []){
+            $data['data'] = $val;
         }else {
-            $data['data'] = $val->data;
+            $data['data'] = $val;
+				$data['akses'] = $this->model('AirModel')->Permission($this->connection());
         }
 		$this->view('templates/header', $data);
 		$this->view('templates/sidebar', $data);

@@ -3,20 +3,24 @@ use GuzzleHttp\Client;
 
 class CahayaModel extends Model{
 	
-	public function Permission(){
-		$client = new Client();
-		$guzzle = $client->request('POST', base_api.'/permissionapi',
-		[
-			'headers' => [ 'Content-Type' => 'application/json' ],
-			'body' => json_encode([
-				'token' => $_SESSION['token'],
-            ]),
-		]);
-        if ($guzzle->getStatusCode() != 200) {
+	public function Permission($kon){
+        if($kon == true){
+            $client = new Client();
+            $guzzle = $client->request('POST', base_api.'/permissionapi',
+            [
+                'headers' => [ 'Content-Type' => 'application/json' ],
+                'body' => json_encode([
+                    'token' => $_SESSION['token'],
+                ]),
+            ]);
+            if ($guzzle->getStatusCode() != 200) {
+                return json_encode(array());
+            } else {
+                $return = $guzzle->getBody()->getContents();
+                return json_decode($return);
+            }
+        }else {
             return json_encode(array());
-        } else {
-            $return = $guzzle->getBody()->getContents();
-            return json_decode($return);
         }
 		
 	}
@@ -144,6 +148,7 @@ class CahayaModel extends Model{
                $response['message'] = 'Data Berhasil Dikirim Keserver';
                 $response['status'] = 'success';
                 return $response;
+                
             }
         }else {
             $before_save = $this->before_save('Cahaya', $post);
