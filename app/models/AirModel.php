@@ -23,6 +23,7 @@ class AirModel extends Model{
             return json_encode(array());
         }
 	}
+    
 	public function GetListData($kon=null){
         if($kon == true){
             $client = new Client();
