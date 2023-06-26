@@ -75,9 +75,10 @@ class Emisi extends Controller {
     public function addOrderemisi(){
         $data['title'] = 'APPS INTILAB';
         $data['qr'] = $_POST['qr'];
+        $no_sample = '';
         
         if($this->connection() == true && $_POST['qr'] != ''){
-            $val = json_decode($this->model('EmisiModel')->GetData($_POST['qr']));
+            $val = json_decode($this->model('EmisiModel')->GetData($_POST['qr'], $no_sample, $this->connection()));
             if($val->record > 0){
                 $data['id_kendaraan']   = $val->id_kendaraan;
                 $data['id_qr']          = $val->id_qr;

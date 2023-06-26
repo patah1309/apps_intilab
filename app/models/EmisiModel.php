@@ -16,6 +16,7 @@ class EmisiModel extends Model{
                 ]),
                 'http_errors' => false
             ]);
+            
             if ($guzzle->getStatusCode() != 201) {
                 return json_encode(array('message' => 'No Data'));
             } else {

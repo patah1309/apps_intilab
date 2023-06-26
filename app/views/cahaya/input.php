@@ -726,6 +726,7 @@ $('#form-add').on('submit', function(e) {
    // $('#btn-submit').prop('disabled', true);
    if ($("input[name=permis]").is(':checked')) {
       if ($("#lokasi").hasClass("sukses") && $("#lain").hasClass("sukses")) {
+
          $.ajax({
             statusCode: {
                500: function() {
