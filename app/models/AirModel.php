@@ -158,7 +158,7 @@ class AirModel extends Model{
                     $value = json_decode($file, true);
                     array_push($value, $post);
                     $myfile = fopen('file/data_air.json', "w");
-                    fwrite($myfile, json_encode($array, JSON_PRETTY_PRINT));
+                    fwrite($myfile, json_encode($value, JSON_PRETTY_PRINT));
                     fclose($myfile);
                     $response['message'] = 'Data Berhasil Disimpan';
                     $response['status'] = 'success';
