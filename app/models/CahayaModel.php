@@ -157,11 +157,8 @@ class CahayaModel extends Model{
                             $response['message'] = 'No Sample Ini Sudah ada';
                         }
                     }
-                    $i = 0;
-                    foreach($old as $key => $value){
-                        $array[$i++] = $value;
-                    }
-                    $array[$i] = $post;
+                    $value = json_decode($file, true);
+                    array_push($value, $post);
                     $myfile = fopen('file/data_cahaya.json', "w");
                     fwrite($myfile, json_encode($array, JSON_PRETTY_PRINT));
                     fclose($myfile);
@@ -169,7 +166,8 @@ class CahayaModel extends Model{
                     $response['status'] = 'success';
                     return $response;
                 }else {
-                    $array = [0 => $post];
+                    $array = [];
+				    array_push($array, $post);
                     $myfile = fopen('file/data_cahaya.json', "w");
                     fwrite($myfile, json_encode($array, JSON_PRETTY_PRINT));
                     fclose($myfile);
@@ -178,7 +176,8 @@ class CahayaModel extends Model{
                     return $response;
                 }
             }else {
-                $array = [0 => $post];
+                $array = [];
+				array_push($array, $post);
                 file_put_contents('file/data_cahaya.json', json_encode($array, JSON_PRETTY_PRINT));
                 $response['message'] = 'Data Berhasil Disimpan';
                 $response['status'] = 'success';
