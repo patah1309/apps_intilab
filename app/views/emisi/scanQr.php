@@ -101,7 +101,7 @@
                 $("#ccc").modal("hide"), scanner.stop();
                 $('#qr').val(t)
                 $('#qr_code').val(t)
-                if($('#status-text').text == 'Online'){
+                if($('#status-text').text() == 'Online'){
                     
                     $.ajax({
                         url: '/public/emisi/scann',
