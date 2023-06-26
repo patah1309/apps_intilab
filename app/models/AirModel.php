@@ -151,15 +151,12 @@ class AirModel extends Model{
                     $array = [];
                     $old = json_decode($file, true);
                     foreach($old as $k => $v){
-                        if($v['no_sample'] == $data['no_sample']){
+                        if($v['no_sample'] == $post['no_sample']){
                             $response['message'] = 'No Sample Ini Sudah ada';
                         }
                     }
-                    $i = 0;
-                    foreach($old as $key => $value){
-                        $array[$i++] = $value;
-                    }
-                    $array[$i] = $data;
+                    $value = json_decode($file, true);
+                    array_push($value, $post);
                     $myfile = fopen('file/data_air.json', "w");
                     fwrite($myfile, json_encode($array, JSON_PRETTY_PRINT));
                     fclose($myfile);
@@ -167,7 +164,8 @@ class AirModel extends Model{
                     $response['status'] = 'success';
                     return $response;
                 }else {
-                    $array = [0 => $data];
+                    $array = [];
+				    array_push($array, $post);
                     $myfile = fopen('file/data_air.json', "w");
                     fwrite($myfile, json_encode($array, JSON_PRETTY_PRINT));
                     fclose($myfile);
@@ -176,7 +174,8 @@ class AirModel extends Model{
                     return $response;
                 }
             }else {
-                $array = [0 => $data];
+                $array = [];
+				array_push($array, $post);
                 file_put_contents('file/data_air.json', json_encode($array, JSON_PRETTY_PRINT));
                 $response['message'] = 'Data Berhasil Disimpan';
                 $response['status'] = 'success';

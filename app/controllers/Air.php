@@ -40,7 +40,7 @@ class Air extends Controller {
 		$khusus = [];
 		$konek = $this->connection();
 		if($konek == true) {
-			$kateg = $this->model('AirModel')->GetListData();
+			$kateg = $this->model('AirModel')->GetListData($this->connection());
 			foreach($kateg->data as $key => $val) {
 				if($val->jenis_sample == 'Sungai' || $val->jenis_sample == 'Danau' || $val->jenis_sample == 'Waduk' || $val->jenis_sample == 'Situ' || $val->jenis_sample == 'Akuifer' || $val->jenis_sample == 'Rawa' || $val->jenis_sample == 'Muara' || $val->jenis_sample == 'Air dari Mata Air') {
 					array_push($permukaan, $val);
