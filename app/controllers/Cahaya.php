@@ -53,7 +53,7 @@ class Cahaya extends Controller {
 		$data['token'] = $_SESSION['token'];
 		// $data['koneksi'] = $this->connection();
 		$val = $this->model('CahayaModel')->GetListData($this->connection());
-		$data['akses'] = $this->model('CahayaModel')->Permission();
+		// $data['akses'] = $this->model('CahayaModel')->Permission();
 		if($val == '[]'){
             $data['data'] = '';
         }else {
