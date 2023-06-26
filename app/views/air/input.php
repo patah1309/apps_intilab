@@ -160,6 +160,7 @@ $("#no_sample").on('keydown', function(e) {
          $.when(getDataSample($("#no_sample").val())).then(function(resp) {
             render_template(JSON.parse(resp))
          })
+         $('#selectkategori').hide()
       } else {
          $('#selectkategori').show()
          $('#kategori-air').select2({
@@ -416,8 +417,6 @@ function render_template(e) {
       })
       $('#limbah').empty();
    }
-
-   $('#selectkategori').hide()
 }
 
 function valDecimal() {
