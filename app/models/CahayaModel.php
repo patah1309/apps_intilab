@@ -20,21 +20,25 @@ class CahayaModel extends Model{
         }
 		
 	}
-	public function GetListData(){
-		$client = new Client();
-		$guzzle = $client->request('POST', base_api.'/indexCahaya',
-		[
-			'headers' => [ 'Content-Type' => 'application/json' ],
-			'body' => json_encode([
-				'token' => $_SESSION['token'],
-                'active' => 0
-            ]),
-		]);
-        if ($guzzle->getStatusCode() != 200) {
+	public function GetListData($kon){
+        if($kon == true) {
+            $client = new Client();
+            $guzzle = $client->request('POST', base_api.'/indexCahaya',
+            [
+                'headers' => [ 'Content-Type' => 'application/json' ],
+                'body' => json_encode([
+                    'token' => $_SESSION['token'],
+                    'active' => 0
+                ]),
+            ]);
+            if ($guzzle->getStatusCode() != 200) {
+                return json_encode(array());
+            } else {
+                $return = $guzzle->getBody()->getContents();
+                return json_decode($return);
+            }
+        }else {
             return json_encode(array());
-        } else {
-            $return = $guzzle->getBody()->getContents();
-            return json_decode($return);
         }
 		
 	}
@@ -95,22 +99,26 @@ class CahayaModel extends Model{
         }
 		
 	}
-	public function GetData($no_sample){
-		$client = new Client();
-		$guzzle = $client->request('POST', base_api.'/getSample',
-		[
-			'headers' => [ 'Content-Type' => 'application/json' ],
-			'body' => json_encode([
-				'token' => $_SESSION['token'],
-                'no_sample' => $no_sample
-            ]),
-            // 'http_errors' => false
-		]);
-        if ($guzzle->getStatusCode() != 200) {
-            return json_encode(array());
-        } else {
-            $return = $guzzle->getBody()->getContents();
-            return $return;
+	public function GetData($no_sample, $kon){
+        if($kon == true) {
+            $client = new Client();
+            $guzzle = $client->request('POST', base_api.'/getSample',
+            [
+                'headers' => [ 'Content-Type' => 'application/json' ],
+                'body' => json_encode([
+                    'token' => $_SESSION['token'],
+                    'no_sample' => $no_sample
+                ]),
+                // 'http_errors' => false
+            ]);
+            if ($guzzle->getStatusCode() != 200) {
+                return json_encode(array());
+            } else {
+                $return = $guzzle->getBody()->getContents();
+                return $return;
+            }
+        }else {
+            return json_encode(array('message' => 'Anda sedang offline tidak dapat mendapatkan data dari server'));
         }
 		
 	}

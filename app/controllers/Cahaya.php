@@ -34,14 +34,14 @@ class Cahaya extends Controller {
 		$data['title'] = 'APPS INTILAB';
 		$data['nama'] = $_SESSION['name'];
 		$data['salam'] = $status;
-		$data['koneksi'] = $this->connection();
+		// $data['koneksi'] = $this->connection();
 		$data['total_data'] = $this->model('CahayaModel')->getJsonData();
 		$this->view('templates/header', $data);
 		$this->view('templates/sidebar', $data);
 		$this->view('cahaya/index', $data);
 		$this->view('templates/footer');
 		}else {
-			session_start();
+			// session_start();
 			session_destroy();
 			header('location: '. base_url . '/login');
 		}
@@ -51,9 +51,14 @@ class Cahaya extends Controller {
 	public function data(){
 		$data['title'] = 'APPS INTILAB';
 		$data['token'] = $_SESSION['token'];
-		$data['koneksi'] = $this->connection();
-		$data['data'] = $this->model('CahayaModel')->GetListData();
+		// $data['koneksi'] = $this->connection();
+		$val = $this->model('CahayaModel')->GetListData($this->connection());
 		$data['akses'] = $this->model('CahayaModel')->Permission();
+		if($val == '[]'){
+            $data['data'] = '';
+        }else {
+            $data['data'] = $val->data;
+        }
 		$this->view('templates/header', $data);
 		$this->view('templates/sidebar', $data);
 		$this->view('cahaya/data', $data);
@@ -106,7 +111,7 @@ class Cahaya extends Controller {
 	}
 	public function getSampel(){
 		$no_sample = $_POST['no_sample'];
-		$val = $this->model('CahayaModel')->GetData($no_sample);
+		$val = $this->model('CahayaModel')->GetData($no_sample, $this->connection());
 		echo $val;
 	}
 

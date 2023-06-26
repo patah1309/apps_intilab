@@ -178,9 +178,11 @@ $("#no_sample").on('keydown', function(e) {
                }
             },
             error: function(e) {
+               e = JSON.parse(e)
                Swal.fire({
                   icon: 'error',
-                  title: e.responseJSON.message,
+                  title: 'Ooooops.....',
+                  text: e.message
                })
             }
          })
@@ -190,6 +192,10 @@ $("#no_sample").on('keydown', function(e) {
             title: 'Anda Sedang Offline',
             timer: 3000
          })
+         $('#udara').html(selectt).fadeIn('slow');
+         $("#foto_lain").val('')
+         rumus();
+         jenisCaha(e.id_ket, e.keterangan);
       }
       return false;
    }

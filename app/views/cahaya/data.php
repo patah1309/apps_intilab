@@ -3,7 +3,7 @@
       <div class="card">
          <div class="card-body ">
             <div class="table-responsive">
-               <table class="loaddata table table-bordered table-striped" id="data-air">
+               <table class="loaddata table table-bordered table-striped" id="data-cahaya">
                   <thead>
                      <tr>
                         <th width="50%">#</th>
@@ -68,7 +68,7 @@ $(document).ready(function() {
          timer: 3000
       })
    }
-   tabel = $('#data-air').DataTable()
+   tabel = $('#data-cahaya').DataTable()
 })
 
 function approve(id) {
