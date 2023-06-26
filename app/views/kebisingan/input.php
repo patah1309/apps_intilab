@@ -261,7 +261,7 @@
 </div>
 
 <script>
-    let uri = '<?= base_url; ?>/assets/sound/';
+    let uri = '<?= base_url; ?>/sound/';
     var success = new Audio(uri + 'success.wav');
     var error = new Audio(uri + 'error.mp3');
 

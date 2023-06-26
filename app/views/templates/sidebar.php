@@ -4,7 +4,7 @@
    </div>
    <!-- loader -->
    <div id="loader">
-      <img src="<?= base_url; ?>/assets/img/Preloader.gif" alt="icon" class="loading-icon">
+      <img src="<?= base_url; ?>/img/Preloader.gif" alt="icon" class="loading-icon">
    </div>
    <!-- * loader -->
    <!-- App Header -->
@@ -25,7 +25,7 @@
             </div>
          </div>
          <div class="headerButton" data-toggle="dropdown" id="dropdownMenuLink" aria-haspopup="true">
-            <img src="<?= base_url; ?>/assets/img/admin.png" alt="image" class="imaged w40">
+            <img src="<?= base_url; ?>/img/admin.png" alt="image" class="imaged w40">
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <!-- <a class="dropdown-item"  href="#"><ion-icon size="small" name="person-outline"></ion-icon>Profil</a> -->
                 <a class="dropdown-item"  href="#" onclick="location.href='<?= base_url; ?>/logout';"><i class="fa-solid fa-right-from-bracket"></i> Keluar</a>
@@ -39,7 +39,7 @@
             <div class="modal-body p-0">
                <!-- profile box -->
                <div class="profileBox pt-2 pb-2">
-                  <div class="image-wrapper"><img src="<?= base_url;?>/assets/img/admin.png" class="imaged w36">
+                  <div class="image-wrapper"><img src="<?= base_url;?>/img/admin.png" class="imaged w36">
                   </div>
                   <div class="in">
                      <strong><span id="name_user"></span></strong>
