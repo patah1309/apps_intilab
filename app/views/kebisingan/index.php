@@ -64,10 +64,11 @@
             }else {
                 var no_sample = $("#no_sample").val();
                 $.ajax({
-                    url: '/public/kebisingan/upload_data_to_server',
+                    url: '<?= base_url; ?>/kebisingan/upload_data_to_server',
                     method: 'POST',
                     success: function(resp) {
                         resp = JSON.parse(resp)
+                        console.log(resp)
                         if(resp.length == 0){
                             Swal.fire({
                                 icon: 'error',

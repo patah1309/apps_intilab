@@ -725,63 +725,72 @@ $('#form-add').on('submit', function(e) {
    let data_form = $(this).serialize();
    // $('#btn-submit').prop('disabled', true);
    if ($("input[name=permis]").is(':checked')) {
-      $.ajax({
-         statusCode: {
-            500: function() {
+      if ($("#lokasi").hasClass("sukses") && $("#lain").hasClass("sukses")) {
+         $.ajax({
+            statusCode: {
+               500: function() {
+                  Swal.fire({
+                     icon: 'error',
+                     title: 'Server Error',
+                     timer: 3000
+                  })
+                  $('#btn-submit').prop('disabled', false);
+               }
+            },
+            url: '/public/cahaya/saveData',
+            method: 'POST',
+            data: data_form,
+            success: function(resp) {
+               resp = JSON.parse(resp)
+               if (resp == 'success') {
+                  Swal.fire({
+                     icon: 'success',
+                     title: 'Success',
+                     text: 'Data hasbeen Save',
+                     timer: 3000
+                  })
+                  document.getElementById("form-add").reset();
+                  $('#btn-submit').prop('disabled', false);
+                  document.getElementById("lokasi").style.setProperty("background-color", "#00B4FF",
+                     "important");
+                  document.getElementById("lokasi").style.setProperty("border-color", "#00B4FF",
+                     "important");
+                  document.getElementById("lain").style.setProperty("background-color", "#00B4FF",
+                     "important");
+                  document.getElementById("lain").style.setProperty("border-color", "#00B4FF",
+                     "important");
+                  $("#no_sample").val('')
+                  $("#foto_lain").val('')
+                  $('#udara').empty();
+                  $('#isiCahaya').empty();
+                  $('#btnBawah').show()
+               } else {
+                  Swal.fire({
+                     icon: 'error',
+                     title: 'Opps..!',
+                     text: 'Please Check the Data.',
+                     timer: 3000
+                  })
+                  $('#btn-submit').prop('disabled', false);
+               }
+            },
+            error: function(err) {
                Swal.fire({
                   icon: 'error',
-                  title: 'Server Error',
+                  title: err.responseJSON,
                   timer: 3000
                })
                $('#btn-submit').prop('disabled', false);
             }
-         },
-         url: '/public/cahaya/saveData',
-         method: 'POST',
-         data: data_form,
-         success: function(resp) {
-            resp = JSON.parse(resp)
-            if (resp == 'success') {
-               Swal.fire({
-                  icon: 'success',
-                  title: 'Success',
-                  text: 'Data hasbeen Save',
-                  timer: 3000
-               })
-               document.getElementById("form-add").reset();
-               $('#btn-submit').prop('disabled', false);
-               document.getElementById("lokasi").style.setProperty("background-color", "#00B4FF",
-                  "important");
-               document.getElementById("lokasi").style.setProperty("border-color", "#00B4FF",
-                  "important");
-               document.getElementById("attachment").style.setProperty("background-color", "#00B4FF",
-                  "important");
-               document.getElementById("attachment").style.setProperty("border-color", "#00B4FF",
-                  "important");
-               $("#no_sample").val('')
-               $("#foto_lain").val('')
-               $('#udara').empty();
-               $('#isiCahaya').empty();
-               $('#btnBawah').show()
-            } else {
-               Swal.fire({
-                  icon: 'error',
-                  title: 'Opps..!',
-                  text: 'Please Check the Data.',
-                  timer: 3000
-               })
-               $('#btn-submit').prop('disabled', false);
-            }
-         },
-         error: function(err) {
-            Swal.fire({
-               icon: 'error',
-               title: err.responseJSON,
-               timer: 3000
-            })
-            $('#btn-submit').prop('disabled', false);
-         }
-      })
+         })
+      } else {
+         error.play();
+         Swal.fire({
+            icon: 'info',
+            title: 'Foto lokasi dan foto roadmap masih kosong.!',
+            timer: 3000
+         })
+      }
    } else {
       error.play();
       Swal.fire({
@@ -794,6 +803,7 @@ $('#form-add').on('submit', function(e) {
 
 function selected(titik) {
    $("#foto_lain").val('');
+   document.getElementById("lain").classList.remove("sukses");
    document.getElementById("attachment").style.setProperty("background-color", "#00B4FF", "important");
    document.getElementById("attachment").style.setProperty("border-color", "#00B4FF", "important");
    if ($('#tblsz').hasClass("d-none")) {
@@ -826,8 +836,9 @@ function show() {
    $('#attch').addClass('d-none');
    $('#saveT').removeClass('d-none');
    $('#resetT').removeClass('d-none');
-   document.getElementById("attachment").style.setProperty("background-color", "#00B4FF", "important");
-   document.getElementById("attachment").style.setProperty("border-color", "#00B4FF", "important");
+   document.getElementById("lain").style.setProperty("background-color", "#00B4FF", "important");
+   document.getElementById("lain").style.setProperty("border-color", "#00B4FF", "important");
+   document.getElementById("lain").classList.remove("sukses");
 }
 
 function resett() {
@@ -837,8 +848,9 @@ function resett() {
       $('#attch').addClass('d-none');
       $('#saveT').removeClass('d-none');
       $('#resetT').removeClass('d-none');
-      document.getElementById("attachment").style.setProperty("background-color", "#00B4FF", "important");
-      document.getElementById("attachment").style.setProperty("border-color", "#00B4FF", "important");
+      document.getElementById("lain").style.setProperty("background-color", "#00B4FF", "important");
+      document.getElementById("lain").style.setProperty("border-color", "#00B4FF", "important");
+      document.getElementById("lain").classList.remove("sukses");
    } else {
       $(".SizeChooser-selected").removeClass('crossed SizeChooser-selected');
    }
@@ -851,8 +863,9 @@ function resett2() {
       $('#attch').addClass('d-none');
       $('#saveT').removeClass('d-none');
       $('#resetT').removeClass('d-none');
-      document.getElementById("attachment").style.setProperty("background-color", "#00B4FF", "important");
-      document.getElementById("attachment").style.setProperty("border-color", "#00B4FF", "important");
+      document.getElementById("lain").style.setProperty("background-color", "#00B4FF", "important");
+      document.getElementById("lain").style.setProperty("border-color", "#00B4FF", "important");
+      document.getElementById("lain").classList.remove("sukses");
    } else {
       $(".SizeChooser-selected").removeClass('crossed SizeChooser-selected');
    }
@@ -878,8 +891,9 @@ function convert() {
          anchorTag.href = canvas.toDataURL("image/jpeg");
          $("#foto_lain").val(anchorTag.href);
       });
-      document.getElementById("attachment").style.setProperty("background-color", "#09810f", "important");
-      document.getElementById("attachment").style.setProperty("border-color", "#09810f", "important");
+      document.getElementById("lain").style.setProperty("background-color", "#09810f", "important");
+      document.getElementById("lain").style.setProperty("border-color", "#09810f", "important");
+      document.getElementById("lain").classList.add("sukses");
       $('#tblsz').addClass("d-none");
       $('#resetT').removeClass('d-none');
       $('#saveT').removeClass('d-none');
@@ -892,8 +906,9 @@ function show2() {
    $('#attch').addClass('d-none');
    $('#saveT').removeClass('d-none');
    $('#resetT').removeClass('d-none');
-   document.getElementById("attachment").style.setProperty("background-color", "#00B4FF", "important");
-   document.getElementById("attachment").style.setProperty("border-color", "#00B4FF", "important");
+   document.getElementById("lain").style.setProperty("background-color", "#00B4FF", "important");
+   document.getElementById("lain").style.setProperty("border-color", "#00B4FF", "important");
+   document.getElementById("lain").classList.remove("sukses");
 }
 
 function convert2() {
@@ -916,8 +931,9 @@ function convert2() {
          anchorTag.href = canvas.toDataURL("image/jpeg");
          $("#foto_lain").val(anchorTag.href);
       });
-      document.getElementById("attachment").style.setProperty("background-color", "#09810f", "important");
-      document.getElementById("attachment").style.setProperty("border-color", "#09810f", "important");
+      document.getElementById("lain").style.setProperty("background-color", "#09810f", "important");
+      document.getElementById("lain").style.setProperty("border-color", "#09810f", "important");
+      document.getElementById("lain").classList.add("sukses");
       $('#tblsz').addClass("d-none");
       $('#resetT').removeClass('d-none');
       $('#saveT').removeClass('d-none');
@@ -925,8 +941,9 @@ function convert2() {
 }
 
 function clear() {
-   document.getElementById("attachment").style.setProperty("background-color", "#00B4FF", "important");
-   document.getElementById("attachment").style.setProperty("border-color", "#00B4FF", "important");
+   document.getElementById("lain").style.setProperty("background-color", "#00B4FF", "important");
+   document.getElementById("lain").style.setProperty("border-color", "#00B4FF", "important");
+   document.getElementById("lain").classList.remove("sukses");
    $('#tblsz').addClass("d-none");
    document.getElementById("form-add").reset();
    $('#udara').empty();
@@ -952,7 +969,7 @@ function selesai() {
 var selectt =
    '<div class="mb-3 mt-2"><div class="form-group basic"><div class="input-wrapper"><select class="form-control" id="pilihJenis"><option>Select Jenis pencahayaan</option><option value="umum">Pencahayaan Umum</option><option value="setempat">Pencahayaan Setempat</option></select></div></div></div>';
 var cahayaUmum =
-   '<div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><input name="categori" id="categori" value="Pencahayaan Umum" style="display:none"><label class="label label-1">Penamaan Titik</label><input type="text" name="keterangan_4" id="keterangan-4" class="form-control" autocomplete="off"></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Tambahan</label><textarea class="form-control rounded" name="information" id="penamaan_tambahan" required></textarea></div></div></div></div></div><div class="row mb-2"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Jumlah Tenaga Kerja</label><div class="input-group"><input type="number" class="form-control" name="jml_kerja" id="jml_kerja" autocomplete="off" step="any" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">Orang</span></div></div></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jenis Pencahayaan</label><select name="jenis_cahaya" id="jenis_cahaya" class="form-control" style="font-size:10px" required><option value="">--Pilih Jenis--</option><option value="Alami">Alami</option><option value="Buatan">Buatan</option><option value="Campuran">Campuran</option></select></div></div></div></div><div class="row mb-2"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jenis Lampu</label><select name="jenis_lamp" id="jenis_lamp" class="form-control" style="font-size:10px" required><option value="">--Pilih Jenis--</option><option value="LED">LED</option><option value="UV Lamp">UV Lamp</option><option value="Neon TL">Neon TL</option><option value="Natrium">Natrium</option><option value="Infrared">Infrared</option><option value="Fluorescent">Fluorescent</option><option value="Bohlam Pijar">Bohlam Pijar</option><option value="Halogen (Lampu Tembak)">Halogen (Lampu Tembak)</option></select></div></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Aktifitas Setiap Area</label><textarea class="form-control rounded" name="aktifitas" id="aktifitas" required></textarea></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Panjang Area</label><div class="input-group"><input id="panjang" type="number" class="form-control" name="panjang" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">m</span></div></div><span class="text-danger" id="valpanjang" style="font-size:8px;display:none">Ex. 0.7</span><span class="text-success" id="cekpanjang" style="font-size:8px;display:none">Desimal sesuai</span></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Lebar Area</label><div class="input-group"><input id="lebar" type="number" class="form-control" name="lebar" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">m</span></div></div><span class="text-danger" id="vallebar" style="font-size:8px;display:none">Ex. 0.7</span><span class="text-success" id="ceklebar" style="font-size:8px;display:none">Desimal sesuai</span></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Luas Area</label><div class="input-group"><input id="luas" type="number" class="form-control" name="luas" autocomplete="off" step="any" readonly="readonly"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">m<sup>2</sup></span></div></div></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Jumlah Titik Pengukuran</label><div class="input-group"><input id="jml_titik_p" type="number" class="form-control" name="jml_titik_p" autocomplete="off" step="any" readonly="readonly"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">Titik</span></div></div></div></div></div></div></div><div class="row mb-2"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Jam Mulai Pengukuran</label><div class="input-group"><div class="row"><div class="col-8"><input type="text" class="form-control" name="mulai" id="time" readonly="readonly"></div><div class="col-2 px-0"><span class="d-flex align-items-center btn btn-danger"><a onclick="mulai()"><i class="fa-regular fa-clock"></i></a></span></div></div></div></div></div></div></div><div class="border border-dash-gray rounded"><div class="row justify-content-center mt-2"><div class="col-12 text-center"><label class="mb-0">PENGUJIAN CAHAYA</label></div><div class="col-8 d-flex justify-content-between"><label>Total Titik :<span id="total-k"></span></label><label>Titik Ke :<span id="titik_k"></span></label></div></div><div id="pencahayaan"></div></div><div id="btnAksi" class="mb-2"></div><div class="row mb-2"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jam Selesai Pengukuran</label><div class="input-group"><div class="row"><div class="col-8"><input type="text" class="form-control" name="selesai" id="timee" readonly="readonly"></div><div class="col-2 px-0"><span class="d-flex align-items-center btn btn-danger"><a onclick="selesai()"><i class="fa-regular fa-clock"></i></a></span></div></div></div></div></div></div></div><label class="mt-1">Dokumentasi</label><div class="row mb-2"><div class="col-6"><div class="form-group basic"><label class="label label-1 mb-1">Lokasi Sampling<sup>*</sup></label><label for="file1"><span class="btn btn-primary" id="lokasi"><hi class="fa fa-camera"></hi>Ambil Gambar</span><input type="file" id="file1" accept="image/*" capture="environment" style="display:none" onchange="preview_image(1)"></label><textarea id="foto_lok" name="foto_lok" class="d-none"></textarea></div></div><div class="col-6" id="attch"><div class="form-group basic"><label class="label label-1 mb-1">Attachment<sup>*</sup></label><label for="btnShow"><span class="btn btn-primary"><hi class="fa fa-solid fa-pencil"></hi>Draw</span><input type="button" id="btnShow" class="btn btn-primary" onclick="show()" style="display:none"></label></div></div></div><div class="table_size_chooser mb-2 d-none" id="tblsz"><div class="SizeChooser"><label class="label label-1 mb-1">Denah Titik</label><table id="html-content-holder"><tbody id="tes"></tbody></table><br></div></div><div class="row mb-2"><div class="col-6 d-none" id="resetT"><div class="form-group basic"><label class="label label-1 mb-1">Reset Titik</label><label for="btnReset"><span class="btn btn-primary" id="resetB"><hi class="fa fa-camera"></hi>Reset Titik</span><input type="button" id="btnReset" class="btn btn-primary" onclick="resett()" style="display:none"></label></div></div><div class="col-6 d-none" id="saveT"><div class="form-group basic"><label class="label label-1 mb-1">Save Draw Titik<sup>*</sup></label><label for="btnConvert"><span class="btn btn-primary" id="attachment"><hi class="fa fa-camera"></hi>Save Titik</span><input type="button" id="btnConvert" class="btn btn-primary" onclick="convert()" style="display:none"></label><textarea id="foto_lain" name="foto_lain" class="d-none"></textarea></div></div></div><div class="mb-2"><label style="border:1px solid #ced4da;padding:5px;border-radius:10px"><input type="checkbox" name="permis" value="1"><span>Data dan Informasi Pengambilan Sampel Ini adalah yang Sebenar-benarnya</span></label></div>';
+   '<div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><input name="categori" id="categori" value="Pencahayaan Umum" style="display:none"><label class="label label-1">Penamaan Titik</label><input type="text" name="keterangan_4" id="keterangan-4" class="form-control" autocomplete="off"></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Tambahan</label><textarea class="form-control rounded" name="information" id="penamaan_tambahan" required></textarea></div></div></div></div></div><div class="row mb-2"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Jumlah Tenaga Kerja</label><div class="input-group"><input type="number" class="form-control" name="jml_kerja" id="jml_kerja" autocomplete="off" step="any" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">Orang</span></div></div></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jenis Pencahayaan</label><select name="jenis_cahaya" id="jenis_cahaya" class="form-control" style="font-size:10px" required><option value="">--Pilih Jenis--</option><option value="Alami">Alami</option><option value="Buatan">Buatan</option><option value="Campuran">Campuran</option></select></div></div></div></div><div class="row mb-2"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jenis Lampu</label><select name="jenis_lamp" id="jenis_lamp" class="form-control" style="font-size:10px" required><option value="">--Pilih Jenis--</option><option value="LED">LED</option><option value="UV Lamp">UV Lamp</option><option value="Neon TL">Neon TL</option><option value="Natrium">Natrium</option><option value="Infrared">Infrared</option><option value="Fluorescent">Fluorescent</option><option value="Bohlam Pijar">Bohlam Pijar</option><option value="Halogen (Lampu Tembak)">Halogen (Lampu Tembak)</option></select></div></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Aktifitas Setiap Area</label><textarea class="form-control rounded" name="aktifitas" id="aktifitas" required></textarea></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Panjang Area</label><div class="input-group"><input id="panjang" type="number" class="form-control" name="panjang" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">m</span></div></div><span class="text-danger" id="valpanjang" style="font-size:8px;display:none">Ex. 0.7</span><span class="text-success" id="cekpanjang" style="font-size:8px;display:none">Desimal sesuai</span></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Lebar Area</label><div class="input-group"><input id="lebar" type="number" class="form-control" name="lebar" autocomplete="off" step="0.1" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">m</span></div></div><span class="text-danger" id="vallebar" style="font-size:8px;display:none">Ex. 0.7</span><span class="text-success" id="ceklebar" style="font-size:8px;display:none">Desimal sesuai</span></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Luas Area</label><div class="input-group"><input id="luas" type="number" class="form-control" name="luas" autocomplete="off" step="any" readonly="readonly"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">m<sup>2</sup></span></div></div></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Jumlah Titik Pengukuran</label><div class="input-group"><input id="jml_titik_p" type="number" class="form-control" name="jml_titik_p" autocomplete="off" step="any" readonly="readonly"><div class="input-group-append"><span class="input-group-text" style="font-size:10px">Titik</span></div></div></div></div></div></div></div><div class="row mb-2"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Jam Mulai Pengukuran</label><div class="input-group"><div class="row"><div class="col-8"><input type="text" class="form-control" name="mulai" id="time" readonly="readonly"></div><div class="col-2 px-0"><span class="d-flex align-items-center btn btn-danger"><a onclick="mulai()"><i class="fa-regular fa-clock"></i></a></span></div></div></div></div></div></div></div><div class="border border-dash-gray rounded"><div class="row justify-content-center mt-2"><div class="col-12 text-center"><label class="mb-0">PENGUJIAN CAHAYA</label></div><div class="col-8 d-flex justify-content-between"><label>Total Titik :<span id="total-k"></span></label><label>Titik Ke :<span id="titik_k"></span></label></div></div><div id="pencahayaan"></div></div><div id="btnAksi" class="mb-2"></div><div class="row mb-2"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jam Selesai Pengukuran</label><div class="input-group"><div class="row"><div class="col-8"><input type="text" class="form-control" name="selesai" id="timee" readonly="readonly"></div><div class="col-2 px-0"><span class="d-flex align-items-center btn btn-danger"><a onclick="selesai()"><i class="fa-regular fa-clock"></i></a></span></div></div></div></div></div></div></div><label class="mt-1">Dokumentasi</label><div class="row mb-2"><div class="col-6"><div class="form-group basic"><label class="label label-1 mb-1">Lokasi Sampling<sup>*</sup></label><label for="file1"><span class="btn btn-primary" id="lokasi"><hi class="fa fa-camera"></hi>Ambil Gambar</span><input type="file" id="file1" accept="image/*" capture="environment" style="display:none" onchange="preview_image(1)"></label><textarea id="foto_lok" name="foto_lok" class="d-none"></textarea></div></div><div class="col-6" id="attch"><div class="form-group basic"><label class="label label-1 mb-1">Attachment<sup>*</sup></label><label for="btnShow"><span class="btn btn-primary"><hi class="fa fa-solid fa-pencil"></hi>Draw</span><input type="button" id="btnShow" class="btn btn-primary" onclick="show()" style="display:none"></label></div></div></div><div class="table_size_chooser mb-2 d-none" id="tblsz"><div class="SizeChooser"><label class="label label-1 mb-1">Denah Titik</label><table id="html-content-holder"><tbody id="tes"></tbody></table><br></div></div><div class="row mb-2"><div class="col-6 d-none" id="resetT"><div class="form-group basic"><label class="label label-1 mb-1">Reset Titik</label><label for="btnReset"><span class="btn btn-primary" id="resetB"><hi class="fa fa-camera"></hi>Reset Titik</span><input type="button" id="btnReset" class="btn btn-primary" onclick="resett()" style="display:none"></label></div></div><div class="col-6 d-none" id="saveT"><div class="form-group basic"><label class="label label-1 mb-1">Save Draw Titik<sup>*</sup></label><label for="btnConvert"><span class="btn btn-primary" id="lain"><hi class="fa fa-camera"></hi>Save Titik</span><input type="button" id="btnConvert" class="btn btn-primary" onclick="convert()" style="display:none"></label><textarea id="foto_lain" name="foto_lain" class="d-none"></textarea></div></div></div><div class="mb-2"><label style="border:1px solid #ced4da;padding:5px;border-radius:10px"><input type="checkbox" name="permis" value="1"><span>Data dan Informasi Pengambilan Sampel Ini adalah yang Sebenar-benarnya</span></label></div>';
 var cahayaSetempat =
-   '<div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><input name="categori" id="categori" value="Pencahayaan Setempat" style="display:none"><label class="label label-1">Penamaan Titik</label><input type="text" name="keterangan_4" id="keterangan-4" class="form-control" autocomplete="off"></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Tambahan</label><textarea class="form-control rounded" name="information" id="penamaan_tambahan" required></textarea></div></div></div></div></div><div class="row mb-2"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jenis Pencahayaan</label><select name="jenis_cahaya" id="jenis_cahaya" class="form-control" style="font-size:10px" required><option value="">--Pilih Jenis--</option><option value="Alami">Alami</option><option value="Buatan">Buatan</option><option value="Campuran">Campuran</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jenis Lampu</label><select name="jenis_lamp" id="jenis_lamp" class="form-control" style="font-size:10px" required><option value="">--Pilih Jenis--</option><option value="LED">LED</option><option value="UV Lamp">UV Lamp</option><option value="Neon TL">Neon TL</option><option value="Natrium">Natrium</option><option value="Infrared">Infrared</option><option value="Fluorescent">Fluorescent</option><option value="Bohlam Pijar">Bohlam Pijar</option><option value="Halogen (Lampu Tembak)">Halogen (Lampu Tembak)</option></select></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jenis Penempatan Sensor</label><select name="jenis_penem" id="jenis_penem" class="form-control" style="font-size:10px" required><option value="">--Pilih Jenis--</option><option value="Meja Kerja">Meja Kerja</option><option value="Bidang Vertikal">Bidang Vertikal</option><option value="Stasiun Kerja Komputer">Stasiun Kerja Komputer</option><option value="Sejajar Dengan Permukaan">Sejajar Dengan Permukaan</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Jumlah Titik Pengukuran</label><div class="input-group"><input id="titik_p" type="number" class="form-control" name="jml_titik_p" autocomplete="off" step="any" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">Titik</span></div></div></div></div></div></div></div><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label">Jam Pengambilan</label><div class="row"><div class="col-8"><input type="text" class="form-control" name="waktu" id="time" readonly="readonly"></div><div class="col-2 px-0"><span class="d-flex align-items-center btn btn-danger"><a onclick="mulai()"><i class="fa-regular fa-clock"></i></a></span></div></div></div></div></div></div><div class="border border-dash-gray rounded"><div class="row justify-content-center mt-2"><div class="col-12 text-center"><label class="mb-0">PENGUJIAN CAHAYA</label></div><div class="col-8 d-flex justify-content-between"><label>Total Titik :<span id="total-k"></span></label><label>Titik Ke :<span id="titik_k"></span></label></div></div><div id="pencahayaan"></div></div><div id="btnAksi" class="mb-2"></div><label class="mt-1">Dokumentasi</label><div class="row mb-2"><div class="col-6"><div class="form-group basic"><label class="label label-1 mb-1">Lokasi Sampling<sup>*</sup></label><label for="file1"><span class="btn btn-primary" id="lokasi"><hi class="fa fa-camera"></hi>Ambil Gambar</span><input type="file" id="file1" accept="image/*" capture="environment" style="display:none" onchange="preview_image(1)"></label><textarea id="foto_lok" name="foto_lok" class="d-none"></textarea></div></div><div class="col-6" id="attch"><div class="form-group basic"><label class="label label-1 mb-1">Attachment<sup>*</sup></label><label for="btnShow"><span class="btn btn-primary"><hi class="fa fa-solid fa-pencil"></hi>Draw</span><input type="button" id="btnShow" class="btn btn-primary" onclick="show2()" style="display:none"></label></div></div></div><div class="table_size_chooser mb-2 d-none" id="tblsz"><div class="SizeChooser"><label class="label label-1 mb-1">Denah Titik</label><table id="html-content-holder"><tbody id="tes"></tbody></table><br></div></div><div class="row mb-2"><div class="col-6 d-none" id="resetT"><div class="form-group basic"><label class="label label-1 mb-1">Reset Titik</label><label for="btnReset"><span class="btn btn-primary" id="resetB"><hi class="fa fa-camera"></hi>Reset Titik</span><input type="button" id="btnReset" class="btn btn-primary" onclick="resett2()" style="display:none"></label></div></div><div class="col-6 d-none" id="saveT"><div class="form-group basic"><label class="label label-1 mb-1">Save Draw Titik<sup>*</sup></label><label for="btnConvert"><span class="btn btn-primary" id="attachment"><hi class="fa fa-camera"></hi>Save Titik</span><input type="button" id="btnConvert" class="btn btn-primary" onclick="convert2()" style="display:none"></label><textarea id="foto_lain" name="foto_lain" class="d-none"></textarea></div></div></div><div class="mb-2"><label style="border:1px solid #ced4da;padding:5px;border-radius:10px"><input type="checkbox" name="permis" value="1"><span>Data dan Informasi Pengambilan Sampel Ini adalah yang Sebenar-benarnya</span></label></div>';
+   '<div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><input name="categori" id="categori" value="Pencahayaan Setempat" style="display:none"><label class="label label-1">Penamaan Titik</label><input type="text" name="keterangan_4" id="keterangan-4" class="form-control" autocomplete="off"></div></div></div></div></div><div class="mb-2"><div class="row"><div class="col-sm-12"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Penamaan Tambahan</label><textarea class="form-control rounded" name="information" id="penamaan_tambahan" required></textarea></div></div></div></div></div><div class="row mb-2"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jenis Pencahayaan</label><select name="jenis_cahaya" id="jenis_cahaya" class="form-control" style="font-size:10px" required><option value="">--Pilih Jenis--</option><option value="Alami">Alami</option><option value="Buatan">Buatan</option><option value="Campuran">Campuran</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jenis Lampu</label><select name="jenis_lamp" id="jenis_lamp" class="form-control" style="font-size:10px" required><option value="">--Pilih Jenis--</option><option value="LED">LED</option><option value="UV Lamp">UV Lamp</option><option value="Neon TL">Neon TL</option><option value="Natrium">Natrium</option><option value="Infrared">Infrared</option><option value="Fluorescent">Fluorescent</option><option value="Bohlam Pijar">Bohlam Pijar</option><option value="Halogen (Lampu Tembak)">Halogen (Lampu Tembak)</option></select></div></div></div></div><div class="mb-2"><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1">Jenis Penempatan Sensor</label><select name="jenis_penem" id="jenis_penem" class="form-control" style="font-size:10px" required><option value="">--Pilih Jenis--</option><option value="Meja Kerja">Meja Kerja</option><option value="Bidang Vertikal">Bidang Vertikal</option><option value="Stasiun Kerja Komputer">Stasiun Kerja Komputer</option><option value="Sejajar Dengan Permukaan">Sejajar Dengan Permukaan</option></select></div></div></div><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label label-1" for="modalInputusername">Jumlah Titik Pengukuran</label><div class="input-group"><input id="titik_p" type="number" class="form-control" name="jml_titik_p" autocomplete="off" step="any" required><div class="input-group-append"><span class="input-group-text" style="font-size:10px">Titik</span></div></div></div></div></div></div></div><div class="row"><div class="col-6"><div class="form-group basic"><div class="input-wrapper"><label class="label">Jam Pengambilan</label><div class="row"><div class="col-8"><input type="text" class="form-control" name="waktu" id="time" readonly="readonly"></div><div class="col-2 px-0"><span class="d-flex align-items-center btn btn-danger"><a onclick="mulai()"><i class="fa-regular fa-clock"></i></a></span></div></div></div></div></div></div><div class="border border-dash-gray rounded"><div class="row justify-content-center mt-2"><div class="col-12 text-center"><label class="mb-0">PENGUJIAN CAHAYA</label></div><div class="col-8 d-flex justify-content-between"><label>Total Titik :<span id="total-k"></span></label><label>Titik Ke :<span id="titik_k"></span></label></div></div><div id="pencahayaan"></div></div><div id="btnAksi" class="mb-2"></div><label class="mt-1">Dokumentasi</label><div class="row mb-2"><div class="col-6"><div class="form-group basic"><label class="label label-1 mb-1">Lokasi Sampling<sup>*</sup></label><label for="file1"><span class="btn btn-primary" id="lokasi"><hi class="fa fa-camera"></hi>Ambil Gambar</span><input type="file" id="file1" accept="image/*" capture="environment" style="display:none" onchange="preview_image(1)"></label><textarea id="foto_lok" name="foto_lok" class="d-none"></textarea></div></div><div class="col-6" id="attch"><div class="form-group basic"><label class="label label-1 mb-1">Attachment<sup>*</sup></label><label for="btnShow"><span class="btn btn-primary"><hi class="fa fa-solid fa-pencil"></hi>Draw</span><input type="button" id="btnShow" class="btn btn-primary" onclick="show2()" style="display:none"></label></div></div></div><div class="table_size_chooser mb-2 d-none" id="tblsz"><div class="SizeChooser"><label class="label label-1 mb-1">Denah Titik</label><table id="html-content-holder"><tbody id="tes"></tbody></table><br></div></div><div class="row mb-2"><div class="col-6 d-none" id="resetT"><div class="form-group basic"><label class="label label-1 mb-1">Reset Titik</label><label for="btnReset"><span class="btn btn-primary" id="resetB"><hi class="fa fa-camera"></hi>Reset Titik</span><input type="button" id="btnReset" class="btn btn-primary" onclick="resett2()" style="display:none"></label></div></div><div class="col-6 d-none" id="saveT"><div class="form-group basic"><label class="label label-1 mb-1">Save Draw Titik<sup>*</sup></label><label for="btnConvert"><span class="btn btn-primary" id="lain"><hi class="fa fa-camera"></hi>Save Titik</span><input type="button" id="btnConvert" class="btn btn-primary" onclick="convert2()" style="display:none"></label><textarea id="foto_lain" name="foto_lain" class="d-none"></textarea></div></div></div><div class="mb-2"><label style="border:1px solid #ced4da;padding:5px;border-radius:10px"><input type="checkbox" name="permis" value="1"><span>Data dan Informasi Pengambilan Sampel Ini adalah yang Sebenar-benarnya</span></label></div>';
    </script>

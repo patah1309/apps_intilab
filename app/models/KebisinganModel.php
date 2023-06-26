@@ -63,11 +63,8 @@ class KebisinganModel  extends Model{
                         }
                     }
                     // var_dump('gamasuk');
-                    $i = 0;
-                    foreach($old as $key => $value){
-                        $array[$i++] = $value;
-                    }
-                    $array[$i] = $data;
+                    $value = json_decode($file, true);
+                    array_push($value, $post);
                     $myfile = fopen('file/data_kebisingan.json', "w");
                     fwrite($myfile, json_encode($array, JSON_PRETTY_PRINT));
                     fclose($myfile);
@@ -75,7 +72,8 @@ class KebisinganModel  extends Model{
                     $response['status'] = 'success';
                     return $response;
                 }else {
-                    $array = [0 => $data];
+                    $array = [];
+				    array_push($array, $post);
                     $myfile = fopen('file/data_kebisingan.json', "w");
                     fwrite($myfile, json_encode($array, JSON_PRETTY_PRINT));
                     fclose($myfile);
@@ -84,7 +82,8 @@ class KebisinganModel  extends Model{
                     return $response;
                 }
             }else {
-                $array = [0 => $data];
+                $array = [];
+				array_push($array, $post);
                 file_put_contents('file/data_kebisingan.json', json_encode($array, JSON_PRETTY_PRINT));
                 $response['message'] = 'Data Berhasil Disimpan';
                 $response['status'] = 'success';
@@ -119,7 +118,7 @@ class KebisinganModel  extends Model{
                         [
                             'headers' => [ 'Content-Type' => 'application/json' ],
                             'body' => json_encode($value),
-                            // 'http_errors' => false
+                            'http_errors' => false
                         ]
                     );
                     if ($guzzle->getStatusCode() != 200) {

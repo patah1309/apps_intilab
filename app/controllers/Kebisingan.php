@@ -96,7 +96,6 @@ class Kebisingan extends Controller {
 			'is_sync' => '0');
 		$kon = $this->connection();
 		$save = $this->model('KebisinganModel')->saveDataUdara($data, $kon, $_POST);
-
 		echo json_encode($save['status']);
 	}
 

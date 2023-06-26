@@ -4,7 +4,7 @@
  * @param {Number} MAX_WIDTH - The width of the image in pixels
  * @param {Number} MAX_HEIGHT - The height of the image in pixels
  */
- async function reduce_image_file_size(base64Str, MAX_WIDTH = 1280, MAX_HEIGHT = 720) {
+async function reduce_image_file_size(base64Str, MAX_WIDTH = 1280, MAX_HEIGHT = 720) {
     let resized_base64 = await new Promise((resolve) => {
         let img = new Image()
         img.src = base64Str
@@ -32,7 +32,7 @@
 
         }
     });
-    
+
     return resized_base64;
 }
 
@@ -60,17 +60,20 @@ async function process_image(file, min_image_size = 300) {
             // console.log('new_size=> ', new_size, 'KB');
             // console.log('old_size=> ', old_size, 'KB');
             var type = localStorage.getItem("type");
-            if(type == 1){
+            if (type == 1) {
                 $("#foto_lok").val(resized);
                 document.getElementById("lokasi").style.setProperty("background-color", "green", "important");
+                document.getElementById("lokasi").classList.add("sukses");
                 document.getElementById("lokasi").style.setProperty("border-color", "green", "important");
-            }else if(type == 2){
+            } else if (type == 2) {
                 $("#foto_sampl").val(resized);
                 document.getElementById("sample").style.setProperty("background-color", "green", "important");
+                document.getElementById("sample").classList.add("sukses");
                 document.getElementById("sample").style.setProperty("border-color", "green", "important");
-            }else {
+            } else {
                 $("#foto_lain").val(resized);
                 document.getElementById("lain").style.setProperty("background-color", "green", "important");
+                document.getElementById("lain").classList.add("sukses");
                 document.getElementById("lain").style.setProperty("border-color", "green", "important");
             }
             localStorage.clear();
@@ -78,17 +81,20 @@ async function process_image(file, min_image_size = 300) {
         } else {
             // console.log('image already small enough');
             var type = localStorage.getItem("type");
-            if(type == 1){
+            if (type == 1) {
                 $("#foto_lok").val(res);
                 document.getElementById("lokasi").style.setProperty("background-color", "green", "important");
+                document.getElementById("lokasi").classList.add("sukses");
                 document.getElementById("lokasi").style.setProperty("border-color", "green", "important");
-            }else if(type == 2){
+            } else if (type == 2) {
                 $("#foto_sampl").val(res);
                 document.getElementById("sample").style.setProperty("background-color", "green", "important");
+                document.getElementById("sample").classList.add("sukses");
                 document.getElementById("sample").style.setProperty("border-color", "green", "important");
-            }else {
+            } else {
                 $("#foto_lain").val(res);
                 document.getElementById("lain").style.setProperty("background-color", "green", "important");
+                document.getElementById("lain").classList.add("sukses");
                 document.getElementById("lain").style.setProperty("border-color", "green", "important");
             }
             localStorage.clear();
@@ -105,11 +111,11 @@ async function process_image(file, min_image_size = 300) {
 async function preview_image(no) {
     // console.log(no);
     localStorage.setItem("type", no);
-    if(no == 1){
+    if (no == 1) {
         var file = document.getElementById('file1');
-    }else if (no == 2) {
+    } else if (no == 2) {
         var file = document.getElementById('file2');
-    }else {
+    } else {
         var file = document.getElementById('file3');
     }
     const image = await process_image(file.files[0]);

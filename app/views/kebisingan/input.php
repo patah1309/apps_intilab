@@ -268,56 +268,73 @@
     $('#form-add').on('submit', function(e){
         e.preventDefault()
         let data_form = $(this).serialize();
-        $('#btn-submit').prop('disabled', true);
-        $.ajax({
-            statusCode: {
-                500: function() {
-                    Swal.fire({
-                        icon : 'error',
-                        title : 'Server Error',
-                        timer : 3000
-                    })
-                    $('#btn-submit').prop('disabled', false);
-                }
-            },
-            url: '/public/kebisingan/saveData',
-            method: 'POST',
-            data: data_form,
-            success: function(resp) {
-                resp = JSON.parse(resp)
-                if(resp == 'success'){
-                    Swal.fire({
-                        icon : 'success',
-                        title : 'Success',
-                        text : 'Data hasbeen Save',
-                        timer : 3000
-                    })
-                    document.getElementById("form-add").reset();
-                    $('#btn-submit').prop('disabled', false);
-                    $('#kebisingan').empty();
-                    $('#kebisingan-value').empty();
-                    document.getElementById("lokasi").style.setProperty("background-color", "#00B4FF", "important");
-                    document.getElementById("lokasi").style.setProperty("border-color", "#00B4FF", "important");
-                    document.getElementById("lain").style.setProperty("background-color", "#00B4FF", "important");
-                    document.getElementById("lain").style.setProperty("border-color", "#00B4FF", "important");
-                } else {
-                    Swal.fire({
-                        icon : 'error',
-                        title : 'Opps..!',
-                        text : 'Please Check the Data.',
-                        timer : 3000
-                    })
-                    $('#btn-submit').prop('disabled', false);
-                }
-            }, error : function(err){
-                Swal.fire({
-                    icon : 'error',
-                    title : err.responseJSON,
-                    timer : 3000
+        if ($("input[name=permis]").is(':checked')) {
+            if($('#lain').hasClass('sukses') && $('#lokasi').hasClass('sukses')){
+                $('#btn-submit').prop('disabled', true);
+                $.ajax({
+                    statusCode: {
+                        500: function() {
+                            Swal.fire({
+                                icon : 'error',
+                                title : 'Server Error',
+                                timer : 3000
+                            })
+                            $('#btn-submit').prop('disabled', false);
+                        }
+                    },
+                    url: '/public/kebisingan/saveData',
+                    method: 'POST',
+                    data: data_form,
+                    success: function(resp) {
+                        resp = JSON.parse(resp)
+                        if(resp == 'success'){
+                            Swal.fire({
+                                icon : 'success',
+                                title : 'Success',
+                                text : 'Data hasbeen Save',
+                                timer : 3000
+                            })
+                            document.getElementById("form-add").reset();
+                            $('#btn-submit').prop('disabled', false);
+                            $('#kebisingan').empty();
+                            $('#kebisingan-value').empty();
+                            document.getElementById("lokasi").style.setProperty("background-color", "#00B4FF", "important");
+                            document.getElementById("lokasi").style.setProperty("border-color", "#00B4FF", "important");
+                            document.getElementById("lain").style.setProperty("background-color", "#00B4FF", "important");
+                            document.getElementById("lain").style.setProperty("border-color", "#00B4FF", "important");
+                        } else {
+                            Swal.fire({
+                                icon : 'error',
+                                title : 'Opps..!',
+                                text : 'Please Check the Data.',
+                                timer : 3000
+                            })
+                            $('#btn-submit').prop('disabled', false);
+                        }
+                    }, error : function(err){
+                        Swal.fire({
+                            icon : 'error',
+                            title : err.responseJSON,
+                            timer : 3000
+                        })
+                        $('#btn-submit').prop('disabled', false);
+                    }
                 })
-                $('#btn-submit').prop('disabled', false);
+            }else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oooooops.....',
+                    text: 'Foto Lokasi Dan Foto Lain - Lain wajib di lakukan.!',
+                    timer: 3000
+                })
             }
-        })
+        }else {
+            Swal.fire({
+                icon: 'info',
+                title: 'Please checked Confirm permission',
+                timer: 3000
+            })
+        }
     })
 
     function getdata(){
