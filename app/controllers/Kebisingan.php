@@ -4,7 +4,6 @@ class Kebisingan extends Controller {
 	public function __construct()
 	{	
         date_default_timezone_set('Asia/Jakarta');
-
 		if($_SESSION['session_login'] != 'sudah_login') {
 			Flasher::setMessage('Login','Tidak ditemukan.','danger');
 			header('location: '. base_url . '/login');
