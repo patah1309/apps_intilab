@@ -206,6 +206,7 @@ function render_template(e) {
       $('#jamm').clockTimePicker();
       $('.select2').select2()
       valDecimal();
+      $('#selectkategori').hide()
    } else if (e.id_ket === '5') {
       $('#limbah').html(laut).fadeIn('slow');
       $('#foto').html(foto).fadeIn('slow');
@@ -214,6 +215,7 @@ function render_template(e) {
       $('#turunan-pengawet').hide();
       $('#turunan-titik-pegambilan').hide();
       $('#btnBawah').hide()
+      $('#selectkategori').hide()
       $('#jenis-pengawet').on('change', function() {
          var e = $('#jenis-pengawet').val();
 
@@ -324,6 +326,7 @@ function render_template(e) {
       $('#katVal').val(e.id_ket);
       $('#turunan-pengawet').hide();
       $('#btnBawah').hide()
+      $('#selectkategori').hide()
       $('#jenis-pengawet').on('change', function() {
          var e = $('#jenis-pengawet').val();
 
@@ -364,6 +367,7 @@ function render_template(e) {
          var c = (b - a);
          $('#kedalaman_sumur_terambil').val(c);
       })
+      $('#selectkategori').hide()
    } else if (e.id_ket === '1' || e.id_ket === '4') {
       $('#limbah').html(airBersih).fadeIn('slow');
       $('#foto').html(foto).fadeIn('slow');
@@ -386,6 +390,7 @@ function render_template(e) {
       $('#jamm').clockTimePicker();
       $('.select2').select2()
       valDecimal();
+      $('#selectkategori').hide()
    } else if (e.id_ket === '64') {
       $('#limbah').html(khusus).fadeIn('slow');
       $('#foto').html(foto).fadeIn('slow');
@@ -408,6 +413,7 @@ function render_template(e) {
       $('#jamm').clockTimePicker();
       $('.select2').select2()
       valDecimal();
+      $('#selectkategori').hide()
    } else {
       error.play();
       Swal.fire({
@@ -416,6 +422,7 @@ function render_template(e) {
          confirmButtonColor: '#3085d6',
       })
       $('#limbah').empty();
+      $('#selectkategori').hide()
    }
 }
 

@@ -128,7 +128,7 @@ class CahayaModel extends Model{
 	}
 
     public function saveData($kon, $post){
-        // var_dump(json_encode($data));
+        // var_dump(json_encode($post));
         if($kon == true){
             $client = new Client();
             $guzzle = $client->post(base_api.'/addDataUdaraApi?token='.$_SESSION['token'],
@@ -158,7 +158,7 @@ class CahayaModel extends Model{
                     $array = [];
                     $old = json_decode($file, true);
                     foreach($old as $k => $v){
-                        if($v['no_sample'] == $data['no_sample']){
+                        if($v['no_sample'] == $post['no_sample']){
                             $response['message'] = 'No Sample Ini Sudah ada';
                         }
                     }

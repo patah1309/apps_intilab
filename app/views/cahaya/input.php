@@ -195,7 +195,7 @@ $("#no_sample").on('keydown', function(e) {
          $('#udara').html(selectt).fadeIn('slow');
          $("#foto_lain").val('')
          rumus();
-         jenisCaha(e.id_ket, e.keterangan);
+         jenisCaha(28, e.keterangan);
       }
       return false;
    }
