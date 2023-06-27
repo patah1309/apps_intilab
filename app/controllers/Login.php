@@ -11,7 +11,7 @@ class Login extends Controller {
 
 	public function prosesLogin() {
 		// var_dump(base_api);
-		$row = $this->model('LoginModel')->checkLogin($_POST);
+		$row = $this->model('LoginModel')->checkLogin($_POST, $this->connection());
 		
 		if($row['message'] == 'Login Success'){
 			$_SESSION['token'] = $row['session']['token'];

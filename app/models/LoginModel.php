@@ -6,7 +6,7 @@ use GuzzleHttp\Exception\ClientException;
 
 class LoginModel {
 
-	public function checkLogin($data)
+	public function checkLogin($data, $conn)
 	{
 		if(file_exists('file/user.json')){
 			
@@ -20,6 +20,55 @@ class LoginModel {
 				if($_POST['username'] == $query['identity'] && $_POST['password'] == $query['password']){
 					
 					if($value['session']['expired_at'] == date('Y-m-d H:i:s')){
+						if($conn == true){
+							$client = new Client();
+							$guzzle = $client->request('POST', base_api.'/gettoken',
+							[
+								'headers' => [ 'Content-Type' => 'application/json' ],
+								'body' => json_encode([
+									'identity' => $_POST['username'],
+									'password' => $_POST['password'],
+								]),
+								// 'http_errors' => false
+							]
+							);
+							if ($guzzle->getStatusCode() != 200) {
+								$response['session'] = NULL;
+								$response['message'] = 'Login Gagal';
+								return $response;
+							} else {
+								$return = $guzzle->getBody()->getContents();
+								$res = (array)json_decode($return);
+								$uname = ['identity' => $_POST['username'],'password' => $_POST['password']];
+								$array = [
+									'uname' => $uname, 
+									'session' => $res
+								];
+								if($res['status'] == 200){
+									$file = file_put_contents('file/user.json', json_encode($array));
+									$response['session'] = $res;
+									$response['name'] = $_POST['username'];
+									$response['message'] = 'Login Success';
+									return $response;
+								}else {
+									$response['session'] = NULL;
+									$response['message'] = 'Login Gagal';
+									return $response;
+								}
+							}
+						}else {
+							$response['session'] = NULL;
+							$response['message'] = 'Login Gagal, Koneksi Internet Tidak Tersedia..!';
+							return $response;
+						}
+					}else {
+						$response['session'] = $value['session'];
+						$response['name'] = $_POST['username'];
+						$response['message'] = 'Login Success';
+						return $response;
+					}
+				} else {
+					if($conn == true){
 						$client = new Client();
 						$guzzle = $client->request('POST', base_api.'/gettoken',
 						[
@@ -28,9 +77,8 @@ class LoginModel {
 								'identity' => $_POST['username'],
 								'password' => $_POST['password'],
 							]),
-							// 'http_errors' => false
-						]
-						);
+							'http_errors' => false
+						]);
 						if ($guzzle->getStatusCode() != 200) {
 							$response['session'] = NULL;
 							$response['message'] = 'Login Gagal';
@@ -56,13 +104,13 @@ class LoginModel {
 							}
 						}
 					}else {
-						$response['session'] = $value['session'];
-						$response['name'] = $_POST['username'];
-						$response['message'] = 'Login Success';
+						$response['session'] = NULL;
+						$response['message'] = 'Login Gagal, Koneksi Internet Tidak Tersedia..!';
 						return $response;
 					}
-				} else {
-					
+				}
+			}else {
+				if($conn == true){
 					$client = new Client();
 					$guzzle = $client->request('POST', base_api.'/gettoken',
 					[
@@ -97,8 +145,14 @@ class LoginModel {
 							return $response;
 						}
 					}
+				}else {
+					$response['session'] = NULL;
+					$response['message'] = 'Login Gagal, Koneksi Internet Tidak Tersedia..!';
+					return $response;
 				}
-			}else {
+			}
+		}else {
+			if($conn == true){
 				$client = new Client();
 				$guzzle = $client->request('POST', base_api.'/gettoken',
 				[
@@ -109,59 +163,27 @@ class LoginModel {
 					]),
 					'http_errors' => false
 				]);
-				if ($guzzle->getStatusCode() != 200) {
+				$return = $guzzle->getBody()->getContents();
+				$res = (array)json_decode($return);
+				$uname = ['identity' => $_POST['username'],'password' => $_POST['password']];
+				$array = [
+					'uname' => $uname, 
+					'session' => $res
+				];
+				if($res['status'] == 200){
+					$file = file_put_contents('file/user.json', json_encode($array));
+					$response['session'] = $res;
+					$response['name'] = $_POST['username'];
+					$response['message'] = 'Login Success';
+					return $response;
+				}else {
 					$response['session'] = NULL;
 					$response['message'] = 'Login Gagal';
 					return $response;
-				} else {
-					$return = $guzzle->getBody()->getContents();
-					$res = (array)json_decode($return);
-					$uname = ['identity' => $_POST['username'],'password' => $_POST['password']];
-					$array = [
-						'uname' => $uname, 
-						'session' => $res
-					];
-					if($res['status'] == 200){
-						$file = file_put_contents('file/user.json', json_encode($array));
-						$response['session'] = $res;
-						$response['name'] = $_POST['username'];
-						$response['message'] = 'Login Success';
-						return $response;
-					}else {
-						$response['session'] = NULL;
-						$response['message'] = 'Login Gagal';
-						return $response;
-					}
 				}
-			}
-		}else {
-
-			$client = new Client();
-			$guzzle = $client->request('POST', base_api.'/gettoken',
-			[
-				'headers' => [ 'Content-Type' => 'application/json' ],
-				'body' => json_encode([
-					'identity' => $_POST['username'],
-					'password' => $_POST['password'],
-				]),
-				'http_errors' => false
-			]);
-			$return = $guzzle->getBody()->getContents();
-			$res = (array)json_decode($return);
-			$uname = ['identity' => $_POST['username'],'password' => $_POST['password']];
-			$array = [
-				'uname' => $uname, 
-				'session' => $res
-			];
-			if($res['status'] == 200){
-				$file = file_put_contents('file/user.json', json_encode($array));
-				$response['session'] = $res;
-				$response['name'] = $_POST['username'];
-				$response['message'] = 'Login Success';
-				return $response;
 			}else {
 				$response['session'] = NULL;
-				$response['message'] = 'Login Gagal';
+				$response['message'] = 'Login Gagal, Koneksi Internet Tidak Tersedia..!';
 				return $response;
 			}
 		}
