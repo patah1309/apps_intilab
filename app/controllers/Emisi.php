@@ -217,12 +217,11 @@ class Emisi extends Controller {
     }
 
     public function viewData(){
-        $konek = $this->connection();
         $data['koneksi'] = $this->connection();
         $data['title'] = 'APPS INTILAB';
-        $val = $this->model('EmisiModel')->getDataEmisi($kon);
+        $val = $this->model('EmisiModel')->getDataEmisi($this->connection());
         // var_dump($val);die();
-        if($konek == true) {
+        if($this->connection() == true) {
 			$data['data'] = $val->data;
 		}else {
 			$data['data'] = $val;
