@@ -38,10 +38,11 @@
                             <a href="javascript:;" onclick="del(<?=$value->id?>)"><span class="col-by"><i
                                      class="fa-solid fa-trash-can"></i></span></a>
                             &nbsp;&nbsp;
-                            <?php }  ?>
+                            <?php }else{  ?>
                             <a href="javascript:;" onclick="del('<?= str_replace('/','_', $value->no_sample) ?>')"><span
                                   class="col-by"><i class="fa-solid fa-trash-can"></i></span></a>
                             &nbsp;&nbsp;
+                            <?php } ?>
                             <?php } ?>
                          </div>
                       </td>
