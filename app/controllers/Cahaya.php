@@ -51,13 +51,14 @@ class Cahaya extends Controller {
 	public function data(){
 		$data['title'] = 'APPS INTILAB';
 		$data['token'] = $_SESSION['token'];
+		$data['koneksi'] = $this->connection();
+		$konek = $this->connection();
 		$val = $this->model('CahayaModel')->GetListData($this->connection());
-		if($val == []){
-            $data['data'] = $val;
-        }else {
-            $data['data'] = $val;
-				$data['akses'] = $this->model('AirModel')->Permission($this->connection());
-        }
+		if($konek == true) {
+			$data['data'] = $val->data;
+		}else {
+			$data['data'] = $val;
+		}
 		$this->view('templates/header', $data);
 		$this->view('templates/sidebar', $data);
 		$this->view('cahaya/data', $data);
@@ -69,7 +70,7 @@ class Cahaya extends Controller {
 		echo $val;
 	}
 	public function hapusdat(){
-		$val = $this->model('CahayaModel')->HapusDat($_POST['id']);
+		$val = $this->model('CahayaModel')->HapusDat($_POST['id'], $this->connection());
 		echo $val;
 	}
 
@@ -93,7 +94,7 @@ class Cahaya extends Controller {
 	}
 
 	public function showData($id){
-		$val = $this->model('CahayaModel')->showDetail($id);
+		$val = $this->model('CahayaModel')->showDetail($id, $this->connection());
 		if($val->categori == 'Pencahayaan Umum') {
 			$template = Self::penumum($val);
 		}else if($val->categori == 'Pencahayaan Setempat') {
@@ -108,6 +109,46 @@ class Cahaya extends Controller {
 		$this->view('cahaya/detail', $data);
 		$this->view('templates/footer');
 	}
+
+		public function penumumoff($data) {
+			$template = '<div class="card-body"><div class="row"><div class="col-sm-4"><div class="card-body"><table><tr><th></th><th></th><th></th></tr><tr class="detail"><td class="data">No Sample</td><td>:</td><td><span>'.$data->no_sample.'</span></td></tr><tr class="detail"><td class="data">Penamaan Titik</td><td>:</td><td><span>'.$data->keterangan_4.'</span></td></tr><tr class="detail"><td class="data">Penamaan Tambahan</td><td>:</td><td><span>'.$data->information.'</span></td></tr><tr class="detail"><td class="data">Kategori</td><td>:</td><td><span>'.$data->categori.'</span></td></tr><tr class="detail"><td class="data">Jenis Pencahayaan</td><td>:</td><td><span>'.$data->jenis_cahaya.'</span></td></tr><tr class="detail"><td class="data">Panjang Area</td><td>:</td><td><span>'.$data->panjang.'</span></td></tr><tr class="detail"><td class="data">Lebar Area</td><td>:</td><td><span>'.$data->lebar.'</span></td></tr><tr class="detail"><td class="data">Luas Area</td><td>:</td><td><span>'.$data->luas.'</span></td></tr><tr class="detail"><td class="data">Jumlah Pekerja</td><td>:</td><td><span>'.$data->jml_kerja.'</span></td></tr><tr class="detail"><td class="data">Jam Mulai</td><td>:</td><td><span>'.$data->mulai.'</span></td></tr><tr class="detail"><td class="data">Jam Selesai</td><td>:</td><td><span>'.$data->selesai.'</span></td></tr><tr class="detail"><td class="data">Jenis Lampu</td><td>:</td><td><span>'.$data->jenis_lamp.'</span></td></tr><tr class="detail"><td class="data">Jumlah Titik</td><td>:</td><td><span>'.$data->jml_titik_p.' titik</span></td></tr></table></div></div><div class="col-sm-6"><div class="card-body"><div class="row mb-2"><div class="col-12"><h6 class="data font-weight-bold">Aktifitas Setiap Area</h6></div><div class="col-12"><div style="overflow-y:scroll;overflow-x:scroll;width:320px">'.$data->aktifitas.'</div></div></div><div class="row mb-2"><div class="col-12"><h6 class="data font-weight-bold">Hasil Pengukuran Titik</h6></div><div class="col-12"><div id="cahaya" style="overflow-y:scroll;overflow-x:scroll;width:320px"></div></div></div></div></div></div></div>';
+				return $template;
+		}
+		public function pensesoff($data) {
+			$template = '<div class="card-body"><div class="row"><div class="col-sm-4"><div class="card-body"><table><tr><th></th><th></th><th></th></tr><tr class="detail"><td class="data">No Sample</td><td>:</td><td><span>'.$data->no_sample.'</span></td></tr><tr class="detail"><td class="data">Penamaan Titik</td><td>:</td><td><span>'.$data->keterangan_4.'</span></td></tr><tr class="detail"><td class="data">Penamaan Tambahan</td><td>:</td><td><span>'.$data->information.'</span></td></tr><tr class="detail"><td class="data">Kategori</td><td>:</td><td><span>'.$data->categori.'</span></td></tr><tr class="detail"><td class="data">Jenis Pencahayaan</td><td>:</td><td><span>'.$data->jenis_cahaya.'</span></td></tr><tr class="detail"><td class="data">Area Sampling</td><td>:</td><td><span>'.$data->jenis_penem.'</span></td></tr><tr class="detail"><td class="data">Jam Pengambilan</td><td>:</td><td><span>'.$data->waktu.'</span></td></tr><tr class="detail"><td class="data">Jenis Lampu</td><td>:</td><td><span>'.$data->jenis_lamp.'</span></td></tr><tr class="detail"><td class="data">Jumlah Titik</td><td>:</td><td><span>'.$data->jml_titik_p.' titik</span></td></tr></table></div></div><div class="col-sm-6"><div class="card-body"><div class="row mb-2"><div class="col-12"><h6 class="data font-weight-bold">Hasil Pengukuran Titik</h6></div><div class="col-12"><div id="cahaya" style="overflow-y:scroll;overflow-x:scroll;width:320px"></div></div></div></div></div></div></div>';
+				return $template;
+		}
+
+		public function showDataoff($id) {
+		$val = $this->model('CahayaModel')->showDetail($id, $this->connection());
+		if($val->categori == 'Pencahayaan Umum') {
+			$template = Self::penumumoff($val);
+		}else if($val->categori == 'Pencahayaan Setempat') {
+			$template = Self::pensesoff($val);
+		}
+		$a = count($val->ket_peng);
+		$nilai_peng = array();
+		for ($i = 0; $i < $a; $i++) {
+			$nilai_peng[] = [
+					'ulangan-1' => $val->ulangan1[$i],
+					'ulangan-2' => $val->ulangan2[$i],
+					'ulangan-3' => $val->ulangan3[$i],
+					'rata-rata' => $val->ratarata[$i],
+					'keterangan' => $val->ket_peng[$i],
+					'kendala' => $val->ken_lampu[$i],
+					'warna' => $val->war_lampu[$i],
+			];
+		}
+		$data['title'] = 'APPS INTILAB';
+		$data['token'] = $_SESSION['token'];
+		$data['template'] = $template;
+		$data['nilai_peng'] = json_encode($nilai_peng);
+		$this->view('templates/header', $data);
+		$this->view('templates/sidebar', $data);
+		$this->view('cahaya/detailoff', $data);
+		$this->view('templates/footer');
+	}
+
 	public function getSampel(){
 		$no_sample = $_POST['no_sample'];
 		$val = $this->model('CahayaModel')->GetData($no_sample, $this->connection());

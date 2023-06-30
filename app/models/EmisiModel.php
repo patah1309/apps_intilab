@@ -159,7 +159,12 @@ class EmisiModel extends Model{
                 return json_decode($return);
             }
         }else {
-            return json_encode(array());
+            $file = file_get_contents('file/data_emisi.json');
+            if($file){
+                return json_decode($file);
+            }else {
+                return json_encode(array());
+            }
         }
     }
 
@@ -251,6 +256,41 @@ class EmisiModel extends Model{
         } else { 
             $return = $guzzle->getBody()->getContents();
             return $return;
+        }
+    }
+    
+    public function getDetailoff($qr){
+        $file = file_get_contents('file/data_emisi.json');
+        if($file){
+            $datoff = json_decode($file, true);
+            foreach($datoff as $k => $v){
+                if($v['no_sample'] == str_replace("_","/", $qr)){
+                    $array[] = $v;
+                }
+            }
+            return (object)$array[0];
+        }else {
+            return json_encode(array());
+        }
+    }
+
+    public function HapusData($id) {
+        $file = file_get_contents('file/data_emisi.json');
+        if($file){
+            $value = [];
+            $datoff = json_decode($file, true);
+            foreach($datoff as $k => $v){
+                if($v['no_sample'] != str_replace("_","/", $id)){
+                    $value[] = $v;
+                }
+            }
+            $myfile = fopen('file/data_emisi.json', "w");
+            fwrite($myfile, json_encode($value, JSON_PRETTY_PRINT));
+            fclose($myfile);
+            $res = ([
+                'message' => 'Data Berhasil Dihapus',
+            ]);
+            return json_encode($res);
         }
     }
     

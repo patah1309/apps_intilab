@@ -42,7 +42,12 @@ class CahayaModel extends Model{
                 return json_decode($return);
             }
         }else {
-            return json_encode(array());
+            $file = file_get_contents('file/data_cahaya.json');
+            if($file){
+                return json_decode($file);
+            }else {
+                return json_encode(array());
+            }
         }
 		
 	}
@@ -65,41 +70,76 @@ class CahayaModel extends Model{
         }
 		
 	}
-	public function HapusDat($id){
-		$client = new Client();
-		$guzzle = $client->request('POST', base_api.'/deleteCahaya',
-		[
-			'headers' => [ 'Content-Type' => 'application/json' ],
-			'body' => json_encode([
-				'token' => $_SESSION['token'],
-                'id' => $id
-            ]),
-		]);
-        if ($guzzle->getStatusCode() != 200) {
-            return json_encode(array());
-        } else {
-            $return = $guzzle->getBody()->getContents();
-            return $return;
+	public function HapusDat($id, $kon){
+        if($kon == true) {
+            $client = new Client();
+            $guzzle = $client->request('POST', base_api.'/deleteCahaya',
+            [
+                'headers' => [ 'Content-Type' => 'application/json' ],
+                'body' => json_encode([
+                    'token' => $_SESSION['token'],
+                    'id' => $id
+                ]),
+            ]);
+            if ($guzzle->getStatusCode() != 200) {
+                return json_encode(array());
+            } else {
+                $return = $guzzle->getBody()->getContents();
+                return $return;
+            }
+        }else {
+            $file = file_get_contents('file/data_cahaya.json');
+            if($file){
+                $value = [];
+                $datoff = json_decode($file, true);
+                foreach($datoff as $k => $v){
+                    if($v['no_sample'] != str_replace("_","/", $id)){
+                        $value[] = $v;
+                    }
+                }
+                $myfile = fopen('file/data_cahaya.json', "w");
+                fwrite($myfile, json_encode($value, JSON_PRETTY_PRINT));
+                fclose($myfile);
+                $res = ([
+                    'message' => 'Data Berhasil Dihapus',
+                ]);
+                return json_encode($res);
+            }
         }
 		
 	}
 
-	public function showDetail($id){
-		$client = new Client();
-		$guzzle = $client->request('POST', base_api.'/detailCahaya',
-		[
-			'headers' => [ 'Content-Type' => 'application/json' ],
-			'body' => json_encode([
-				'token' => $_SESSION['token'],
-                'id' => $id
-            ]),
-            // 'http_errors' => false
-		]);
-        if ($guzzle->getStatusCode() != 200) {
-            return json_encode(array());
-        } else {
-            $return = $guzzle->getBody()->getContents();
-            return json_decode($return);
+	public function showDetail($id, $kon){
+        if($kon == true) {
+            $client = new Client();
+            $guzzle = $client->request('POST', base_api.'/detailCahaya',
+            [
+                'headers' => [ 'Content-Type' => 'application/json' ],
+                'body' => json_encode([
+                    'token' => $_SESSION['token'],
+                    'id' => $id
+                ]),
+                // 'http_errors' => false
+            ]);
+            if ($guzzle->getStatusCode() != 200) {
+                return json_encode(array());
+            } else {
+                $return = $guzzle->getBody()->getContents();
+                return json_decode($return);
+            }
+        }else {
+            $file = file_get_contents('file/data_cahaya.json');
+            if($file){
+                $datoff = json_decode($file, true);
+                foreach($datoff as $k => $v){
+                    if($v['no_sample'] == str_replace("_","/", $id)){
+                        $array[] = $v;
+                    }
+                }
+                return (object)$array[0];
+            }else {
+                return json_encode(array());
+            }
         }
 		
 	}
@@ -160,6 +200,8 @@ class CahayaModel extends Model{
                     foreach($old as $k => $v){
                         if($v['no_sample'] == $post['no_sample']){
                             $response['message'] = 'No Sample Ini Sudah ada';
+                            $response['status'] = 'danger';
+                            return $response;die();
                         }
                     }
                     $value = json_decode($file, true);

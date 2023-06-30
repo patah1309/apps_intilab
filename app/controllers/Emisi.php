@@ -168,6 +168,39 @@ class Emisi extends Controller {
         $this->view('templates/footer');
     }
 
+    public function bensin($data) {
+        $co2 = json_encode($data->co2);
+        $co = json_encode($data->co);
+        $hc = json_encode($data->hc);
+        $o2 = json_encode($data->o2);
+    $template = '<div class="card-body"><div class="row"><div class="col-sm-4"><div class="card-body"><table><tr><th></th><th></th><th></th></tr><tr class="detail"><td class="data">Kode QR</td><td>:</td><td><span>'.$data->kode_qr.'</span></td></tr><tr class="detail"><td class="data">No Sample</td><td>:</td><td><span>'.$data->no_sample.'</span></td></tr><tr class="detail"><td class="data">Nama Pelanggan</td><td>:</td><td><span>'.$data->nama.'</span></td></tr><tr class="detail"><td class="data">Alamat Lokasi Pengujian</td><td>:</td><td><span>'.$data->lokasi_pengujian.'</span></td></tr><tr class="detail"><td class="data">Jenis Bahan Bakar Kendaraan</td><td>:</td><td><span>'.$data->jenis_kendaraan.'</span></td></tr><tr class="detail"><td class="data">No Polisi</td><td>:</td><td><span>'.$data->no_plat.'</span></td></tr><tr class="detail"><td class="data">Nomor Mesin</td><td>:</td><td><span>'.$data->no_mesin.'</span></td></tr><tr class="detail"><td class="data">Merk Kendaraan</td><td>:</td><td><span>'.$data->merk.'</span></td></tr><tr class="detail"><td class="data">Tranmission</td><td>:</td><td><span>'.$data->transmisi.'</span></td></tr><tr class="detail"><td class="data">Tahun Pembuatan</td><td>:</td><td><span>'.$data->tahun.'</span></td></tr><tr class="detail"><td class="data">Kategori Kendaraan</td><td>:</td><td><span>'.$data->kategori_kendaraan.'</span></td></tr><tr class="detail"><td class="data">KM Kendaraan</td><td>:</td><td><span>'.$data->km.'</span></td></tr><tr class="detail"><td class="data">Kapasitas CC</td><td>:</td><td><span>'.$data->cc.'</span></td></tr><tr class="detail"><td class="data">Bobot Kendaraan</td><td>:</td><td><span>'.$data->bobot_kendaraan.'</span></td></tr><tr class="detail"><td class="data">CO2 %</td><td>:</td><td><span>'.$co2.'</span></td></tr><tr class="detail"><td class="data">CO %</td><td>:</td><td><span>'.$co.'</span></td></tr><tr class="detail"><td class="data">HC %</td><td>:</td><td><span>'.$hc.'</span></td></tr><tr class="detail"><td class="data">O2 %</td><td>:</td><td><span>'.$o2.'</span></td></tr><tr class="detail"><td class="data">Lambda (λ)</td><td>:</td><td><span>'.$data->lamda.'</span></td></tr><tr class="detail"><td class="data">Regulasi</td><td>:</td><td><span>'.$data->regulasi.'</span></td></tr><tr class="detail"><td class="data">Catatan Kondisi Sampling</td><td>:</td><td><span>'.$data->catatan.'</span></td></tr></table></div></div></div></div>';
+        return $template;
+	}
+
+    public function solar($data) {
+        $opasitas = json_encode($data->opasitas);
+        $nilai_k = json_encode($data->nilai_k);
+        $rpm = json_encode($data->rpm);
+        $oli = json_encode($data->oli);
+    $template = '<div class="card-body"><div class="row"><div class="col-sm-4"><div class="card-body"><table><tr><th></th><th></th><th></th></tr><tr class="detail"><td class="data">Kode QR</td><td>:</td><td><span>'.$data->kode_qr.'</span></td></tr><tr class="detail"><td class="data">No Sample</td><td>:</td><td><span>'.$data->no_sample.'</span></td></tr><tr class="detail"><td class="data">Nama Pelanggan</td><td>:</td><td><span>'.$data->nama.'</span></td></tr><tr class="detail"><td class="data">Alamat Lokasi Pengujian</td><td>:</td><td><span>'.$data->lokasi_pengujian.'</span></td></tr><tr class="detail"><td class="data">Jenis Bahan Bakar Kendaraan</td><td>:</td><td><span>'.$data->jenis_kendaraan.'</span></td></tr><tr class="detail"><td class="data">No Polisi</td><td>:</td><td><span>'.$data->no_plat.'</span></td></tr><tr class="detail"><td class="data">Nomor Mesin</td><td>:</td><td><span>'.$data->no_mesin.'</span></td></tr><tr class="detail"><td class="data">Merk Kendaraan</td><td>:</td><td><span>'.$data->merk.'</span></td></tr><tr class="detail"><td class="data">Tranmission</td><td>:</td><td><span>'.$data->transmisi.'</span></td></tr><tr class="detail"><td class="data">Tahun Pembuatan</td><td>:</td><td><span>'.$data->tahun.'</span></td></tr><tr class="detail"><td class="data">Kategori Kendaraan</td><td>:</td><td><span>'.$data->kategori_kendaraan.'</span></td></tr><tr class="detail"><td class="data">KM Kendaraan</td><td>:</td><td><span>'.$data->km.'</span></td></tr><tr class="detail"><td class="data">Kapasitas CC</td><td>:</td><td><span>'.$data->cc.'</span></td></tr><tr class="detail"><td class="data">Bobot Kendaraan</td><td>:</td><td><span>'.$data->bobot_kendaraan.'</span></td></tr><tr class="detail"><td class="data">Opasitas (%HSU)</td><td>:</td><td><span>'.$opasitas.'</span></td></tr><tr class="detail"><td class="data">Nilai K(m-1)</td><td>:</td><td><span>'.$nilai_k.'</span></td></tr><tr class="detail"><td class="data">Putaran Mesin (RPM)</td><td>:</td><td><span>'.$rpm.'</span></td></tr><tr class="detail"><td class="data">Temperature Oli</td><td>:</td><td><span>'.$oli.'</span></td></tr><tr class="detail"><td class="data">Regulasi</td><td>:</td><td><span>'.$data->regulasi.'</span></td></tr><tr class="detail"><td class="data">Catatan Kondisi Sampling</td><td>:</td><td><span>'.$data->catatan.'</span></td></tr></table></div></div></div></div>';
+        return $template;
+	}
+
+    public function detailEmisioff($id){
+        $data['title'] = 'APPS INTILAB';
+        $val = $this->model('EmisiModel')->getDetailoff($id);
+        if($val->jenis_kendaraan == 31) {
+			$template = Self::bensin($val);
+		}else if($val->jenis_kendaraan == 32) {
+			$template = Self::solar($val);
+		}
+        $data['template'] = $template;
+        $this->view('templates/header', $data);
+        $this->view('templates/sidebar', $data);
+        $this->view('emisi/detailoff', $data);
+        $this->view('templates/footer');
+    }
+
     public function getDataDetail(){
         $val = $this->model('EmisiModel')->getDetail($_POST['qr']);
         echo $val;
@@ -175,14 +208,15 @@ class Emisi extends Controller {
 
     public function viewData(){
         $kon = $this->connection();
+        $data['koneksi'] = $this->connection();
         $data['title'] = 'APPS INTILAB';
         $val = $this->model('EmisiModel')->getDataEmisi($kon);
         // var_dump($val);die();
-        if($val == '[]'){
-            $data['data'] = '';
-        }else {
-            $data['data'] = $val->data;
-        }
+        if($konek == true) {
+			$data['data'] = $val->data;
+		}else {
+			$data['data'] = $val;
+		}
         $this->view('templates/header', $data);
         $this->view('templates/sidebar', $data);
         $this->view('emisi/data', $data);
@@ -192,6 +226,12 @@ class Emisi extends Controller {
     public function approveEmisi(){
 		$id = $_POST['id'];
 		$data = $this->model('EmisiModel')->approveData($id);
+		echo $data;
+	}
+
+    public function hapusData(){
+		$id = $_POST['id'];
+		$data = $this->model('EmisiModel')->HapusData($id);
 		echo $data;
 	}
 

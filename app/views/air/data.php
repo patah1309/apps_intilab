@@ -9,25 +9,38 @@
                         <th width="50%">#</th>
                         <th nowrap>Tanggal</th>
                         <th nowrap>No Sample</th>
+                        <?php if($data['koneksi'] == true) {?>
                         <th nowrap>Nama Perusahaan</th>
+                        <?php }?>
                         <th nowrap>Jam Pengambilan</th>
                         <th nowrap>Jenis Sample</th>
                      </tr>
                   </thead>
                   <tbody>
 
-                     <?php foreach($data['data']->data as $value):?>
+                     <?php foreach($data['data'] as $value):?>
                      <tr>
                         <td>
                            <div class="d-flex">
+                              <?php if($data['koneksi'] == true) {?>
                               <a href="<?= base_url;?>/air/showData/<?=$value->id?>"><span class="col-blue"><i
                                        class="fa-solid fa-eye"></i></span></a> &nbsp;|&nbsp;
+                              <?php }else { ?>
+                              <a href="<?= base_url;?>/air/showDataoff/<?= str_replace("/","_", $value->no_sample)?>"><span
+                                    class="col-blue"><i class="fa-solid fa-eye"></i></span></a> &nbsp;|&nbsp;
+                              <?php } ?>
                               <?php 
                            if($value->approve == 0) { ?>
+                              <?php if($data['koneksi'] == true) {?>
                               <a href="javascript:;" onclick="approve(<?=$value->id?>)"><span class="col-by"><i
                                        class="fa-solid fa-check"></i></span></a>
                               &nbsp;|&nbsp;
                               <a href="javascript:;" onclick="del(<?=$value->id?>)"><span class="col-by"><i
+                                       class="fa-solid fa-trash-can"></i></span></a>
+                              &nbsp;&nbsp;
+                              <?php }  ?>
+                              <a href="javascript:;"
+                                 onclick="del('<?= str_replace('/','_', $value->no_sample) ?>')"><span class="col-by"><i
                                        class="fa-solid fa-trash-can"></i></span></a>
                               &nbsp;&nbsp;
                               <?php } ?>
@@ -35,8 +48,12 @@
                         </td>
                         <td><?= date('Y-m-d', strtotime($value->add_at))?></td>
                         <td><?= $value->no_sample?></td>
+                        <?php if($data['koneksi'] == true) {?>
                         <td><?= $value->detail->nama?></td>
                         <td><?= $value->jam_pengambilan?></td>
+                        <?php }else { ?>
+                        <td><?= $value->jam ?></td>
+                        <?php } ?>
                         <td><?= $value->jenis_sample?></td>
                      </tr>
                      <?php

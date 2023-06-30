@@ -13,16 +13,15 @@
                      <label class="label">No Sample</label>
                      <input type="text" class="form-control" id="no_sample" name="no_sample"
                         placeholder="Masukan No Sample" required>
-                     <!-- <input type="hidden" id="id_kat" name="id_kat">
-                     <input type="hidden" id="katVal"> -->
+                     <!-- <input type="hidden" id="id_kat" name="id_kat"> -->
+                     <input type="hidden" id="katVal" name="kat_id">
                      <i class="clear-input">
                         <ion-icon name="close-circle" role="img" class="md hydrated" aria-label="close circle">
                         </ion-icon>
                      </i>
                   </div>
                </div>
-               <div id="selectkategori" style="display:none;"><select id="kategori-air" class="form-control"></select>
-               </div>
+               <div id="selectkategori"></div>
                <div id="limbah"></div>
                <div id="foto" class="mt-1"></div>
                <div id="foto2" class="mt-1"></div>
@@ -58,6 +57,10 @@
 
 <script>
 let data_kategori = [{
+      id: '',
+      text: '--Pilih Kategori--'
+   },
+   {
       id: '5-Laut',
       text: 'Laut'
    },
@@ -75,7 +78,7 @@ let data_kategori = [{
    },
    {
       id: '1-Bersih',
-      text: 'Bersih'
+      text: 'Bersih (Air Keperluan Hygiene Sanitasi, Air Khusus RS, Air Dalam Kemasan, Air RO)'
    },
    {
       id: '56-Danau',
@@ -91,7 +94,7 @@ let data_kategori = [{
    },
    {
       id: '72-Tanah',
-      text: 'Tanah'
+      text: 'Tanah (Air Sumur Bor, Air Sumur Gali, Air Sumur Pantek)'
    },
    {
       id: '51-Limbah',
@@ -160,9 +163,12 @@ $("#no_sample").on('keydown', function(e) {
          $.when(getDataSample($("#no_sample").val())).then(function(resp) {
             render_template(JSON.parse(resp))
          })
-         $('#selectkategori').hide()
+         $('#selectkategori').empty()
       } else {
-         $('#selectkategori').show()
+         $('#selectkategori').empty()
+         var html = '<select id="kategori-air" class="form-control"></select>'
+         $('#selectkategori').append(html)
+
          $('#kategori-air').select2({
             data: data_kategori,
             placeholder: 'Select Kategori Air'
@@ -170,13 +176,15 @@ $("#no_sample").on('keydown', function(e) {
 
          $('#kategori-air').on('change', function() {
             let data_select = $(this).val()
-            let array_data = {
-               'id_ket': data_select.split('-')[0],
-               'id_ket2': 1,
-               'jenis': data_select.split('-')[1],
-               'keterangan': ''
+            if (data_select != '') {
+               let array_data = {
+                  'id_ket': data_select.split('-')[0],
+                  'id_ket2': 1,
+                  'jenis': data_select.split('-')[1],
+                  'keterangan': ''
+               }
+               render_template(array_data);
             }
-            render_template(array_data);
          })
       }
       e.preventDefault()
@@ -206,7 +214,7 @@ function render_template(e) {
       $('#jamm').clockTimePicker();
       $('.select2').select2()
       valDecimal();
-      $('#selectkategori').hide()
+      $('#selectkategori').empty()
    } else if (e.id_ket === '5') {
       $('#limbah').html(laut).fadeIn('slow');
       $('#foto').html(foto).fadeIn('slow');
@@ -215,7 +223,7 @@ function render_template(e) {
       $('#turunan-pengawet').hide();
       $('#turunan-titik-pegambilan').hide();
       $('#btnBawah').hide()
-      $('#selectkategori').hide()
+      $('#selectkategori').empty()
       $('#jenis-pengawet').on('change', function() {
          var e = $('#jenis-pengawet').val();
 
@@ -326,7 +334,7 @@ function render_template(e) {
       $('#katVal').val(e.id_ket);
       $('#turunan-pengawet').hide();
       $('#btnBawah').hide()
-      $('#selectkategori').hide()
+      $('#selectkategori').empty()
       $('#jenis-pengawet').on('change', function() {
          var e = $('#jenis-pengawet').val();
 
@@ -367,7 +375,7 @@ function render_template(e) {
          var c = (b - a);
          $('#kedalaman_sumur_terambil').val(c);
       })
-      $('#selectkategori').hide()
+      $('#selectkategori').empty()
    } else if (e.id_ket === '1' || e.id_ket === '4') {
       $('#limbah').html(airBersih).fadeIn('slow');
       $('#foto').html(foto).fadeIn('slow');
@@ -390,7 +398,7 @@ function render_template(e) {
       $('#jamm').clockTimePicker();
       $('.select2').select2()
       valDecimal();
-      $('#selectkategori').hide()
+      $('#selectkategori').empty()
    } else if (e.id_ket === '64') {
       $('#limbah').html(khusus).fadeIn('slow');
       $('#foto').html(foto).fadeIn('slow');
@@ -413,7 +421,7 @@ function render_template(e) {
       $('#jamm').clockTimePicker();
       $('.select2').select2()
       valDecimal();
-      $('#selectkategori').hide()
+      $('#selectkategori').empty()
    } else {
       error.play();
       Swal.fire({
@@ -422,7 +430,7 @@ function render_template(e) {
          confirmButtonColor: '#3085d6',
       })
       $('#limbah').empty();
-      $('#selectkategori').hide()
+      $('#selectkategori').empty()
    }
 }
 
@@ -716,7 +724,7 @@ $('#form-add').on('submit', function(e) {
    let data_form = $(this).serialize();
    if ($("input[name=permis]").is(':checked')) {
       if ($("#lokasi").hasClass("sukses") && $("#sample").hasClass("sukses") && $("#lain").hasClass("sukses")) {
-         $('#btn-submit').prop('disabled', true);
+         // $('#btn-submit').prop('disabled', true);
          $.ajax({
             statusCode: {
                500: function() {
@@ -725,7 +733,7 @@ $('#form-add').on('submit', function(e) {
                      title: 'Server Error',
                      timer: 3000
                   })
-                  $('#btn-submit').prop('disabled', false);
+                  // $('#btn-submit').prop('disabled', false);
                }
             },
             url: '/public/air/saveData',
@@ -765,7 +773,7 @@ $('#form-add').on('submit', function(e) {
                      text: 'Please Check the Data.',
                      timer: 3000
                   })
-                  $('#btn-submit').prop('disabled', false);
+                  // $('#btn-submit').prop('disabled', false);
                }
             },
             error: function(err) {

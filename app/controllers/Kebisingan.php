@@ -106,12 +106,14 @@ class Kebisingan extends Controller {
 	public function viewDatakebisingan(){
 		$data['title'] = 'APPS INTILAB';
 		$data['token'] = $_SESSION['token'];
+		$data['koneksi'] = $this->connection();
+		$konek = $this->connection();
 		$val = $this->model('KebisinganModel')->getDataKebisingan($this->connection());
-		if($val == '[]'){
-            $data['data'] = '';
-        }else {
-            $data['data'] = $val->data;
-        }
+		if($konek == true) {
+			$data['data'] = $val->data;
+		}else {
+			$data['data'] = $val;
+		}
         $this->view('templates/header', $data);
         $this->view('templates/sidebar', $data);
         $this->view('kebisingan/data', $data);
@@ -126,13 +128,13 @@ class Kebisingan extends Controller {
 
 	public function deleteKebisingan(){
 		$id = $_POST['id'];
-		$data = $this->model('KebisinganModel')->deleteData($id);
+		$data = $this->model('KebisinganModel')->deleteData($id, $this->connection());
 		echo $data;
 	}
 
 	public function showData($id){
 		$data['title'] = 'APPS INTILAB';
-		$val = $this->model('KebisinganModel')->showDetail($id);
+		$val = $this->model('KebisinganModel')->showDetail($id, $this->connection());
 		$data['lat'] = $val->lat;
 		$data['long'] = $val->long;
 		$data['coor'] = $val->coor;
@@ -141,6 +143,18 @@ class Kebisingan extends Controller {
         $this->view('templates/sidebar', $data);
         $this->view('kebisingan/detail', $data);
         $this->view('templates/footer');
+	}
+
+	public function showDataoff($id) {
+		$val = $this->model('KebisinganModel')->showDetail($id, $this->connection());
+		
+		$data['title'] = 'APPS INTILAB';
+		$data['token'] = $_SESSION['token'];
+		$data['data'] = $val;
+		$this->view('templates/header', $data);
+		$this->view('templates/sidebar', $data);
+		$this->view('kebisingan/detailoff', $data);
+		$this->view('templates/footer');
 	}
 
 }
