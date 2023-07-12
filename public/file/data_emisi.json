@@ -1,0 +1,41 @@
+[
+    {
+        "kode_qr": "ISL08287802",
+        "no_sample": "makan",
+        "nama": "Agus salim",
+        "lokasi_pengujian": "Padang pasir",
+        "jenis_kendaraan": "31",
+        "no_plat": "Ahajj",
+        "no_mesin": "Sjsj",
+        "merk": "Sjsjsj",
+        "transmisi": "Automatic",
+        "tahun": "2020",
+        "kategori_kendaraan": "Angkutan Barang",
+        "km": "36",
+        "cc": "56",
+        "bobot_kendaraan": "36",
+        "co2": [
+            "85",
+            "68",
+            "8"
+        ],
+        "co": [
+            "58",
+            "69",
+            "52"
+        ],
+        "hc": [
+            "25",
+            "36",
+            "58"
+        ],
+        "o2": [
+            "25",
+            "6",
+            "36"
+        ],
+        "lamda": "52",
+        "regulasi": "8",
+        "catatan": "Cek kendaraan"
+    }
+]

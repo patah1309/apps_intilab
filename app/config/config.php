@@ -1,7 +1,7 @@
 <?php
 $path = 'http://';
 if (isset($_SERVER['HTTPS']))$path = 'https://';
-$link = 'http://10.88.0.139/eng/backend/public/';
+$link = 'http://10.88.0.142/eng/backend/public/';
 $url = $path . $_SERVER['SERVER_NAME'].':8080/public';
 $url_api = $link.'default/api';
 $url_foto = $link.'dokumentasi/';

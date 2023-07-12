@@ -7,7 +7,9 @@
                   <thead>
                      <tr>
                         <th width="50%">#</th>
+                        <?php if($data['koneksi'] == true) {?>
                         <th nowrap>Tanggal</th>
+                        <?php } ?>
                         <th nowrap>No Sample</th>
                         <?php if($data['koneksi'] == true) {?>
                         <th nowrap>Nama Perusahaan</th>
@@ -38,15 +40,18 @@
                               <a href="javascript:;" onclick="del(<?=$value->id?>)"><span class="col-by"><i
                                        class="fa-solid fa-trash-can"></i></span></a>
                               &nbsp;&nbsp;
-                              <?php }  ?>
+                              <?php }else {   ?>
                               <a href="javascript:;"
                                  onclick="del('<?= str_replace('/','_', $value->no_sample) ?>')"><span class="col-by"><i
                                        class="fa-solid fa-trash-can"></i></span></a>
                               &nbsp;&nbsp;
                               <?php } ?>
+                              <?php } ?>
                            </div>
                         </td>
+                        <?php if($data['koneksi'] == true) {?>
                         <td><?= date('Y-m-d', strtotime($value->add_at))?></td>
+                        <?php } ?>
                         <td><?= $value->no_sample?></td>
                         <?php if($data['koneksi'] == true) {?>
                         <td><?= $value->detail->nama?></td>

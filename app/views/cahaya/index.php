@@ -57,13 +57,27 @@ $('#sync').on('click', function() {
       $.ajax({
          url: '/public/cahaya/upload_data_to_server',
          method: 'POST',
+         beforeSend: function() {
+            Swal.fire({
+               title: "Please Wait !",
+               allowOutsideClick: !1,
+               showConfirmButton: !1,
+               onBeforeOpen() {
+                  Swal.showLoading()
+               }
+            })
+         },
          success: function(resp) {
             resp = JSON.parse(resp)
-            if (resp.length == 0) {
+            if (resp.message == "Ada data offline gagal upload ke server.!") {
                Swal.fire({
-                  icon: 'error',
-                  title: 'Ada Masalah Pada Data Silahkan Hubungi IT.!',
+                  title: resp.message,
+                  icon: "info",
+                  timer: 2000
                })
+               setTimeout(() => {
+                  location.href = "<?= base_url;?>/cahaya";
+               }, 3000);
             } else {
                Swal.fire({
                   title: "Data Berhasil Disimpan",

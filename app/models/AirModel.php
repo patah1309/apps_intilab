@@ -1,6 +1,6 @@
 <?php
 use GuzzleHttp\Client;
-
+use GuzzleHttp\Exception\RequestException;
 class AirModel extends Model{
 	
 	public function Permission($kon){
@@ -246,26 +246,31 @@ class AirModel extends Model{
             $file = file_get_contents('file/data_air.json');
             if($file){
                 $total = json_decode($file, true);
+                $gagal = [];
                 foreach($total as $key => $value){
                     $client = new Client();
-                    $guzzle = $client->request('POST', base_api.'/addDatalapangan?token='.$_SESSION['token'],
-                        [
-                            'headers' => [ 'Content-Type' => 'application/json' ],
-                            'body' => json_encode($value),
-                            // 'http_errors' => false
-                        ]
-                    );
-                    if ($guzzle->getStatusCode() != 200) {
-                        return json_encode(array());
-                    } else {
-                        unset($total[$key]);
-                        $json = json_encode($total, JSON_PRETTY_PRINT);
-                        file_put_contents('file/data_air.json', $json);
-                        // $return = $guzzle->getBody()->getContents();
-                        // return $return;
+                    try {
+                        $guzzle = $client->request('POST', base_api.'/addDatalapangan?token='.$_SESSION['token'],
+                            [
+                                'headers' => [ 'Content-Type' => 'application/json' ],
+                                'body' => json_encode($value),
+                            ]
+                        );
+                    } catch (RequestException $e) {
+                        if ($e->getResponse() && $e->getResponse()->getStatusCode() === 401) {
+                            $gagal[] = $value;
+                        }
                     }
                 }
-                 return json_encode(array('message' => 'Data berhasil di sinkronisasi'));
+                $sidat = count($gagal);
+                if($sidat == 0) {
+                    return json_encode(array('message' => 'Data berhasil di sinkronisasi'));
+                }else {
+                    $myfile = fopen('file/data_air.json', "w");
+                    fwrite($myfile, json_encode($gagal, JSON_PRETTY_PRINT));
+                    fclose($myfile);
+                    return json_encode(array('message' => 'Ada data offline gagal upload ke server.!'));
+                }
             }else {
                  return json_encode(array());
             }
