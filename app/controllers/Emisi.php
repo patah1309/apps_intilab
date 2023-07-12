@@ -236,7 +236,7 @@ class Emisi extends Controller {
         $data['title'] = 'APPS INTILAB';
         $val = $this->model('EmisiModel')->getDataEmisi($konek);
         // var_dump($val);die();
-        if($konek == true) {
+        if($this->connection() == true) {
 			$data['data'] = $val->data;
 		}else {
 			$data['data'] = $val;
